@@ -1,6 +1,12 @@
-printf '\n[multilib]\nInclude = /etc/pacman.d/mirrorlist\n' >> /etc/pacman.conf
-pacman -Sy >/dev/null
-for p in steam wine wine-mono wine-gecko winetricks umu-launcher lutris discord telegram-desktop vlc obs-studio libreoffice-fresh code gimp krita prismlauncher flatpak fuse2 heroic-games-launcher mangohud gamemode lib32-gamemode qbittorrent spotify-launcher chromium audacity kdenlive blender godot inkscape zram-generator tlp thermald vulkan-intel lib32-vulkan-intel vulkan-radeon lib32-vulkan-radeon nvidia-open nvidia-utils lib32-nvidia-utils xf86-video-intel intel-media-driver libva-intel-driver mesa-utils vulkan-tools hwdata pciutils usbutils sof-firmware alsa-ucm-conf calamares archlinux-keyring os-prober grub efibootmgr mkinitcpio-utils python-gobject webkit2gtk-4.1 gtk4 libadwaita kvantum; do
-  r=$(pacman -Si "$p" 2>/dev/null | awk -F': ' '/^Repository/{print $2; exit}')
-  printf '%-24s %s\n' "$p" "${r:-MISSING}"
-done
+set -x
+pacman -S --noconfirm --needed sudo python curl gtk-update-icon-cache >/dev/null 2>&1 || pacman -S --noconfirm --needed sudo python curl >/dev/null
+useradd -m tester && echo "tester ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/t
+# simulate an OLD install: skel from build-19 era = old hyprland.lua with hyprpaper, no theme files
+mkdir -p /home/tester/.config/hypr && echo 'hl.on("hyprland.start", function() hl.exec_cmd("hyprpaper") end)' > /home/tester/.config/hypr/hyprland.lua
+echo '-- my stuff' > /home/tester/.config/hypr/user.lua
+chown -R tester: /home/tester
+set +x
+su - tester -c 'EMBER_BRANCH=ci-lint bash -c "curl -fsSL https://raw.githubusercontent.com/Claude0S/EmberOS/ci-lint/profile/airootfs/usr/local/bin/ember-selfupdate | EMBER_BRANCH=ci-lint bash"' 2>&1 | tail -15
+echo "=== after"
+ls /usr/local/bin/ | grep ember | tr '\n' ' '; echo
+su - tester -c 'grep -c theme ~/.config/hypr/hyprland.lua; cat ~/.config/hypr/user.lua; ls ~/.config/hypr ~/.config/waybar ~/.config/ember; ember-theme set night; ember-theme mascot ember; ember-theme status; head -3 ~/.config/waybar/colors.css'
