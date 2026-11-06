@@ -1,0 +1,11 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = filesystem
+Target = lsb-release
+
+[Action]
+Description = Applying Ember OS branding...
+When = PostTransaction
+Exec = /usr/local/bin/ember-branding

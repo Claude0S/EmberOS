@@ -1,0 +1,17 @@
+# Ember OS — packages added on top of the archiso "releng" base.
+# One package per line. Comments and empty lines are ignored.
+
+# --- Part 1: base ---
+fastfetch
+networkmanager
+sudo
+nano
+htop
+git
+wget
+unzip
+p7zip
+bash-completion
+noto-fonts
+ttf-dejavu
+terminus-font

@@ -1,0 +1,30 @@
+#!/bin/sh
+# Ember OS branding: os-release, issue, lsb-release.
+# Called by a pacman hook every time the "filesystem" package
+# is installed or upgraded (it would otherwise restore Arch branding).
+
+cat > /usr/lib/os-release <<'EOF'
+NAME="Ember OS"
+PRETTY_NAME="Ember OS"
+ID=emberos
+ID_LIKE=arch
+BUILD_ID=rolling
+VERSION_ID=1.0
+ANSI_COLOR="38;2;232;135;90"
+HOME_URL="https://github.com/Claude0S/EmberOS"
+SUPPORT_URL="https://github.com/Claude0S/EmberOS/issues"
+BUG_REPORT_URL="https://github.com/Claude0S/EmberOS/issues"
+LOGO=emberos
+EOF
+
+# Login prompt on text consoles (agetty expands \l)
+printf '\n  \033[38;2;232;135;90m\033[1mEmber OS\033[0m  (\\l)\n\n' > /etc/issue
+
+if [ -f /etc/lsb-release ] || [ -d /etc ]; then
+  cat > /etc/lsb-release <<'EOF'
+DISTRIB_ID=EmberOS
+DISTRIB_RELEASE=1.0
+DISTRIB_DESCRIPTION="Ember OS"
+EOF
+fi
+exit 0
