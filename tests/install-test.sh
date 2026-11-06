@@ -63,4 +63,9 @@ shot 12-installed-desktop 50 || st=1
 shot 13-installed-later 30   || st=1
 echo quit | socat - "UNIX-CONNECT:$MON" >/dev/null 2>&1 || true
 wait "$QPID" 2>/dev/null
+grep -a "EMBER-INSTALLED" "$OUT/installed-serial.log" | tee -a "$OUT/install-result.txt"
+for need in "multi-user OK" "Hyprland running"; do
+  grep -aq "EMBER-INSTALLED: $need" "$OUT/installed-serial.log" \
+    || { echo "::error::Installed system check failed: $need"; st=1; }
+done
 exit $st

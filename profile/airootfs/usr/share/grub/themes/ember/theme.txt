@@ -40,7 +40,7 @@ terminal-box: "select_*.png"
     width = 100%
     align = "center"
     id = "__timeout__"
-    text = "Завантаження через %d с · Booting in %d s"
+    text = "Завантаження через %d с"
     font = "DejaVu Sans Regular 16"
     color = "#c8b6a6"
 }

@@ -64,6 +64,18 @@ chroot /mnt /bin/bash -c '
     echo "%wheel ALL=(ALL) ALL" > /etc/sudoers.d/10-wheel && chmod 440 /etc/sudoers.d/10-wheel &&
     echo ember-test > /etc/hostname' || fail "users"
 chroot /mnt /usr/local/bin/ember-postinstall || fail "ember-postinstall"
+# Маячок для CI: встановлена система після завантаження пише в серійний порт
+cat > /mnt/etc/systemd/system/ember-ci-beacon.service <<'EOB'
+[Unit]
+Description=CI beacon (autotest only)
+After=multi-user.target sddm.service
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c 'sleep 25; echo "EMBER-INSTALLED: multi-user OK" > /dev/ttyS0; pgrep -x Hyprland >/dev/null && echo "EMBER-INSTALLED: Hyprland running" > /dev/ttyS0; pgrep -x waybar >/dev/null && echo "EMBER-INSTALLED: waybar running" > /dev/ttyS0; true'
+[Install]
+WantedBy=multi-user.target
+EOB
+ln -sf /etc/systemd/system/ember-ci-beacon.service /mnt/etc/systemd/system/multi-user.target.wants/ember-ci-beacon.service
 # Для скриншота після перезавантаження — автовхід тестового користувача
 mkdir -p /mnt/etc/sddm.conf.d
 printf '[Autologin]\nUser=tester\nSession=hyprland.desktop\n' > /mnt/etc/sddm.conf.d/99-autotest.conf
