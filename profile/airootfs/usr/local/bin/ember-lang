@@ -8,8 +8,8 @@ case "$l" in en) loc=en_US.UTF-8 ;; ru) loc=ru_RU.UTF-8 ;; *) loc=uk_UA.UTF-8 ;;
 mkdir -p "$HOME/.config/environment.d"
 echo "LANG=$loc" > "$HOME/.config/environment.d/10-ember-lang.conf"
 # Перезапуск панелі та віджетів, щоб підхопили мову
-pkill -x waybar; (LANG=$loc waybar >/dev/null 2>&1 &)
-pkill -fx quickshell; [ "$(cat "$HOME/.config/ember/mode" 2>/dev/null)" = little ] || (LANG=$loc quickshell >/dev/null 2>&1 &)
+pkill -x waybar; LANG=$loc setsid -f waybar >/dev/null 2>&1
+pkill -fx quickshell; [ "$(cat "$HOME/.config/ember/mode" 2>/dev/null)" = little ] || LANG=$loc setsid -f quickshell >/dev/null 2>&1
 hyprctl reload >/dev/null 2>&1
 notify-send -i /usr/share/ember/icons/fox-avatar.png "Ember OS" \
     "$(case "$l" in en) echo "Language: English. Some apps need a re-login." ;; ru) echo "Язык: русский. Некоторые программы — после повторного входа." ;; *) echo "Мова: українська. Деякі програми — після повторного входу." ;; esac)"

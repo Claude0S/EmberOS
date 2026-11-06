@@ -8,7 +8,7 @@ case "${1:-full}" in
         command -v powerprofilesctl >/dev/null && powerprofilesctl set power-saver 2>/dev/null
         ;;
     full)
-        pgrep -fx quickshell >/dev/null || (quickshell >/dev/null 2>&1 &)
+        pgrep -fx quickshell >/dev/null || setsid -f quickshell >/dev/null 2>&1
         command -v powerprofilesctl >/dev/null && powerprofilesctl set balanced 2>/dev/null
         ;;
 esac
