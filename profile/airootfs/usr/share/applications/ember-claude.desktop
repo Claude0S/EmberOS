@@ -2,7 +2,7 @@
 Name=Claude
 Comment=Claude (claude.ai) in its own window
 Exec=ember-webapp run claude
-Icon=internet-chat
+Icon=ember-chat
 Terminal=false
 Type=Application
 Categories=Network;Chat;

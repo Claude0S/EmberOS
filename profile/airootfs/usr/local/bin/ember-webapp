@@ -8,7 +8,7 @@ set -euo pipefail
 
 declare -A URL=( [claude]="https://claude.ai" )
 declare -A TITLE=( [claude]="Claude" )
-declare -A ICON=( [claude]="internet-chat" )
+declare -A ICON=( [claude]="ember-chat" )
 
 action="${1:-}"; app="${2:-}"
 [ -n "$app" ] && [ -n "${URL[$app]:-}" ] || { echo "usage: ember-webapp install|run claude"; exit 1; }

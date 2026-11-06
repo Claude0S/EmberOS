@@ -14,7 +14,7 @@ local mod      = "SUPER"
 
 -- ─── Автозапуск ───
 hl.on("hyprland.start", function()
-    hl.exec_cmd("hyprpaper")
+    hl.exec_cmd("quickshell -p /usr/share/ember/wallpaper/shell.qml")
     hl.exec_cmd("waybar")
     hl.exec_cmd("swaync")
     hl.exec_cmd('nwg-dock-hyprland -x -i 42 -mb 10 -c "fuzzel"')
@@ -119,6 +119,13 @@ hl.window_rule({
     name  = "ember-float-tools",
     match = { class = "^(pavucontrol|org.pulseaudio.pavucontrol|nm-connection-editor|blueman-manager)$" },
     float = true,
+})
+hl.window_rule({
+    name  = "ember-welcome",
+    match = { class = "^(os.ember.Welcome)$" },
+    float = true,
+    size  = "640 720",
+    center = true,
 })
 hl.window_rule({
     name  = "ember-pip",
