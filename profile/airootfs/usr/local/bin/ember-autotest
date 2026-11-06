@@ -72,7 +72,7 @@ Description=CI beacon (autotest only)
 After=multi-user.target sddm.service
 [Service]
 Type=oneshot
-ExecStart=/bin/sh -c 'sleep 25; echo "EMBER-INSTALLED: multi-user OK" > /dev/ttyS0; pgrep -x Hyprland >/dev/null && echo "EMBER-INSTALLED: Hyprland running" > /dev/ttyS0; pgrep -x waybar >/dev/null && echo "EMBER-INSTALLED: waybar running" > /dev/ttyS0; true'
+ExecStart=/bin/sh -c 'sleep 25; for m in "multi-user OK" "$(pgrep -x Hyprland >/dev/null && echo Hyprland running)" "$(pgrep -x waybar >/dev/null && echo waybar running)"; do [ -n "$m" ] && echo "EMBER-INSTALLED: $m" | tee /dev/kmsg > /dev/ttyS0; done; true'
 [Install]
 WantedBy=multi-user.target
 EOB
@@ -85,6 +85,8 @@ say "postinstall ok"
 # ─── 7. initcpio + bootloader ───
 chroot /mnt mkinitcpio -P || fail "mkinitcpio"
 chroot /mnt grub-install --target=i386-pc "$D" || fail "grub-install"
+# Тільки для тесту: дублювати консоль ядра в серійний порт (для маячка)
+sed -i 's|^GRUB_CMDLINE_LINUX=.*|GRUB_CMDLINE_LINUX="console=ttyS0,115200 console=tty0"|' /mnt/etc/default/grub
 chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg || fail "grub-mkconfig"
 grep -q "ember" /mnt/boot/grub/grub.cfg || say "warning: no ember theme in grub.cfg"
 chroot /mnt systemctl enable NetworkManager sddm >/dev/null 2>&1
