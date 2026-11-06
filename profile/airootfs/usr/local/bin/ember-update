@@ -1,0 +1,42 @@
+#!/bin/bash
+# ember-update — команда /update: оновлює пакети Arch і файли Ember OS,
+# потім докачує програми, які не встановились (Steam, Wine, Hydra).
+# Якщо базу пакетів тримає фонова докачка — зупиняє її, а не падає з
+# "unable to lock database"; застарілий замок прибирає.
+set -u
+O=$'\033[38;2;232;135;90m'; R=$'\033[38;2;230;110;100m'; X=$'\033[0m'
+say() { echo -e "${O}==>${X} $*"; }
+
+sudo -v || exit 1
+
+free_pacman() {
+    if systemctl is-active -q ember-setup-apps.service 2>/dev/null; then
+        say "Зупиняю фонову докачку програм (продовжиться після оновлення)…"
+        sudo systemctl stop ember-setup-apps.service
+    fi
+    for i in $(seq 60); do
+        [ -e /var/lib/pacman/db.lck ] || return 0
+        if ! pgrep -x pacman >/dev/null; then
+            say "Прибираю застарілий замок бази пакетів…"
+            sudo rm -f /var/lib/pacman/db.lck
+            return 0
+        fi
+        [ "$i" = 1 ] && say "Чекаю, поки інший pacman закінчить…"
+        sleep 5
+    done
+    echo -e "${R}Базу пакетів досі зайнято. Спробуй /update ще раз за кілька хвилин.${X}"
+    exit 1
+}
+
+free_pacman
+say "Оновлюю пакети системи…"
+sudo pacman -Syu --noconfirm || { echo -e "${R}pacman не зміг оновитись (див. вище).${X}"; exit 1; }
+
+ember-selfupdate || exit 1
+
+if [ ! -e /var/lib/ember/apps-done ]; then
+    say "Докачую Steam, Wine та Hydra у фоні (сповіщення прийде, коли буде готово)…"
+    sudo systemctl reset-failed ember-setup-apps.service 2>/dev/null || true
+    sudo systemctl start --no-block ember-setup-apps.service
+fi
+say "Готово. Перезайди в систему, щоб побачити новий вигляд."

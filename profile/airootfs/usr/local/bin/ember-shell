@@ -490,7 +490,7 @@ COMMANDS = {
     "wallpaper": lambda a: run(["ember-theme", "wallpaper"] + a if a else ["ember-theme", "status"]),
     "drivers": cmd_simple("sudo ember-drivers"),
     "wifi": cmd_simple("nmtui"),
-    "update": cmd_simple("sudo pacman -Syu && ember-selfupdate"),
+    "update": cmd_simple("ember-update"),
     "files": lambda _: detach(["thunar"]),
     "clear": lambda _: banner(),
     "exit": lambda _: cmd_desktop([]),
