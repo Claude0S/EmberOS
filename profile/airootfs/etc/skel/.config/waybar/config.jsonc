@@ -8,12 +8,20 @@
   "margin-right": 16,
   "spacing": 0,
 
-  "modules-left": ["custom/ember", "hyprland/workspaces"],
+  "modules-left": ["image#fox", "custom/ember", "hyprland/workspaces"],
   "modules-center": ["clock", "custom/weather"],
-  "modules-right": ["custom/lang", "tray", "network", "bluetooth", "pulseaudio", "battery", "custom/notifications", "custom/power"],
+  "modules-right": ["custom/lang", "network", "bluetooth", "pulseaudio", "battery", "tray", "custom/notifications", "custom/power"],
+
+  "image#fox": {
+    "exec": "echo $HOME/.local/share/ember/mascot/fox-small.png",
+    "interval": 3600,
+    "size": 24,
+    "on-click": "fuzzel",
+    "tooltip": false
+  },
 
   "custom/ember": {
-    "format": "󰈺  Ember",
+    "format": "Ember",
     "tooltip": false,
     "on-click": "fuzzel",
     "on-click-right": "/usr/local/bin/ember-toggle-shell"
@@ -36,9 +44,9 @@
   },
 
   "custom/weather": {
-    "exec": "curl -sf --max-time 8 'https://wttr.in/?format=%c%t&m' | sed 's/+//; s/ //g'",
+    "exec": "curl -sf --max-time 8 'https://wttr.in/?format=%t&m' | sed 's/+//; s/C//; s/ //g'",
     "interval": 1800,
-    "format": "  {}",
+    "format": "<span color='#f2c37a'>●</span>  {}",
     "tooltip": false,
     "on-click": "firefox --new-tab https://wttr.in"
   },
@@ -50,10 +58,11 @@
     "on-click": "hyprctl switchxkblayout all next"
   },
 
-  "tray": { "icon-size": 15, "spacing": 8 },
+  "tray": { "icon-size": 15, "spacing": 8, "show-passive-items": false },
 
   "network": {
-    "format-wifi": "󰤨",
+    "format-wifi": "{icon}",
+    "format-icons": ["󰤟", "󰤢", "󰤥", "󰤨"],
     "format-ethernet": "󰈀",
     "format-disconnected": "󰤭",
     "tooltip-format": "{essid}  {ipaddr}",
@@ -87,7 +96,7 @@
     "exec": "swaync-client -swb",
     "return-type": "json",
     "format": "{icon}",
-    "format-icons": { "notification": "󰂚", "none": "󰂜", "dnd-notification": "󰂛", "dnd-none": "󰂛" },
+    "format-icons": { "notification": "󰂞", "none": "󰂚", "dnd-notification": "󰂛", "dnd-none": "󰂛" },
     "tooltip": false,
     "on-click": "swaync-client -t -sw"
   },
