@@ -1,0 +1,16 @@
+{
+  "name": "Night",
+  "accent": "#f39a5c",
+  "accent2": "#c9a0dc",
+  "accent3": "#f2c37a",
+  "fg": "#ece6f2",
+  "bg": "#100d16",
+  "surface": "#2e2640",
+  "fox": {
+    "fur": "#2f2838",
+    "chest": "#bdb3cc",
+    "eye": "#f39a5c",
+    "nose": "#0e0b12",
+    "rim": "#4a3d63"
+  }
+}

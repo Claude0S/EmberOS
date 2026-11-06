@@ -1,0 +1,15 @@
+{
+  "name": "Forest",
+  "accent": "#7cb96a",
+  "accent2": "#a6d38c",
+  "accent3": "#e3d27a",
+  "fg": "#eef6e8",
+  "bg": "#111a14",
+  "surface": "#34503a",
+  "fox": {
+    "fur": "#7cb96a",
+    "chest": "#eef6e8",
+    "eye": "#111a14",
+    "nose": "#111a14"
+  }
+}

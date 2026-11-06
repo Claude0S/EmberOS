@@ -2,8 +2,18 @@
 import QtQuick
 import Quickshell
 import Quickshell.Wayland
+import Quickshell.Io
 
 ShellRoot {
+    id: root
+    property string path: "/usr/share/backgrounds/ember/lake.png"
+    FileView {
+        id: wf
+        path: Quickshell.env("HOME") + "/.config/ember/wallpaper"
+        watchChanges: true
+        onFileChanged: reload()
+        onLoaded: { var p = text().trim(); if (p !== "") root.path = p }
+    }
     Variants {
         model: Quickshell.screens
         PanelWindow {
@@ -16,7 +26,7 @@ ShellRoot {
             anchors { top: true; bottom: true; left: true; right: true }
             Image {
                 anchors.fill: parent
-                source: "file:///usr/share/backgrounds/ember/lake.png"
+                source: "file://" + root.path
                 fillMode: Image.PreserveAspectCrop
                 asynchronous: true
                 smooth: true

@@ -1,0 +1,74 @@
+#!/bin/bash
+# ember-selfupdate — оновлює файли Ember OS з GitHub без перевстановлення:
+# команди (/theme, /download…), теми, лисенят, обої, віджети, панель, док.
+# Твої особисті налаштування (~/.config/hypr/user.lua, widgets.json, вибір теми) не чіпає.
+#
+# Перший раз на старій системі:
+#   curl -fsSL https://raw.githubusercontent.com/Claude0S/EmberOS/main/profile/airootfs/usr/local/bin/ember-selfupdate | bash
+set -euo pipefail
+
+REPO="Claude0S/EmberOS"
+BRANCH="${EMBER_BRANCH:-main}"
+URL="https://codeload.github.com/$REPO/tar.gz/refs/heads/$BRANCH"
+O=$'\033[38;2;232;135;90m'; G=$'\033[38;2;155;196;138m'; X=$'\033[0m'
+say() { echo -e "${O}==>${X} $*"; }
+
+tmp=$(mktemp -d)
+trap 'rm -rf "$tmp"' EXIT
+
+say "Завантажую Ember OS ($BRANCH)…"
+curl -fsSL "$URL" | tar -xz -C "$tmp"
+SRC=$(find "$tmp" -maxdepth 1 -mindepth 1 -type d | head -1)/profile/airootfs
+[ -d "$SRC/usr/local/bin" ] || { echo "Не вдалося завантажити оновлення" >&2; exit 1; }
+
+say "Оновлюю системні файли (потрібен пароль)…"
+sudo bash -s "$SRC" <<'ROOT'
+set -e
+S="$1"
+# Команди Ember
+for f in "$S"/usr/local/bin/ember-*; do
+    case "$(basename "$f")" in ember-live-user|ember-autotest*|ember-postinstall|ember-copy-kernel) continue ;; esac
+    install -m 755 "$f" "/usr/local/bin/$(basename "$f")"
+done
+# Дані: теми, шаблони, каталог програм, лисенята, обої, ярлики, іконки
+for d in usr/share/ember usr/share/sddm/themes/ember usr/share/plymouth/themes/ember \
+         usr/share/backgrounds/ember usr/share/icons/hicolor; do
+    [ -d "$S/$d" ] && mkdir -p "/$d" && cp -r "$S/$d/." "/$d/"
+done
+for f in "$S"/usr/share/applications/ember-*.desktop; do install -m 644 "$f" /usr/share/applications/; done
+# Шаблон нових користувачів
+cp -r "$S/etc/skel/." /etc/skel/
+gtk-update-icon-cache -q /usr/share/icons/hicolor 2>/dev/null || true
+ROOT
+
+say "Оновлюю робочий стіл (твої user.lua, віджети й тема зберігаються)…"
+# Файли, якими керує Ember (особисті налаштування — в user.lua / widgets.json / look.json)
+managed=(
+  .config/hypr/hyprland.lua .config/hypr/hypridle.conf .config/hypr/hyprpaper.conf
+  .config/waybar/config.jsonc .config/waybar/style.css
+  .config/nwg-dock-hyprland/style.css
+  .config/kitty/kitty.conf
+  .config/quickshell/shell.qml .config/quickshell/widgets
+  .config/qt6ct/qt6ct.conf
+)
+for f in "${managed[@]}"; do
+    [ -e "/etc/skel/$f" ] || continue
+    mkdir -p "$(dirname "$HOME/$f")"
+    rm -rf "${HOME:?}/$f"
+    cp -r "/etc/skel/$f" "$HOME/$f"
+done
+# Нові файли, яких у тебе ще немає (не перезаписуючи існуючі)
+(cd /etc/skel && find . -type f) | while read -r f; do
+    [ -e "$HOME/$f" ] || { mkdir -p "$(dirname "$HOME/$f")"; cp "/etc/skel/$f" "$HOME/$f"; }
+done
+
+ember-theme apply --quiet
+if [ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]; then
+    hyprctl reload >/dev/null 2>&1 || true
+    pkill -x waybar; (waybar >/dev/null 2>&1 &)
+    pkill -f "quickshell" ; (quickshell -p /usr/share/ember/wallpaper/shell.qml >/dev/null 2>&1 &)
+    [ "$(cat "$HOME/.config/ember/mode" 2>/dev/null)" = little ] || (quickshell >/dev/null 2>&1 &)
+    pkill -x nwg-dock-hyprland; (nwg-dock-hyprland -x -i 42 -mb 10 -c fuzzel >/dev/null 2>&1 &)
+    pkill -x hyprpaper 2>/dev/null || true
+fi
+echo -e "${G}Готово! Ember OS оновлено. Спробуй /theme night 🦊${X}"

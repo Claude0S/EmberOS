@@ -13,14 +13,14 @@ Widget {
         spacing: 2
         Text {
             text: Qt.formatTime(clock.date, "HH:mm")
-            color: "#fbeee0"
+            color: root.cFg
             font.family: "Inter"
             font.pixelSize: 68
             font.weight: Font.Bold
         }
         Text {
             text: clock.date.toLocaleDateString(Qt.locale(), "dddd, d MMMM")
-            color: "#f3a46c"
+            color: root.cAccent2
             font.family: "Inter"
             font.pixelSize: 18
         }

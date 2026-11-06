@@ -1,0 +1,15 @@
+{
+  "name": "Mono",
+  "accent": "#cfcfcf",
+  "accent2": "#e6e6e6",
+  "accent3": "#a8a8a8",
+  "fg": "#f2f2f2",
+  "bg": "#141414",
+  "surface": "#3a3a3a",
+  "fox": {
+    "fur": "#9a9a9a",
+    "chest": "#f2f2f2",
+    "eye": "#141414",
+    "nose": "#141414"
+  }
+}

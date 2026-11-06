@@ -1,0 +1,15 @@
+{
+  "name": "Ember",
+  "accent": "#e8875a",
+  "accent2": "#f3a46c",
+  "accent3": "#f2c37a",
+  "fg": "#fbeee0",
+  "bg": "#1a1320",
+  "surface": "#523049",
+  "fox": {
+    "fur": "#e8875a",
+    "chest": "#fbeee0",
+    "eye": "#2a1c26",
+    "nose": "#2a1c26"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "Ocean",
+  "accent": "#5aa9e8",
+  "accent2": "#7cc4e0",
+  "accent3": "#9be0d8",
+  "fg": "#e8f3fb",
+  "bg": "#0f1824",
+  "surface": "#2c4a66",
+  "fox": {
+    "fur": "#5aa9e8",
+    "chest": "#e8f3fb",
+    "eye": "#0f1824",
+    "nose": "#0f1824"
+  }
+}

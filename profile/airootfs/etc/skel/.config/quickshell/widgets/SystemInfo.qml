@@ -42,7 +42,11 @@ Widget {
     }
     Timer { interval: 2000; repeat: true; running: true; triggeredOnStart: true; onTriggered: proc.running = true }
 
+    // Кольори передаються явно: вбудований компонент не бачить id файлу
     component Bar: Column {
+        property color cFg: "#fbeee0"
+        property color cAc: "#e8875a"
+        property color cAc2: "#f3a46c"
         property string label
         property real value
         property string valueText
@@ -50,15 +54,15 @@ Widget {
         spacing: 5
         Row {
             width: parent.width
-            Text { text: label; color: "#fbeee0"; font.family: "Inter"; font.pixelSize: 14; width: parent.width - 60 }
-            Text { text: valueText; color: "#f3a46c"; font.family: "Inter"; font.pixelSize: 14; width: 60; horizontalAlignment: Text.AlignRight }
+            Text { text: label; color: cFg; font.family: "Inter"; font.pixelSize: 14; width: parent.width - 60 }
+            Text { text: valueText; color: cAc2; font.family: "Inter"; font.pixelSize: 14; width: 60; horizontalAlignment: Text.AlignRight }
         }
         Rectangle {
             width: parent.width; height: 6; radius: 3; color: Qt.rgba(1, 1, 1, 0.12)
             Rectangle {
                 height: parent.height; radius: 3
                 width: parent.width * Math.max(0, Math.min(1, value))
-                color: value > 0.85 ? "#ff7a6b" : "#e8875a"
+                color: value > 0.85 ? "#ff7a6b" : cAc
                 Behavior on width { NumberAnimation { duration: 600; easing.type: Easing.OutCubic } }
             }
         }
@@ -67,9 +71,10 @@ Widget {
     Column {
         anchors.fill: parent
         spacing: 14
-        Bar { label: root.en ? "󰻠  CPU" : root.ru ? "󰻠  Процессор" : "󰻠  Процесор"; value: root.cpu; valueText: Math.round(root.cpu * 100) + "%" }
-        Bar { label: root.en ? "󰍛  Memory" : root.ru ? "󰍛  Память" : "󰍛  Памʼять";    value: root.mem; valueText: Math.round(root.mem * 100) + "%" }
+        Bar { cFg: root.cFg; cAc: root.cAccent; cAc2: root.cAccent2; label: root.en ? "󰻠  CPU" : root.ru ? "󰻠  Процессор" : "󰻠  Процесор"; value: root.cpu; valueText: Math.round(root.cpu * 100) + "%" }
+        Bar { cFg: root.cFg; cAc: root.cAccent; cAc2: root.cAccent2; label: root.en ? "󰍛  Memory" : root.ru ? "󰍛  Память" : "󰍛  Памʼять";    value: root.mem; valueText: Math.round(root.mem * 100) + "%" }
         Bar {
+            cFg: root.cFg; cAc: root.cAccent; cAc2: root.cAccent2
             visible: root.battery >= 0
             label: root.en ? "󰁹  Battery" : "󰁹  Батарея"; value: root.battery / 100; valueText: root.battery + "%"
         }

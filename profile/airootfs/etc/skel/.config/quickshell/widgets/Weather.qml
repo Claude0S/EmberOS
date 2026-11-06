@@ -36,9 +36,9 @@ Widget {
         Column {
             anchors.verticalCenter: parent.verticalCenter
             spacing: 2
-            Text { text: root.temp; color: "#fbeee0"; font.family: "Inter"; font.pixelSize: 38; font.weight: Font.Bold }
-            Text { text: root.desc; color: "#f3a46c"; font.family: "Inter"; font.pixelSize: 15; width: 170; elide: Text.ElideRight }
-            Text { text: root.place; color: Qt.rgba(0.98, 0.93, 0.88, 0.55); font.family: "Inter"; font.pixelSize: 12; width: 170; elide: Text.ElideRight }
+            Text { text: root.temp; color: root.cFg; font.family: "Inter"; font.pixelSize: 38; font.weight: Font.Bold }
+            Text { text: root.desc; color: root.cAccent2; font.family: "Inter"; font.pixelSize: 15; width: 170; elide: Text.ElideRight }
+            Text { text: root.place; color: Qt.rgba(root.cFg.r, root.cFg.g, root.cFg.b, 0.55); font.family: "Inter"; font.pixelSize: 12; width: 170; elide: Text.ElideRight }
         }
     }
 }

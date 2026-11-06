@@ -1,0 +1,252 @@
+#!/usr/bin/env python3
+"""
+ember-theme — теми Ember OS.
+
+  ember-theme list                  список тем
+  ember-theme status                що зараз вибрано
+  ember-theme set <тема>            кольори системи (+ лисеня й обої, якщо їх не змінено окремо)
+  ember-theme mascot <тема|auto>    лисеня від іншої теми (auto — як у теми)
+  ember-theme wallpaper <тема|файл|auto>   обої від іншої теми, свій файл або як у теми
+  ember-theme apply                 перегенерувати все (після оновлення системи)
+
+Вибір зберігається в ~/.config/ember/look.json.
+"""
+import json
+import os
+import shutil
+import subprocess
+import sys
+
+ROOT = os.environ.get("EMBER_ROOT", "")          # лише для збірки образу
+THEMES = "/usr/share/ember/themes"
+TPL = "/usr/share/ember/templates"
+HOME = os.path.expanduser("~")
+CFG = os.path.join(HOME, ".config")
+EMBER = os.path.join(CFG, "ember")
+LOOK = os.path.join(EMBER, "look.json")
+DATA = os.path.join(HOME, ".local", "share", "ember")
+
+OUTPUTS = {
+    "hypr-theme.lua":   os.path.join(CFG, "hypr", "theme.lua"),
+    "gtk-colors.css":   [os.path.join(CFG, "waybar", "colors.css"),
+                         os.path.join(CFG, "nwg-dock-hyprland", "colors.css")],
+    "kitty-theme.conf": os.path.join(CFG, "kitty", "theme.conf"),
+    "fuzzel.ini":       os.path.join(CFG, "fuzzel", "fuzzel.ini"),
+    "hyprlock.conf":    os.path.join(CFG, "hypr", "hyprlock.conf"),
+    "fastfetch.jsonc":  os.path.join(CFG, "fastfetch", "config.jsonc"),
+}
+
+MSG = {
+    "uk": {"set": "Тема: {}", "mascot": "Лисеня: {}", "wall": "Обої: {}", "auto": "як у теми",
+           "unknown": "Немає такої теми: {}. Є: {}", "nofile": "Файл не знайдено: {}",
+           "list": "Теми", "now": "Зараз"},
+    "en": {"set": "Theme: {}", "mascot": "Mascot: {}", "wall": "Wallpaper: {}", "auto": "follows theme",
+           "unknown": "No such theme: {}. Available: {}", "nofile": "File not found: {}",
+           "list": "Themes", "now": "Now"},
+    "ru": {"set": "Тема: {}", "mascot": "Лисёнок: {}", "wall": "Обои: {}", "auto": "как у темы",
+           "unknown": "Нет такой темы: {}. Есть: {}", "nofile": "Файл не найден: {}",
+           "list": "Темы", "now": "Сейчас"},
+}
+
+
+def lang():
+    try:
+        v = open(os.path.join(EMBER, "lang")).read().strip()
+        if v in MSG:
+            return v
+    except OSError:
+        pass
+    e = os.environ.get("LANG", "")
+    return "en" if e.startswith("en") else "ru" if e.startswith("ru") else "uk"
+
+
+def m(k, *a):
+    s = MSG[lang()][k]
+    return s.format(*a) if a else s
+
+
+def themes():
+    return sorted(d for d in os.listdir(ROOT + THEMES) if os.path.isfile(os.path.join(ROOT + THEMES, d, "theme.json")))
+
+
+def palette(key):
+    with open(os.path.join(ROOT + THEMES, key, "theme.json")) as f:
+        return json.load(f)
+
+
+def load_look():
+    try:
+        with open(LOOK) as f:
+            look = json.load(f)
+    except (OSError, ValueError):
+        look = {}
+    look.setdefault("theme", "ember")
+    look.setdefault("mascot", None)
+    look.setdefault("wallpaper", None)
+    if look["theme"] not in themes():
+        look["theme"] = "ember"
+    return look
+
+
+def save_look(look):
+    os.makedirs(EMBER, exist_ok=True)
+    with open(LOOK, "w") as f:
+        json.dump(look, f, indent=2, ensure_ascii=False)
+
+
+def hex2ansi(h):
+    h = h.lstrip("#")
+    return "38;2;{};{};{}".format(int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16))
+
+
+def wallpaper_path(look):
+    w = look.get("wallpaper")
+    if w and w in themes():
+        return os.path.join(THEMES, w, "wallpaper.png")
+    if w and os.path.isfile(w):
+        return w
+    return os.path.join(THEMES, look["theme"], "wallpaper.png")
+
+
+def render(look, reload=True):
+    pal = palette(look["theme"])
+    mascot = look.get("mascot") or look["theme"]
+    if mascot not in themes():
+        mascot = look["theme"]
+    fox = palette(mascot)["fox"]
+    mdir = os.path.join(THEMES, mascot)
+    wall = wallpaper_path(look)
+
+    values = {k: pal[k].lstrip("#") for k in ("accent", "accent2", "accent3", "fg", "bg", "surface")}
+    values.update({
+        "name": pal["name"],
+        "wallpaper": wall,
+        "fox_avatar": os.path.join(mdir, "fox-avatar.png"),
+        "fox_fur_ansi": hex2ansi(fox["fur"]),
+        "fox_chest_ansi": hex2ansi(fox["chest"]),
+        "fox_eye_ansi": hex2ansi(fox["eye"]),
+        "accent2_ansi": hex2ansi(pal["accent2"]),
+    })
+
+    for tpl, outs in OUTPUTS.items():
+        try:
+            text = open(os.path.join(ROOT + TPL, tpl)).read()
+        except OSError:
+            continue
+        for k, v in values.items():
+            text = text.replace("{{" + k + "}}", str(v))
+        for out in outs if isinstance(outs, list) else [outs]:
+            os.makedirs(os.path.dirname(out), exist_ok=True)
+            with open(out, "w") as f:
+                f.write(text)
+
+    # Для віджетів, обоїв і сповіщень
+    os.makedirs(EMBER, exist_ok=True)
+    th = dict(pal)
+    th.update({"mascot": mascot, "foxAvatar": os.path.join(mdir, "fox-avatar.png"),
+               "fox": os.path.join(mdir, "fox.png"), "wallpaper": wall})
+    with open(os.path.join(EMBER, "theme.json"), "w") as f:
+        json.dump(th, f, indent=2, ensure_ascii=False)
+    with open(os.path.join(EMBER, "wallpaper"), "w") as f:
+        f.write(wall + "\n")
+    os.makedirs(DATA, exist_ok=True)
+    link = os.path.join(DATA, "mascot")
+    try:
+        if os.path.islink(link) or os.path.exists(link):
+            os.remove(link)
+        os.symlink(mdir, link)
+    except OSError:
+        pass
+    if reload:
+        reload_desktop()
+
+
+def quiet(*cmd):
+    try:
+        subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=10)
+    except (OSError, subprocess.TimeoutExpired):
+        pass
+
+
+def reload_desktop():
+    if not os.environ.get("HYPRLAND_INSTANCE_SIGNATURE"):
+        return
+    quiet("hyprctl", "reload")
+    quiet("pkill", "-SIGUSR2", "waybar")          # waybar перечитує стиль
+    quiet("pkill", "-SIGUSR1", "kitty")           # kitty перечитує кольори
+    quiet("pkill", "-x", "nwg-dock-hyprland")
+    mode = ""
+    try:
+        mode = open(os.path.join(EMBER, "mode")).read().strip()
+    except OSError:
+        pass
+    size = "36" if mode == "little" else "42"
+    subprocess.Popen(["nwg-dock-hyprland", "-x", "-i", size, "-mb", "10", "-c", "fuzzel"],
+                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+    # Обої та віджети (Quickshell) самі стежать за ~/.config/ember/*.json
+
+
+def check_theme(key):
+    if key not in themes():
+        print(m("unknown", key, ", ".join(themes())))
+        sys.exit(1)
+
+
+def main():
+    args = sys.argv[1:]
+    cmd = args[0] if args else "status"
+    look = load_look()
+
+    if cmd == "list":
+        print(m("list") + ":")
+        for t in themes():
+            mark = "●" if t == look["theme"] else "○"
+            print(f"  {mark} {t:<8} {palette(t)['name']}")
+        return
+    if cmd == "status":
+        print(m("set", look["theme"]))
+        print(m("mascot", look["mascot"] or m("auto")))
+        print(m("wall", look["wallpaper"] or m("auto")))
+        return
+    if cmd == "apply":
+        render(look, reload="--quiet" not in args)
+        return
+    if cmd == "set" and len(args) >= 2:
+        check_theme(args[1])
+        look["theme"] = args[1]
+        save_look(look); render(look)
+        print(m("set", args[1]))
+        return
+    if cmd == "mascot" and len(args) >= 2:
+        v = args[1]
+        if v in ("auto", "theme"):
+            look["mascot"] = None
+        else:
+            check_theme(v)
+            look["mascot"] = v
+        save_look(look); render(look)
+        print(m("mascot", look["mascot"] or m("auto")))
+        return
+    if cmd == "wallpaper" and len(args) >= 2:
+        v = " ".join(args[1:])
+        if v in ("auto", "theme"):
+            look["wallpaper"] = None
+        elif v in themes():
+            look["wallpaper"] = v
+        else:
+            p = os.path.abspath(os.path.expanduser(v))
+            if not os.path.isfile(p):
+                print(m("nofile", v)); sys.exit(1)
+            os.makedirs(os.path.join(DATA, "wallpapers"), exist_ok=True)
+            dest = os.path.join(DATA, "wallpapers", os.path.basename(p))
+            if os.path.abspath(dest) != p:
+                shutil.copy(p, dest)
+            look["wallpaper"] = dest
+        save_look(look); render(look)
+        print(m("wall", look["wallpaper"] or m("auto")))
+        return
+    print(__doc__)
+
+
+if __name__ == "__main__":
+    main()

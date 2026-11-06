@@ -1,0 +1,15 @@
+{
+  "name": "Sakura",
+  "accent": "#e8879f",
+  "accent2": "#f3a6be",
+  "accent3": "#f7c6d9",
+  "fg": "#fdeef3",
+  "bg": "#1c1220",
+  "surface": "#5a3050",
+  "fox": {
+    "fur": "#e8879f",
+    "chest": "#fdeef3",
+    "eye": "#2a1426",
+    "nose": "#2a1426"
+  }
+}

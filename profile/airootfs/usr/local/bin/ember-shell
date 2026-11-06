@@ -69,6 +69,9 @@ T = {
             ("/little", "легкий режим для слабких компʼютерів"),
             ("/full", "повний режим з анімаціями"),
             ("/widgets", "налаштувати віджети робочого столу"),
+            ("/theme <тема>", "тема: ember, night, ocean, forest, sakura, mono"),
+            ("/mascot <тема|auto>", "лисеня від іншої теми"),
+            ("/wallpaper <тема|файл|auto>", "обої: від теми або свій файл"),
             ("/status", "процесор, памʼять, диск, батарея"),
             ("/drivers", "перевірити й встановити драйвери"),
             ("/wifi", "підключитися до Wi-Fi"),
@@ -111,6 +114,9 @@ T = {
             ("/little", "light mode for older computers"),
             ("/full", "full mode with animations"),
             ("/widgets", "configure desktop widgets"),
+            ("/theme <name>", "theme: ember, night, ocean, forest, sakura, mono"),
+            ("/mascot <theme|auto>", "fox mascot from another theme"),
+            ("/wallpaper <theme|file|auto>", "wallpaper: from a theme or your own file"),
             ("/status", "CPU, memory, disk, battery"),
             ("/drivers", "check and install drivers"),
             ("/wifi", "connect to Wi-Fi"),
@@ -153,6 +159,9 @@ T = {
             ("/little", "лёгкий режим для слабых компьютеров"),
             ("/full", "полный режим с анимациями"),
             ("/widgets", "настроить виджеты рабочего стола"),
+            ("/theme <тема>", "тема: ember, night, ocean, forest, sakura, mono"),
+            ("/mascot <тема|auto>", "лисёнок от другой темы"),
+            ("/wallpaper <тема|файл|auto>", "обои: от темы или свой файл"),
             ("/status", "процессор, память, диск, батарея"),
             ("/drivers", "проверить и установить драйверы"),
             ("/wifi", "подключиться к Wi-Fi"),
@@ -250,7 +259,7 @@ def banner():
 def cmd_help(_):
     say(f"\n  {B}{t('help_title')}{X}", O)
     for c, d in T[lang()]["help"]:
-        print(f"  {A}{c:<24}{X} {C}{d}{X}")
+        print(f"  {A}{c:<30}{X} {C}{d}{X}")
     print()
 
 
@@ -474,9 +483,14 @@ COMMANDS = {
     "status": cmd_status,
     "lang": cmd_lang,
     "widgets": cmd_widgets,
+    "theme": lambda a: run(["ember-theme", "set", a[0]] if a else ["ember-theme", "list"]),
+    "themes": lambda a: run(["ember-theme", "list"]),
+    "mascot": lambda a: run(["ember-theme", "mascot", a[0]] if a else ["ember-theme", "status"]),
+    "maskot": lambda a: run(["ember-theme", "mascot", a[0]] if a else ["ember-theme", "status"]),
+    "wallpaper": lambda a: run(["ember-theme", "wallpaper"] + a if a else ["ember-theme", "status"]),
     "drivers": cmd_simple("sudo ember-drivers"),
     "wifi": cmd_simple("nmtui"),
-    "update": cmd_simple("sudo pacman -Syu"),
+    "update": cmd_simple("sudo pacman -Syu && ember-selfupdate"),
     "files": lambda _: detach(["thunar"]),
     "clear": lambda _: banner(),
     "exit": lambda _: cmd_desktop([]),

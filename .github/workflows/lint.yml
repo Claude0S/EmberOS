@@ -52,6 +52,12 @@ jobs:
         run: |
           useradd -m linter
           cp -r profile/airootfs/etc/skel/. /home/linter/
+          # every theme must render and keep Hyprland config valid
+          for t in ember night ocean forest sakura mono; do
+            EMBER_ROOT="$PWD/profile/airootfs" HOME=/home/linter python profile/airootfs/usr/local/bin/ember-theme set "$t"
+            grep -q "{{" /home/linter/.config/hypr/hyprlock.conf /home/linter/.config/fuzzel/fuzzel.ini && { echo "::error::unrendered template ($t)"; exit 1; }
+          done
+          EMBER_ROOT="$PWD/profile/airootfs" HOME=/home/linter python profile/airootfs/usr/local/bin/ember-theme set night
           cp profile/airootfs/usr/share/ember/little/mode.lua /tmp/little.lua
           chown -R linter: /home/linter
           cat > /tmp/verify.sh <<'EOS'

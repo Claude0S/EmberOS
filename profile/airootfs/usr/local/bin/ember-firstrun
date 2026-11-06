@@ -7,6 +7,8 @@ for f in .config/hypr/mode.conf .config/hypr/user.conf .config/ember/widgets.jso
     [ -e "$HOME/$f" ] || { mkdir -p "$(dirname "$HOME/$f")"; cp "/etc/skel/$f" "$HOME/$f" 2>/dev/null; }
 done
 mkdir -p "$HOME/Pictures"
+# Тема: перегенерувати файли кольорів (після оновлень системи шаблони могли змінитись)
+ember-theme apply --quiet 2>/dev/null
 
 # Живая сессия с флешки: сразу показать окно приветствия (Wi-Fi + установка)
 if grep -q archisobasedir /proc/cmdline 2>/dev/null; then

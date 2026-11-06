@@ -7,6 +7,13 @@ PanelWindow {
     id: w
 
     property var conf: ({})
+    property var th: ({})
+    readonly property color cAccent:  th.accent  || "#e8875a"
+    readonly property color cAccent2: th.accent2 || "#f3a46c"
+    readonly property color cAccent3: th.accent3 || "#f2c37a"
+    readonly property color cFg:      th.fg      || "#fbeee0"
+    readonly property color cBg:      th.bg      || "#1a1320"
+    readonly property string foxAvatar: th.foxAvatar || "/usr/share/ember/icons/fox-avatar.png"
     property real cardWidth: 300
     property real cardHeight: 160
     default property alias content: inner.data
@@ -45,9 +52,9 @@ PanelWindow {
         transformOrigin: Item.TopLeft
         scale: w.s
         radius: 22
-        color: Qt.rgba(0.102, 0.075, 0.125, conf.opacity !== undefined ? conf.opacity : 0.7)
+        color: Qt.rgba(w.cBg.r, w.cBg.g, w.cBg.b, conf.opacity !== undefined ? conf.opacity : 0.7)
         border.width: 1
-        border.color: Qt.rgba(0.94, 0.63, 0.44, 0.30)
+        border.color: Qt.rgba(w.cAccent2.r, w.cAccent2.g, w.cAccent2.b, 0.30)
 
         Item {
             id: inner

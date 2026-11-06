@@ -10,6 +10,7 @@ ShellRoot {
     id: root
 
     property var cfg: defaults()
+    property var th: ({})
 
     function defaults() {
         return {
@@ -48,8 +49,16 @@ ShellRoot {
         onLoadFailed: cfgFile.setText(JSON.stringify(root.defaults(), null, 2) + "\n")
     }
 
-    Clock      { conf: root.cfg.clock;   onMoved: (x, y) => root.setPos("clock", x, y) }
-    Music      { conf: root.cfg.music;   onMoved: (x, y) => root.setPos("music", x, y) }
-    SystemInfo { conf: root.cfg.system;  onMoved: (x, y) => root.setPos("system", x, y) }
-    Weather    { conf: root.cfg.weather; onMoved: (x, y) => root.setPos("weather", x, y) }
+    FileView {
+        id: thFile
+        path: Quickshell.env("HOME") + "/.config/ember/theme.json"
+        watchChanges: true
+        onFileChanged: reload()
+        onLoaded: { try { root.th = JSON.parse(text()) } catch (e) { root.th = ({}) } }
+    }
+
+    Clock      { conf: root.cfg.clock;   th: root.th; onMoved: (x, y) => root.setPos("clock", x, y) }
+    Music      { conf: root.cfg.music;   th: root.th; onMoved: (x, y) => root.setPos("music", x, y) }
+    SystemInfo { conf: root.cfg.system;  th: root.th; onMoved: (x, y) => root.setPos("system", x, y) }
+    Weather    { conf: root.cfg.weather; th: root.th; onMoved: (x, y) => root.setPos("weather", x, y) }
 }

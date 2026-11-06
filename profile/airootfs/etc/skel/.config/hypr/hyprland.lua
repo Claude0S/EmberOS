@@ -48,10 +48,6 @@ hl.config({
         gaps_in = 6,
         gaps_out = 14,
         border_size = 2,
-        col = {
-            active_border   = { colors = { "rgba(e8875aee)", "rgba(f2c37aee)" }, angle = 45 },
-            inactive_border = "rgba(52304966)",
-        },
         resize_on_border = true,
         layout = "dwindle",
     },
@@ -83,7 +79,6 @@ hl.config({
         disable_hyprland_logo = true,
         disable_splash_rendering = true,
         force_default_wallpaper = 0,
-        background_color = 0xff1a1320,
         focus_on_activate = true,
     },
 
@@ -194,6 +189,8 @@ bind("XF86AudioPause", "playerctl play-pause", { locked = true })
 bind("XF86AudioNext",  "playerctl next",       { locked = true })
 bind("XF86AudioPrev",  "playerctl previous",   { locked = true })
 
+-- Кольори теми (/theme) — файл генерує ember-theme
+pcall(require, "theme")
 -- Режим full / little (/little и /full меняют файл mode.lua)
 pcall(require, "mode")
 -- Личные настройки пользователя (не перезаписываются обновлениями)

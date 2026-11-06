@@ -23,6 +23,12 @@ rm -rf "$PROFILE" "$WORK"
 cp -r /usr/share/archiso/configs/releng "$PROFILE"
 cp -rT "$REPO/profile/airootfs" "$PROFILE/airootfs"
 
+# Theme files for new users (/etc/skel) — default theme "ember"
+pacman -S --noconfirm --needed python >/dev/null
+EMBER_ROOT="$PROFILE/airootfs" HOME="$PROFILE/airootfs/etc/skel" \
+  python3 "$PROFILE/airootfs/usr/local/bin/ember-theme" apply --quiet
+ls "$PROFILE/airootfs/etc/skel/.config/hypr/theme.lua" "$PROFILE/airootfs/etc/skel/.config/waybar/colors.css"
+
 # Packages: releng list + ours, without duplicates
 {
   cat "$PROFILE/packages.x86_64"
