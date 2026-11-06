@@ -1,0 +1,26 @@
+name: Explore (dev helper)
+
+on:
+  workflow_dispatch:
+    inputs:
+      packages:
+        description: "Packages to install"
+        required: false
+        default: ""
+      script:
+        description: "Bash script to run"
+        required: true
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    steps:
+      - name: Run
+        env:
+          PKGS: ${{ inputs.packages }}
+          SCRIPT: ${{ inputs.script }}
+        run: |
+          pacman -Syu --noconfirm --needed $PKGS >/dev/null 2>&1 || pacman -Syu --noconfirm --needed $PKGS
+          echo "$SCRIPT" > /tmp/s.sh
+          bash /tmp/s.sh
