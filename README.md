@@ -8,7 +8,7 @@
   A warm, good-looking and lightweight Arch-based system.
 </p>
 
-<p align="center"><b>English</b> · <a href="README.uk.md">Українська</a></p>
+<p align="center"><b>English</b> · <a href="README.uk.md">Українська</a> · <a href="README.ru.md">Русский</a></p>
 
 <p align="center">
   <img src="assets/wallpaper.png" width="720" alt="Ember OS wallpaper">

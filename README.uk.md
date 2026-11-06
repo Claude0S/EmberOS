@@ -13,7 +13,7 @@
   <img src="assets/wallpaper.png" width="720" alt="Ember OS wallpaper">
 </p>
 
-<p align="center"><a href="README.md">English</a> · <b>Українська</b></p>
+<p align="center"><a href="README.md">English</a> · <b>Українська</b> · <a href="README.ru.md">Русский</a></p>
 
 ## Завантажити
 
