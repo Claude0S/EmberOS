@@ -74,3 +74,10 @@ jq
 curl
 socat
 firefox
+
+# --- VMs: proper resolution in VirtualBox ---
+virtualbox-guest-utils
+
+# --- Part 4: apps ---
+fuse2
+python

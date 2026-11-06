@@ -1,0 +1,10 @@
+[Default Applications]
+application/x-ms-dos-executable=ember-run-exe.desktop
+application/x-msdownload=ember-run-exe.desktop
+application/x-msdos-program=ember-run-exe.desktop
+application/x-msi=ember-run-exe.desktop
+application/x-bat=ember-run-exe.desktop
+text/html=firefox.desktop
+x-scheme-handler/http=firefox.desktop
+x-scheme-handler/https=firefox.desktop
+inode/directory=thunar.desktop

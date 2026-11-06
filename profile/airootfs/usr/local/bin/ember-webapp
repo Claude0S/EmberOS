@@ -1,0 +1,49 @@
+#!/bin/bash
+# Веб-приложения Ember OS: сайт в отдельном окне без вкладок и адресной строки
+# (отдельный профиль Firefox со скрытыми панелями).
+#   ember-webapp install claude   — добавить ярлык в меню и док
+#   ember-webapp run claude       — открыть окно
+set -euo pipefail
+
+declare -A URL=( [claude]="https://claude.ai" )
+declare -A TITLE=( [claude]="Claude" )
+declare -A ICON=( [claude]="internet-chat" )
+
+action="${1:-}"; app="${2:-}"
+[ -n "$app" ] && [ -n "${URL[$app]:-}" ] || { echo "usage: ember-webapp install|run claude"; exit 1; }
+
+profile="$HOME/.local/share/ember/webapps/$app"
+
+make_profile() {
+    mkdir -p "$profile/chrome"
+    cat > "$profile/user.js" <<'EOF'
+user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
+user_pref("browser.shell.checkDefaultBrowser", false);
+user_pref("browser.startup.homepage_override.mstone", "ignore");
+user_pref("datareporting.policy.dataSubmissionPolicyBypassNotification", true);
+user_pref("browser.tabs.inTitlebar", 0);
+user_pref("browser.aboutwelcome.enabled", false);
+EOF
+    cat > "$profile/chrome/userChrome.css" <<'EOF'
+/* Ember OS web app: no tabs, no toolbars */
+#TabsToolbar, #nav-bar, #PersonalToolbar, #sidebar-box, #titlebar { visibility: collapse !important; }
+EOF
+}
+
+case "$action" in
+    run)
+        [ -f "$profile/user.js" ] || make_profile
+        exec firefox --new-instance --no-remote --profile "$profile" \
+             --name "ember-$app" --class "ember-$app" "${URL[$app]}"
+        ;;
+    install)
+        make_profile
+        pinned="$HOME/.cache/nwg-dock-pinned"
+        mkdir -p "$(dirname "$pinned")"
+        if ! grep -qx "ember-$app" "$pinned" 2>/dev/null; then
+            { echo "ember-$app"; cat "$pinned" 2>/dev/null; } > "$pinned.tmp" && mv "$pinned.tmp" "$pinned"
+        fi
+        echo "${TITLE[$app]}: ярлык в меню и доке готов."
+        ;;
+    *) echo "usage: ember-webapp install|run claude"; exit 1 ;;
+esac

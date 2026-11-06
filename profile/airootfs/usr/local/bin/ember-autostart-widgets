@@ -1,0 +1,5 @@
+#!/bin/bash
+# Виджеты стартуют только в полном режиме
+mode=$(cat "$HOME/.config/ember/mode" 2>/dev/null || echo full)
+[ "$mode" = little ] && exit 0
+exec quickshell

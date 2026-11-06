@@ -1,0 +1,28 @@
+#!/bin/bash
+# Запуск программ Windows (.exe / .msi / .bat) двойным кликом.
+# Использует Wine (с префиксом ~/.wine). Если Wine ещё не установлен —
+# ставит его, показывая окно с прогрессом.
+set -u
+file="${1:-}"
+[ -n "$file" ] || { echo "usage: ember-run-exe file.exe"; exit 1; }
+
+note() { command -v notify-send >/dev/null && notify-send -i /usr/share/ember/icons/fox-avatar.png "Ember OS" "$1"; }
+
+if ! command -v wine >/dev/null 2>&1; then
+    note "Устанавливаю поддержку программ Windows (один раз)…"
+    if [ -t 1 ]; then
+        sudo pacman -S --needed --noconfirm wine wine-mono wine-gecko winetricks || exit 1
+    else
+        kitty --class ember-setup --title "Ember OS — Wine" -e \
+            bash -c 'sudo pacman -S --needed --noconfirm wine wine-mono wine-gecko winetricks; echo; read -rp "Готово. Enter — закрыть"' || exit 1
+    fi
+fi
+
+export WINEPREFIX="${WINEPREFIX:-$HOME/.wine}"
+export WINEDEBUG="${WINEDEBUG:--all}"
+cd "$(dirname "$file")" || true
+case "${file,,}" in
+    *.msi) exec wine msiexec /i "$file" ;;
+    *.bat|*.cmd) exec wine cmd /c "$file" ;;
+    *) exec wine "$file" ;;
+esac

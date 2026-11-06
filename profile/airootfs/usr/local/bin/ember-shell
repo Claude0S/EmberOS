@@ -1,0 +1,507 @@
+#!/usr/bin/env python3
+"""
+ember-shell — командная строка Ember OS.
+
+Win+Enter открывает её на весь экран, /desktop возвращает рабочий стол.
+Команды начинаются со слеша (/help — список). Всё остальное выполняется
+как обычная команда терминала (bash).
+"""
+import json
+import os
+import re
+import readline  # noqa: F401  (история и стрелки)
+import shlex
+import shutil
+import subprocess
+import sys
+import time
+
+HOME = os.path.expanduser("~")
+CFG_DIR = os.path.join(HOME, ".config", "ember")
+LANG_FILE = os.path.join(CFG_DIR, "lang")
+WIDGETS_FILE = os.path.join(CFG_DIR, "widgets.json")
+HIST_FILE = os.path.join(CFG_DIR, "shell_history")
+CATALOG = "/usr/share/ember/catalog.json"
+LITTLE_MODE = "/usr/share/ember/little/mode.lua"
+HYPR_MODE = os.path.join(HOME, ".config", "hypr", "mode.lua")
+
+# ─── Цвета ───
+O = "\033[38;2;232;135;90m"    # оранжевый
+A = "\033[38;2;243;164;108m"   # янтарный
+C = "\033[38;2;251;238;224m"   # кремовый
+G = "\033[38;2;155;196;138m"   # зелёный
+R = "\033[38;2;255;122;107m"   # красный
+D = "\033[38;2;140;120;135m"   # тусклый
+B = "\033[1m"
+X = "\033[0m"
+
+# ─── Тексты на двух языках ───
+T = {
+    "uk": {
+        "hello": "Ласкаво просимо до Ember OS",
+        "hint": "/help — усі команди · /desktop — робочий стіл · Win+Enter — сховати",
+        "unknown": "Невідома команда: {}. Напиши /help",
+        "search_usage": "Використання: /search що шукати",
+        "searching": "Шукаю у Firefox: {}",
+        "desktop": "Повертаю робочий стіл…",
+        "dl_usage": "Використання: /download назва (наприклад /download steam)",
+        "dl_start": "Встановлюю {}…",
+        "dl_ok": "Готово! {} встановлено.",
+        "dl_fail": "Не вдалося встановити {}.",
+        "dl_notfound": "Не знайшов «{}». Схожі програми:",
+        "dl_none": "Нічого схожого не знайшов. Спробуй іншу назву.",
+        "dl_pick": "Номер програми (Enter — скасувати): ",
+        "little": "Легкий режим увімкнено: без розмиття, тіней і важких анімацій.",
+        "full": "Повний режим увімкнено: вся краса повернулась.",
+        "lang_set": "Мову змінено: українська.",
+        "lang_usage": "Використання: /lang uk | en",
+        "w_usage": "Використання: /widgets [on|off|opacity|scale|reset] [віджет] [значення]",
+        "w_saved": "Віджети оновлено.",
+        "w_list": "Віджети (перетягуй мишкою на робочому столі):",
+        "bye": "Бувай!",
+        "status_mode": "Режим",
+        "help_title": "Команди Ember OS",
+        "help": [
+            ("/search <запит>", "відкрити Firefox з пошуком"),
+            ("/desktop", "повернутися на робочий стіл"),
+            ("/download <програма>", "встановити програму (steam, hydra, discord, telegram…)"),
+            ("/apps", "список популярних програм для /download"),
+            ("/little", "легкий режим для слабких компʼютерів"),
+            ("/full", "повний режим з анімаціями"),
+            ("/widgets", "налаштувати віджети робочого столу"),
+            ("/status", "процесор, памʼять, диск, батарея"),
+            ("/drivers", "перевірити й встановити драйвери"),
+            ("/wifi", "підключитися до Wi-Fi"),
+            ("/update", "оновити систему"),
+            ("/files", "провідник"),
+            ("/lang uk|en", "мова"),
+            ("/clear", "очистити екран"),
+            ("будь-що інше", "виконується як звичайна команда терміналу"),
+        ],
+    },
+    "en": {
+        "hello": "Welcome to Ember OS",
+        "hint": "/help — all commands · /desktop — desktop · Win+Enter — hide",
+        "unknown": "Unknown command: {}. Type /help",
+        "search_usage": "Usage: /search what to find",
+        "searching": "Searching in Firefox: {}",
+        "desktop": "Back to the desktop…",
+        "dl_usage": "Usage: /download name (e.g. /download steam)",
+        "dl_start": "Installing {}…",
+        "dl_ok": "Done! {} is installed.",
+        "dl_fail": "Could not install {}.",
+        "dl_notfound": "Couldn't find “{}”. Similar apps:",
+        "dl_none": "Nothing similar found. Try another name.",
+        "dl_pick": "App number (Enter — cancel): ",
+        "little": "Little mode on: no blur, no shadows, light animations.",
+        "full": "Full mode on: all the eye candy is back.",
+        "lang_set": "Language changed: English.",
+        "lang_usage": "Usage: /lang uk | en",
+        "w_usage": "Usage: /widgets [on|off|opacity|scale|reset] [widget] [value]",
+        "w_saved": "Widgets updated.",
+        "w_list": "Widgets (drag them with the mouse on the desktop):",
+        "bye": "Bye!",
+        "status_mode": "Mode",
+        "help_title": "Ember OS commands",
+        "help": [
+            ("/search <query>", "open Firefox with a search"),
+            ("/desktop", "back to the desktop"),
+            ("/download <app>", "install an app (steam, hydra, discord, telegram…)"),
+            ("/apps", "popular apps for /download"),
+            ("/little", "light mode for older computers"),
+            ("/full", "full mode with animations"),
+            ("/widgets", "configure desktop widgets"),
+            ("/status", "CPU, memory, disk, battery"),
+            ("/drivers", "check and install drivers"),
+            ("/wifi", "connect to Wi-Fi"),
+            ("/update", "update the system"),
+            ("/files", "file manager"),
+            ("/lang uk|en", "language"),
+            ("/clear", "clear the screen"),
+            ("anything else", "runs as a normal terminal command"),
+        ],
+    },
+}
+
+
+def lang():
+    try:
+        v = open(LANG_FILE).read().strip()
+        if v in T:
+            return v
+    except OSError:
+        pass
+    env = os.environ.get("LANG", "")
+    return "en" if env.startswith("en") else "uk"
+
+
+def t(key, *args):
+    s = T[lang()][key]
+    return s.format(*args) if args else s
+
+
+def say(msg, color=C):
+    print(f"{color}{msg}{X}")
+
+
+def run(cmd, **kw):
+    """Run a command (list or str), return exit code."""
+    try:
+        return subprocess.call(cmd, shell=isinstance(cmd, str), **kw)
+    except FileNotFoundError:
+        return 127
+
+
+def detach(cmd):
+    subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                     start_new_session=True)
+
+
+def hypr(lua):
+    run(["hyprctl", "dispatch", lua], stdout=subprocess.DEVNULL)
+
+
+def notify(title, body=""):
+    if shutil.which("notify-send"):
+        detach(["notify-send", "-i", "/usr/share/ember/icons/fox-avatar.png", title, body])
+
+
+FOX = [
+    "  {o}██{x}                    {o}██{x}",
+    "  {o}████{x}                {o}████{x}",
+    "  {o}██{c}██{o}██{x}            {o}██{c}██{o}██{x}",
+    "  {o}██{c}██{o}████████████████{c}██{o}██{x}",
+    "{o}████████████████████████████{x}",
+    "{o}██████{d}████{o}████████{d}████{o}██████{x}",
+    "{o}██████{d}████{o}████████{d}████{o}██████{x}",
+    "{c}████{o}████████████████████{c}████{x}",
+    "  {c}████████{o}████████{c}████████{x}",
+    "    {c}████████{d}████{c}████████{x}",
+    "        {c}████████████{x}",
+]
+
+
+def banner():
+    os.system("clear")
+    d = "\033[38;2;42;28;38m"
+    cols = shutil.get_terminal_size((100, 30)).columns
+    pad = " " * max(0, (cols - 28) // 2)
+    print()
+    for line in FOX:
+        print(pad + line.format(o=O, c=C, d=d, x=X))
+    print()
+    title = f"{B}{O}Ember OS{X}"
+    print(" " * max(0, (cols - 8) // 2) + title)
+    hint = t("hello")
+    print(" " * max(0, (cols - len(hint)) // 2) + f"{A}{hint}{X}")
+    hint2 = t("hint")
+    print(" " * max(0, (cols - len(hint2)) // 2) + f"{D}{hint2}{X}")
+    print()
+
+
+# ─── Команды ───
+
+def cmd_help(_):
+    say(f"\n  {B}{t('help_title')}{X}", O)
+    for c, d in T[lang()]["help"]:
+        print(f"  {A}{c:<24}{X} {C}{d}{X}")
+    print()
+
+
+def cmd_search(args):
+    q = " ".join(args).strip()
+    if not q:
+        return say(t("search_usage"), A)
+    say(t("searching", q), A)
+    detach(["firefox", "--search", q])
+    time.sleep(0.4)
+    hypr('hl.dsp.workspace.toggle_special("shell")')
+
+
+def cmd_desktop(_):
+    say(t("desktop"), D)
+    hypr('hl.dsp.workspace.toggle_special("shell")')
+
+
+def load_catalog():
+    try:
+        with open(CATALOG) as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return {}
+
+
+def install_entry(name, e):
+    kind = e.get("type")
+    label = e.get("name", name)
+    say(t("dl_start", label), A)
+    if kind == "pacman":
+        rc = run(["sudo", "pacman", "-S", "--needed", "--noconfirm"] + e["pkgs"])
+    elif kind == "flatpak":
+        if not shutil.which("flatpak"):
+            run(["sudo", "pacman", "-S", "--needed", "--noconfirm", "flatpak"])
+        run(["flatpak", "remote-add", "--user", "--if-not-exists", "flathub",
+             "https://dl.flathub.org/repo/flathub.flatpakrepo"])
+        rc = run(["flatpak", "install", "--user", "-y", "flathub", e["id"]])
+    elif kind == "script":
+        rc = run(e["script"])
+    else:
+        rc = 1
+    if rc == 0:
+        say(t("dl_ok", label), G)
+        notify("Ember OS", t("dl_ok", label))
+    else:
+        say(t("dl_fail", label), R)
+    return rc
+
+
+def cmd_download(args):
+    if not args:
+        return say(t("dl_usage"), A)
+    query = " ".join(args).lower().strip()
+    cat = load_catalog()
+    # 1) каталог Ember (точное имя или синоним)
+    for key, e in cat.items():
+        names = [key] + e.get("aliases", [])
+        if query in names:
+            return install_entry(key, e)
+    # 2) локальный .exe / .msi
+    if os.path.isfile(os.path.expanduser(query)) and query.endswith((".exe", ".msi")):
+        return run(["ember-run-exe", os.path.expanduser(query)])
+    # 3) официальные репозитории
+    if run(["pacman", "-Si", query], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) == 0:
+        return install_entry(query, {"type": "pacman", "pkgs": [query], "name": query})
+    # 4) похожие варианты
+    say(t("dl_notfound", query), A)
+    options = []
+    for key, e in cat.items():
+        hay = " ".join([key, e.get("name", "")] + e.get("aliases", [])).lower()
+        if query in hay:
+            options.append((key, e, e.get("name", key)))
+    try:
+        out = subprocess.run(["pacman", "-Ssq", query], capture_output=True, text=True).stdout
+        for p in out.split()[:8]:
+            options.append((p, {"type": "pacman", "pkgs": [p], "name": p}, p + "  (pacman)"))
+    except FileNotFoundError:
+        pass
+    if not options:
+        return say(t("dl_none"), D)
+    for i, (_, _, label) in enumerate(options[:12], 1):
+        print(f"  {A}{i:>2}{X}  {C}{label}{X}")
+    try:
+        pick = input(f"{O}{t('dl_pick')}{X}").strip()
+    except EOFError:
+        return
+    if pick.isdigit() and 1 <= int(pick) <= len(options[:12]):
+        key, e, _ = options[int(pick) - 1]
+        install_entry(key, e)
+
+
+def cmd_apps(_):
+    cat = load_catalog()
+    groups = {}
+    for key, e in cat.items():
+        groups.setdefault(e.get("group", "Other"), []).append(key)
+    for g in sorted(groups):
+        print(f"  {O}{g}{X}: {C}{', '.join(sorted(groups[g]))}{X}")
+
+
+def set_mode(little):
+    os.makedirs(os.path.dirname(HYPR_MODE), exist_ok=True)
+    if little:
+        shutil.copy(LITTLE_MODE, HYPR_MODE)
+    else:
+        with open(HYPR_MODE, "w") as f:
+            f.write("-- Ember OS mode: full\n")
+    with open(os.path.join(CFG_DIR, "mode"), "w") as f:
+        f.write("little\n" if little else "full\n")
+    run(["hyprctl", "reload"], stdout=subprocess.DEVNULL)
+    if shutil.which("ember-mode-services"):
+        run(["ember-mode-services", "little" if little else "full"])
+    say(t("little") if little else t("full"), G)
+
+
+def cmd_little(_):
+    set_mode(True)
+
+
+def cmd_full(_):
+    set_mode(False)
+
+
+def read_mode():
+    try:
+        return open(os.path.join(CFG_DIR, "mode")).read().strip()
+    except OSError:
+        return "full"
+
+
+def bar(frac, width=24):
+    frac = max(0.0, min(1.0, frac))
+    n = int(round(frac * width))
+    col = R if frac > 0.85 else O
+    return f"{col}{'█' * n}{D}{'░' * (width - n)}{X}"
+
+
+def cmd_status(_):
+    def cpu_sample():
+        v = list(map(int, open("/proc/stat").readline().split()[1:]))
+        return v[3] + v[4], sum(v)
+    i1, t1 = cpu_sample()
+    time.sleep(0.4)
+    i2, t2 = cpu_sample()
+    cpu = 1 - (i2 - i1) / max(1, t2 - t1)
+    mem = {}
+    for line in open("/proc/meminfo"):
+        k, v = line.split(":")
+        mem[k] = int(v.split()[0])
+    m = 1 - mem["MemAvailable"] / mem["MemTotal"]
+    du = shutil.disk_usage("/")
+    print()
+    print(f"  {A}CPU   {X}{bar(cpu)} {C}{cpu*100:4.0f}%{X}")
+    print(f"  {A}RAM   {X}{bar(m)} {C}{m*100:4.0f}%  ({(mem['MemTotal']-mem['MemAvailable'])/1048576:.1f} / {mem['MemTotal']/1048576:.1f} GiB){X}")
+    print(f"  {A}Disk  {X}{bar(du.used/du.total)} {C}{du.used/du.total*100:4.0f}%  ({du.free/2**30:.0f} GiB free){X}")
+    for b in sorted(os.listdir("/sys/class/power_supply")) if os.path.isdir("/sys/class/power_supply") else []:
+        p = f"/sys/class/power_supply/{b}/capacity"
+        if b.startswith("BAT") and os.path.exists(p):
+            cap = int(open(p).read())
+            st = open(f"/sys/class/power_supply/{b}/status").read().strip()
+            print(f"  {A}{b:<5} {X}{bar(cap/100)} {C}{cap:4d}%  {st}{X}")
+    print(f"  {A}{t('status_mode')}  {X}{C}{read_mode()}{X}\n")
+
+
+def cmd_lang(args):
+    if not args or args[0] not in T:
+        return say(t("lang_usage"), A)
+    os.makedirs(CFG_DIR, exist_ok=True)
+    with open(LANG_FILE, "w") as f:
+        f.write(args[0] + "\n")
+    if shutil.which("ember-lang"):
+        run(["ember-lang", args[0]])
+    say(t("lang_set"), G)
+
+
+def cmd_widgets(args):
+    try:
+        cfg = json.load(open(WIDGETS_FILE))
+    except (OSError, ValueError):
+        cfg = json.load(open("/etc/skel/.config/ember/widgets.json"))
+    if not args:
+        say(t("w_list"), A)
+        for k, v in cfg.items():
+            state = f"{G}on {X}" if v.get("enabled", True) else f"{R}off{X}"
+            print(f"  {state} {C}{k:<8}{X} {D}opacity={v.get('opacity')} scale={v.get('scale')}{X}")
+        return say(t("w_usage"), D)
+    action = args[0]
+    names = list(cfg) if len(args) < 2 or args[1] == "all" else [args[1]]
+    if action == "reset":
+        cfg = json.load(open("/etc/skel/.config/ember/widgets.json"))
+    else:
+        for n in names:
+            if n not in cfg:
+                return say(t("unknown", n), R)
+            if action in ("on", "off"):
+                cfg[n]["enabled"] = action == "on"
+            elif action in ("opacity", "scale") and len(args) >= 3:
+                cfg[n][action] = float(args[2])
+            else:
+                return say(t("w_usage"), A)
+    os.makedirs(CFG_DIR, exist_ok=True)
+    with open(WIDGETS_FILE, "w") as f:
+        json.dump(cfg, f, indent=2, ensure_ascii=False)
+        f.write("\n")
+    say(t("w_saved"), G)
+
+
+def cmd_simple(cmd):
+    return lambda _: run(cmd)
+
+
+COMMANDS = {
+    "help": cmd_help, "?": cmd_help,
+    "search": cmd_search, "s": cmd_search,
+    "desktop": cmd_desktop,
+    "download": cmd_download, "install": cmd_download,
+    "apps": cmd_apps,
+    "little": cmd_little, "lite": cmd_little,
+    "full": cmd_full,
+    "status": cmd_status,
+    "lang": cmd_lang,
+    "widgets": cmd_widgets,
+    "drivers": cmd_simple("sudo ember-drivers"),
+    "wifi": cmd_simple("nmtui"),
+    "update": cmd_simple("sudo pacman -Syu"),
+    "files": lambda _: detach(["thunar"]),
+    "clear": lambda _: banner(),
+    "exit": lambda _: cmd_desktop([]),
+}
+
+
+def handle(line):
+    line = line.strip()
+    if not line:
+        return
+    if line.startswith("/"):
+        try:
+            parts = shlex.split(line[1:])
+        except ValueError:
+            parts = line[1:].split()
+        if not parts:
+            return cmd_help([])
+        name, args = parts[0].lower(), parts[1:]
+        fn = COMMANDS.get(name)
+        if fn is None:
+            return say(t("unknown", "/" + name), R)
+        try:
+            fn(args)
+        except KeyboardInterrupt:
+            print()
+        return
+    if line in ("exit", "logout"):
+        return cmd_desktop([])
+    if re.match(r"^cd(\s|$)", line):
+        target = os.path.expanduser(line[2:].strip() or "~")
+        try:
+            os.chdir(target)
+        except OSError as e:
+            say(str(e), R)
+        return
+    run(["bash", "-c", line])
+
+
+def prompt():
+    cwd = os.getcwd().replace(HOME, "~", 1)
+    # \001 \002 — чтобы readline правильно считал ширину
+    return f"\001{D}\002{cwd} \001{O}{B}\002❯\001{X}\002 "
+
+
+def main():
+    os.makedirs(CFG_DIR, exist_ok=True)
+    try:
+        readline.read_history_file(HIST_FILE)
+    except OSError:
+        pass
+    readline.set_history_length(1000)
+    if len(sys.argv) > 1:
+        handle(" ".join(sys.argv[1:]))
+        return
+    banner()
+    while True:
+        try:
+            line = input(prompt())
+        except EOFError:
+            print()
+            cmd_desktop([])
+            continue
+        except KeyboardInterrupt:
+            print()
+            continue
+        handle(line)
+        try:
+            readline.write_history_file(HIST_FILE)
+        except OSError:
+            pass
+
+
+if __name__ == "__main__":
+    main()

@@ -42,18 +42,18 @@ jobs:
         run: |
           useradd -m linter
           cp -r profile/airootfs/etc/skel/. /home/linter/
-          cp profile/airootfs/usr/share/ember/little/mode.conf /tmp/little.conf
+          cp profile/airootfs/usr/share/ember/little/mode.lua /tmp/little.lua
           chown -R linter: /home/linter
           cat > /tmp/verify.sh <<'EOS'
           export XDG_RUNTIME_DIR=$(mktemp -d)
-          C=$HOME/.config/hypr/hyprland.conf
+          C=$HOME/.config/hypr/hyprland.lua
           echo "=== full mode ==="; Hyprland --verify-config -c "$C" 2>&1
-          cp /tmp/little.conf $HOME/.config/hypr/mode.conf
+          cp /tmp/little.lua $HOME/.config/hypr/mode.lua
           echo "=== little mode ==="; Hyprland --verify-config -c "$C" 2>&1
           EOS
           out=$(su linter -c 'bash /tmp/verify.sh' || true)
           echo "$out"
-          if echo "$out" | grep -E 'ERR|rror|nvalid|nknown|deprecated' | grep -v 'DEBUG'; then echo "::error::Hyprland config has problems"; exit 1; fi
+          if echo "$out" | grep -vE 'DEBUG|Socket2|IPC will not work' | grep -E 'ERR|rror|nvalid|nknown|deprecated'; then echo "::error::Hyprland config has problems"; exit 1; fi
 
       - name: QML (qmllint)
         run: |

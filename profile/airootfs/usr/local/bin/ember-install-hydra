@@ -1,0 +1,48 @@
+#!/bin/bash
+# Устанавливает Hydra Launcher: последняя версия AppImage с официальной
+# страницы релизов на GitHub. Ставится в /opt/hydra, ярлык — в меню.
+# Без источников загрузки: их пользователь добавляет сам в настройках Hydra.
+set -euo pipefail
+
+API="https://api.github.com/repos/hydralauncher/hydra/releases/latest"
+DEST=/opt/hydra
+SUDO=""
+[ "$(id -u)" -ne 0 ] && SUDO="sudo"
+
+echo "Hydra Launcher: ищу последнюю версию…"
+url=$(curl -fsSL "$API" | jq -r '.assets[] | select(.name | test("\\.AppImage$")) | .browser_download_url' | head -1)
+if [ -z "$url" ]; then
+    echo "Не нашёл AppImage в последнем релизе Hydra." >&2
+    exit 1
+fi
+echo "Скачиваю: $url"
+tmp=$(mktemp)
+curl -fL --progress-bar -o "$tmp" "$url"
+
+$SUDO install -d "$DEST"
+$SUDO install -m 755 "$tmp" "$DEST/hydra.AppImage"
+rm -f "$tmp"
+
+# Иконка: достаём из AppImage, если получится
+icon="applications-games"
+if (cd /tmp && "$DEST/hydra.AppImage" --appimage-extract '*.png' >/dev/null 2>&1); then
+    png=$(find /tmp/squashfs-root -maxdepth 1 -name '*.png' | head -1)
+    if [ -n "$png" ]; then
+        $SUDO install -m 644 "$png" "$DEST/hydra.png"
+        icon="$DEST/hydra.png"
+    fi
+    rm -rf /tmp/squashfs-root
+fi
+
+$SUDO tee /usr/share/applications/hydra-launcher.desktop >/dev/null <<EOF
+[Desktop Entry]
+Name=Hydra Launcher
+Comment=Game launcher
+Exec=$DEST/hydra.AppImage %U
+Icon=$icon
+Terminal=false
+Type=Application
+Categories=Game;
+StartupWMClass=Hydra
+EOF
+echo "Hydra Launcher установлен."

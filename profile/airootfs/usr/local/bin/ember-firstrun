@@ -14,3 +14,19 @@ if [ ! -e "$marker" ]; then
     notify-send -i /usr/share/ember/icons/fox-avatar.png "Добро пожаловать в Ember OS" \
         "Win+Enter — командная строка · Win+D — программы · Win+L — блокировка"
 fi
+
+# Сообщить, когда в фоне докачаются Steam / Wine / Hydra (установленная система)
+if [ -e /etc/systemd/system/multi-user.target.wants/ember-setup-apps.service ] && [ ! -e /var/lib/ember/apps-done ] \
+   && ! grep -q archisobasedir /proc/cmdline; then
+    (
+        notified=""
+        while sleep 15; do
+            st=$(cat /var/lib/ember/apps-status 2>/dev/null)
+            case "$st" in
+                installing) [ -z "$notified" ] && notify-send -i /usr/share/ember/icons/fox-avatar.png "Ember OS" "В фоне устанавливаю Steam, Wine и Hydra Launcher…" && notified=1 ;;
+                done) notify-send -i /usr/share/ember/icons/fox-avatar.png "Ember OS" "Готово: Steam, Wine и Hydra Launcher установлены 🎮"; break ;;
+                failed) notify-send -u critical "Ember OS" "Не удалось докачать программы. Попробуй /download steam и /download hydra"; break ;;
+            esac
+        done
+    ) &
+fi

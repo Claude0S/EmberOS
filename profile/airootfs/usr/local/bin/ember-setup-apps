@@ -1,0 +1,29 @@
+#!/bin/bash
+# Первый запуск установленной системы: в фоне докачивает тяжёлые программы,
+# которые не помещаются в ISO: Steam, Wine/Proton, Hydra Launcher.
+# Статус пишется в /var/lib/ember/apps-status (его показывает ember-firstrun).
+set -u
+STATE=/var/lib/ember
+mkdir -p "$STATE"
+status() { echo "$1" > "$STATE/apps-status"; }
+
+# Ждём интернет (до 10 минут)
+for _ in $(seq 120); do
+    curl -fsI --max-time 5 https://archlinux.org >/dev/null 2>&1 && break
+    status "waiting-network"
+    sleep 5
+done
+
+status "installing"
+ok=1
+pacman -Sy --noconfirm >/dev/null 2>&1
+pacman -S --needed --noconfirm steam gamemode lib32-gamemode mangohud \
+    wine wine-mono wine-gecko winetricks umu-launcher || ok=0
+ember-install-hydra || ok=0
+
+if [ "$ok" = 1 ]; then
+    status "done"
+    touch "$STATE/apps-done"
+else
+    status "failed"
+fi

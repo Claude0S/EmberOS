@@ -28,12 +28,21 @@ cp -rT "$REPO/profile/airootfs" "$PROFILE/airootfs"
   cat "$PROFILE/packages.x86_64"
   grep -vE '^[[:space:]]*(#|$)' "$REPO/profile/packages.x86_64"
 } | sort -u > "$PROFILE/packages.tmp"
+# ...minus what we don't need from releng (keeps the ISO under 2 GiB)
+if [[ -f "$REPO/profile/packages.remove" ]]; then
+  grep -vxFf <(grep -vE '^[[:space:]]*(#|$)' "$REPO/profile/packages.remove") \
+    "$PROFILE/packages.tmp" > "$PROFILE/packages.tmp2" || true
+  mv "$PROFILE/packages.tmp2" "$PROFILE/packages.tmp"
+fi
 mv "$PROFILE/packages.tmp" "$PROFILE/packages.x86_64"
 
 # Extra pacman repos / options (multilib for Steam & Wine)
 if [[ -f "$REPO/profile/pacman.extra.conf" ]]; then
   cat "$REPO/profile/pacman.extra.conf" >> "$PROFILE/pacman.conf"
 fi
+# The live system / installed system get the same pacman.conf (with multilib)
+mkdir -p "$PROFILE/airootfs/etc"
+cp "$PROFILE/pacman.conf" "$PROFILE/airootfs/etc/pacman.conf"
 
 # ISO identity
 sed -i \
@@ -41,7 +50,7 @@ sed -i \
   -e 's|^iso_label=.*|iso_label="EMBER_$(date --date="@${SOURCE_DATE_EPOCH:-$(date +%s)}" +%Y%m)"|' \
   -e 's|^iso_publisher=.*|iso_publisher="Ember OS <https://github.com/Claude0S/EmberOS>"|' \
   -e 's|^iso_application=.*|iso_application="Ember OS Live/Install"|' \
-  -e "s|^airootfs_image_tool_options=.*|airootfs_image_tool_options=('-comp' 'zstd' '-Xcompression-level' '15' '-b' '1M')|" \
+  -e "s|^airootfs_image_tool_options=.*|airootfs_image_tool_options=('-comp' 'xz' '-b' '1M')|" \
   "$PROFILE/profiledef.sh"
 
 # Executable permissions for our scripts (appended to the associative array)

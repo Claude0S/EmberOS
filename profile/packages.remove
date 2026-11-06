@@ -1,0 +1,29 @@
+# Packages from the archiso "releng" list that Ember OS does not need.
+# (Accessibility speech tools stay out of the live image to save space;
+#  they can be installed later with /download.)
+archinstall
+brltty
+clonezilla
+cloud-init
+espeakup
+hyperv
+irssi
+lftp
+livecd-sounds
+lynx
+mc
+modemmanager
+nmap
+openconnect
+openvpn
+partclone
+partimage
+ppp
+pptpclient
+qemu-guest-agent
+refind
+rp-pppoe
+tcpdump
+vpnc
+xl2tpd
+virtualbox-guest-utils-nox
