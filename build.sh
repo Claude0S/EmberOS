@@ -44,6 +44,34 @@ fi
 mkdir -p "$PROFILE/airootfs/etc"
 cp "$PROFILE/pacman.conf" "$PROFILE/airootfs/etc/pacman.conf"
 
+# --- AUR packages (Calamares) -> local repo used only while building ---
+if [[ -f "$REPO/profile/aur.txt" ]]; then
+  log "Building AUR packages"
+  pacman -S --noconfirm --needed base-devel git sudo >/dev/null
+  id builder >/dev/null 2>&1 || useradd -m builder
+  echo "builder ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/builder
+  AURREPO=/tmp/ember-aur
+  rm -rf "$AURREPO"; mkdir -p "$AURREPO"; chown builder: "$AURREPO"
+  while read -r pkg; do
+    [[ -z "$pkg" || "$pkg" == \#* ]] && continue
+    log "  makepkg $pkg"
+    sudo -u builder bash -c "set -e; cd /tmp; rm -rf aur-$pkg; git clone -q https://aur.archlinux.org/$pkg.git aur-$pkg; cd aur-$pkg; makepkg -s --noconfirm --needed --nocheck; cp ./*.pkg.tar.zst $AURREPO/"
+  done < "$REPO/profile/aur.txt"
+  repo-add -q "$AURREPO/ember-aur.db.tar.gz" "$AURREPO"/*.pkg.tar.zst
+  # Only the build-time pacman.conf knows this repo (not the live/installed system)
+  printf '\n[ember-aur]\nSigLevel = Optional TrustAll\nServer = file://%s\n' "$AURREPO" >> "$PROFILE/pacman.conf"
+fi
+
+# --- GRUB theme fonts (for the installed system's boot menu) ---
+pacman -S --noconfirm --needed grub ttf-dejavu >/dev/null
+GT="$PROFILE/airootfs/usr/share/grub/themes/ember"
+if [[ -d "$GT" ]]; then
+  grub-mkfont -s 16 -o "$GT/dejavu_16.pf2" /usr/share/fonts/TTF/DejaVuSans.ttf
+  grub-mkfont -s 22 -o "$GT/dejavu_22.pf2" /usr/share/fonts/TTF/DejaVuSans.ttf
+  grub-mkfont -s 22 -o "$GT/dejavu_bold_22.pf2" /usr/share/fonts/TTF/DejaVuSans-Bold.ttf
+  grub-mkfont -s 32 -o "$GT/dejavu_bold_32.pf2" /usr/share/fonts/TTF/DejaVuSans-Bold.ttf
+fi
+
 # ISO identity
 sed -i \
   -e 's|^iso_name=.*|iso_name="emberos"|' \

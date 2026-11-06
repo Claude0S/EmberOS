@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=Запустить программу Windows
+Name=Запустити програму Windows
 Name[en]=Run Windows program
 Exec=ember-run-exe %f
 Icon=wine

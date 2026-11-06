@@ -1,0 +1,145 @@
+#!/bin/bash
+# ember-drivers — определяет железо и ставит нужные драйверы.
+#
+#   ember-drivers            показать, что найдено, и спросить перед установкой
+#   ember-drivers --auto     поставить всё без вопросов (установщик, автозапуск)
+#   ember-drivers --list     только показать, что нужно
+#
+# Запускается автоматически при установке и при каждом запуске системы
+# (ember-drivers.service): если железо не менялось — ничего не делает.
+set -u
+. /usr/share/ember/i18n.sh
+
+AUTO=0; LIST=0; QUIET=0
+for a in "$@"; do
+    case "$a" in
+        --auto) AUTO=1 ;;
+        --list) LIST=1 ;;
+        --quiet) QUIET=1 ;;
+    esac
+done
+
+O=$'\033[38;2;232;135;90m'; G=$'\033[38;2;155;196;138m'; D=$'\033[38;2;140;120;135m'; X=$'\033[0m'
+say() { [ "$QUIET" = 1 ] || echo -e "$*"; }
+
+STATE=/var/lib/ember
+HASH_FILE=$STATE/hardware.hash
+
+declare -a PKGS=()
+declare -a FOUND=()
+declare -a SERVICES=()
+add() { PKGS+=("$@"); }
+found() { FOUND+=("$1"); }
+
+pci=$(lspci -nn 2>/dev/null)
+gpu=$(echo "$pci" | grep -iE 'VGA|3D controller|Display controller')
+
+# ─── Видеокарты ───
+if echo "$gpu" | grep -qi '\[8086:'; then
+    found "Intel graphics: $(echo "$gpu" | grep -i '\[8086:' | head -1 | sed 's/.*: //')"
+    add mesa lib32-mesa vulkan-intel lib32-vulkan-intel intel-media-driver libva-intel-driver
+    grep -q GenuineIntel /proc/cpuinfo && add thermald && SERVICES+=(thermald.service)
+fi
+if echo "$gpu" | grep -qi '\[1002:'; then
+    found "AMD graphics: $(echo "$gpu" | grep -i '\[1002:' | head -1 | sed 's/.*: //')"
+    add mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon
+fi
+if echo "$gpu" | grep -qi '\[10de:'; then
+    nv=$(echo "$gpu" | grep -i '\[10de:' | head -1)
+    # Turing и новее (RTX 20xx/GTX 16xx и выше): открытый драйвер NVIDIA
+    if echo "$nv" | grep -qE '\b(TU1|GA1|AD1|GB1|GB2)[0-9]{2}'; then
+        found "NVIDIA (Turing+): ${nv#*: }"
+        add nvidia-open nvidia-utils lib32-nvidia-utils nvidia-settings egl-wayland
+        NVIDIA_KMS=1
+    else
+        found "NVIDIA (older generation): ${nv#*: } — nouveau"
+        add mesa lib32-mesa vulkan-nouveau lib32-vulkan-nouveau
+    fi
+fi
+if [ "$(echo "$gpu" | grep -c .)" -ge 2 ]; then
+    found "$(msg "Дві відеокарти (ноутбук): перемикання через switcheroo" "Two GPUs (laptop): switching via switcheroo")"
+    add switcheroo-control
+    SERVICES+=(switcheroo-control.service)
+fi
+
+# ─── Wi-Fi / Bluetooth ───
+if echo "$pci" | grep -qiE '\[14e4:(4311|4312|4313|4315|4328|4329|432a|432b|432c|432d|4331|4353|4357|4358|4359|4365|43a0|43b1|43b2|4727)\]'; then
+    found "Broadcom Wi-Fi"
+    add broadcom-wl-dkms linux-headers
+fi
+if echo "$pci" | grep -qi 'network controller'; then
+    found "Wi-Fi: $(echo "$pci" | grep -i 'network controller' | head -1 | sed 's/.*: //')"
+    add linux-firmware
+fi
+if [ -d /sys/class/bluetooth ] && ls /sys/class/bluetooth/ 2>/dev/null | grep -q .; then
+    found "Bluetooth"
+    add bluez bluez-utils
+    SERVICES+=(bluetooth.service)
+fi
+
+# ─── Звук ───
+if echo "$pci" | grep -qiE 'audio device|multimedia audio'; then
+    found "$(msg "Звук" "Audio"): $(echo "$pci" | grep -iE 'audio device|multimedia audio' | head -1 | sed 's/.*: //')"
+    add sof-firmware alsa-ucm-conf alsa-firmware
+fi
+
+# ─── Ноутбук ───
+if ls /sys/class/power_supply/ 2>/dev/null | grep -q '^BAT'; then
+    found "$(msg "Ноутбук: батарея, енергозбереження" "Laptop: battery, power saving")"
+    add power-profiles-daemon brightnessctl
+    SERVICES+=(power-profiles-daemon.service)
+fi
+
+# ─── Виртуальные машины ───
+virt=$(systemd-detect-virt 2>/dev/null || echo none)
+case "$virt" in
+    oracle) found "VirtualBox"; add virtualbox-guest-utils; SERVICES+=(vboxservice.service) ;;
+    vmware) found "VMware";     add open-vm-tools; SERVICES+=(vmtoolsd.service) ;;
+    kvm|qemu) found "QEMU/KVM"; add qemu-guest-agent spice-vdagent ;;
+esac
+
+# ─── Процессор: микрокод ───
+grep -q GenuineIntel /proc/cpuinfo && add intel-ucode
+grep -q AuthenticAMD /proc/cpuinfo && add amd-ucode
+
+# ─── Что нужно доставить ───
+mapfile -t UNIQUE < <(printf '%s\n' "${PKGS[@]}" | sort -u)
+missing=()
+for p in "${UNIQUE[@]}"; do
+    pacman -Q "$p" >/dev/null 2>&1 || missing+=("$p")
+done
+
+say "${O}$(msg "Знайдено:" "Found:")${X}"
+for f in "${FOUND[@]}"; do say "  • $f"; done
+if [ "${#missing[@]}" -eq 0 ]; then
+    say "${G}$(msg "Усі драйвери вже встановлено." "All drivers are already installed.")${X}"
+    mkdir -p "$STATE"; echo "$pci" | md5sum > "$HASH_FILE" 2>/dev/null
+    exit 0
+fi
+say "${O}$(msg "Потрібно встановити:" "To install:")${X} ${missing[*]}"
+[ "$LIST" = 1 ] && exit 0
+
+if [ "$(id -u)" -ne 0 ]; then
+    exec sudo "$0" "$@"
+fi
+if [ "$AUTO" = 0 ]; then
+    read -rp "$(msg "Встановити? [Y/n] " "Install? [Y/n] ")" ans
+    case "$ans" in n|N|н|Н) exit 0 ;; esac
+fi
+
+pacman -Sy --noconfirm >/dev/null 2>&1
+# Ставим по одному набору, чтобы отсутствие одного пакета не ломало всё
+if ! pacman -S --needed --noconfirm "${missing[@]}"; then
+    for p in "${missing[@]}"; do pacman -S --needed --noconfirm "$p" || say "${D}$(msg "пропущено" "skipped"): $p${X}"; done
+fi
+
+for s in "${SERVICES[@]}"; do systemctl enable "$s" >/dev/null 2>&1; done
+
+if [ "${NVIDIA_KMS:-0}" = 1 ]; then
+    # Для Wayland у NVIDIA нужен modeset
+    echo "options nvidia_drm modeset=1 fbdev=1" > /etc/modprobe.d/ember-nvidia.conf
+    mkinitcpio -P >/dev/null 2>&1 || true
+fi
+
+mkdir -p "$STATE"; echo "$pci" | md5sum > "$HASH_FILE"
+say "${G}$(msg "Драйвери встановлено. Для деяких потрібне перезавантаження." "Drivers installed. Some need a reboot.")${X}"

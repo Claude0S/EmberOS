@@ -26,6 +26,16 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("/usr/local/bin/ember-firstrun")
 end)
 
+-- Мова інтерфейсу (/lang uk | en)
+pcall(function()
+    local f = io.open(os.getenv("HOME") .. "/.config/ember/lang", "r")
+    if f then
+        local l = f:read("*l"); f:close()
+        if l == "en" then hl.env("LANG", "en_US.UTF-8")
+        elseif l == "uk" then hl.env("LANG", "uk_UA.UTF-8") end
+    end
+end)
+
 hl.env("XCURSOR_SIZE", "24")
 hl.env("HYPRCURSOR_SIZE", "24")
 hl.env("QT_QPA_PLATFORMTHEME", "qt6ct")
@@ -140,8 +150,8 @@ bind(mod .. " + L", "hyprlock")
 bind(mod .. " + N", "swaync-client -t -sw")
 bind(mod .. " + SHIFT + E", "/usr/local/bin/ember-power")
 bind(mod .. " + SHIFT + V", "cliphist list | fuzzel --dmenu | cliphist decode | wl-copy")
-bind("Print", 'grim -g "$(slurp)" - | wl-copy && notify-send "Ember OS" "Скриншот скопирован"')
-bind("SHIFT + Print", 'grim ~/Pictures/screenshot-$(date +%F-%H%M%S).png && notify-send "Ember OS" "Скриншот сохранён"')
+bind("Print", 'grim -g "$(slurp)" - | wl-copy && notify-send "Ember OS" "📸 Знімок скопійовано · Screenshot copied"')
+bind("SHIFT + Print", 'mkdir -p ~/Pictures && grim ~/Pictures/screenshot-$(date +%F-%H%M%S).png && notify-send "Ember OS" "📸 Знімок збережено · Screenshot saved"')
 
 hl.bind(mod .. " + Q", hl.dsp.window.close())
 hl.bind(mod .. " + F", hl.dsp.window.fullscreen())

@@ -1,0 +1,287 @@
+#!/usr/bin/env python3
+"""
+Ember OS — окно приветствия живой сессии.
+Подключение к Wi-Fi прямо здесь, потом кнопка «Установить Ember OS» (Calamares).
+"""
+import os
+import re
+import subprocess
+import threading
+
+import gi
+
+gi.require_version("Gtk", "4.0")
+gi.require_version("Adw", "1")
+from gi.repository import Adw, Gdk, GLib, Gtk  # noqa: E402
+
+FOX = "/usr/share/ember/icons/fox-small.png"
+
+TEXT = {
+    "uk": {
+        "title": "Ласкаво просимо до Ember OS",
+        "sub": "Спершу підключись до інтернету — так встановляться драйвери, Steam і Hydra.",
+        "wifi": "Wi-Fi",
+        "scan": "Оновити",
+        "scanning": "Шукаю мережі…",
+        "no_wifi": "Wi-Fi адаптер не знайдено. Підключи кабель або продовжуй без інтернету.",
+        "online": "Інтернет підключено ✓",
+        "offline": "Немає інтернету",
+        "password": "Пароль",
+        "connect": "Підключити",
+        "cancel": "Скасувати",
+        "connecting": "Підключаюсь до {}…",
+        "failed": "Не вдалося підключитися. Перевір пароль.",
+        "install": "Встановити Ember OS",
+        "try": "Спробувати без встановлення",
+        "lang": "EN",
+    },
+    "en": {
+        "title": "Welcome to Ember OS",
+        "sub": "Connect to the internet first — drivers, Steam and Hydra will be installed automatically.",
+        "wifi": "Wi-Fi",
+        "scan": "Refresh",
+        "scanning": "Looking for networks…",
+        "no_wifi": "No Wi-Fi adapter found. Plug in a cable or continue offline.",
+        "online": "Internet connected ✓",
+        "offline": "No internet",
+        "password": "Password",
+        "connect": "Connect",
+        "cancel": "Cancel",
+        "connecting": "Connecting to {}…",
+        "failed": "Could not connect. Check the password.",
+        "install": "Install Ember OS",
+        "try": "Try without installing",
+        "lang": "UA",
+    },
+}
+
+CSS = b"""
+window.ember, window.ember .background { background-color: #1a1320; color: #fbeee0; }
+.ember-title { color: #f3a46c; font-size: 26px; font-weight: 800; }
+.ember-sub { color: #e8dccd; }
+.ember-status-ok { color: #9bc48a; font-weight: bold; }
+.ember-status-bad { color: #f2c37a; font-weight: bold; }
+.ember-primary { background: #e8875a; color: #1a1320; font-weight: bold; border-radius: 14px; padding: 12px 22px; }
+.ember-primary:hover { background: #f09a6c; }
+.ember-secondary { border-radius: 14px; padding: 12px 22px; }
+.ember-list { background: rgba(255,255,255,0.05); border-radius: 14px; }
+.ember-list row { padding: 6px 4px; }
+"""
+
+
+def nm(*args, timeout=30):
+    try:
+        r = subprocess.run(["nmcli", *args], capture_output=True, text=True, timeout=timeout)
+        return r.returncode, r.stdout
+    except (OSError, subprocess.TimeoutExpired):
+        return 1, ""
+
+
+def split_terse(line):
+    # nmcli -t экранирует ":" как "\:"
+    parts = re.split(r"(?<!\\):", line)
+    return [p.replace("\\:", ":") for p in parts]
+
+
+class Welcome(Adw.Application):
+    def __init__(self):
+        super().__init__(application_id="os.ember.Welcome")
+        self.lang = "en" if os.environ.get("LANG", "").startswith("en") else "uk"
+        self.win = None
+
+    def t(self, k, *a):
+        s = TEXT[self.lang][k]
+        return s.format(*a) if a else s
+
+    # ─── UI ───
+    def do_activate(self):
+        Adw.StyleManager.get_default().set_color_scheme(Adw.ColorScheme.FORCE_DARK)
+        prov = Gtk.CssProvider()
+        prov.load_from_data(CSS)
+        Gtk.StyleContext.add_provider_for_display(
+            Gdk.Display.get_default(), prov, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+        if self.win is None:
+            self.win = Adw.ApplicationWindow(application=self, default_width=620, default_height=720)
+            self.win.add_css_class("ember")
+            self.win.set_title("Ember OS")
+        self.build()
+        self.win.present()
+        self.refresh()
+        GLib.timeout_add_seconds(5, self.poll_online)
+
+    def build(self):
+        tv = Adw.ToolbarView()
+        hb = Adw.HeaderBar()
+        lang_btn = Gtk.Button(label=self.t("lang"))
+        lang_btn.connect("clicked", self.toggle_lang)
+        hb.pack_end(lang_btn)
+        tv.add_top_bar(hb)
+
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=14,
+                      margin_top=10, margin_bottom=24, margin_start=32, margin_end=32)
+
+        if os.path.exists(FOX):
+            pic = Gtk.Picture.new_for_filename(FOX)
+            pic.set_size_request(110, 110)
+            pic.set_can_shrink(True)
+            pic.set_halign(Gtk.Align.CENTER)
+            box.append(pic)
+
+        title = Gtk.Label(label=self.t("title"))
+        title.add_css_class("ember-title")
+        box.append(title)
+        sub = Gtk.Label(label=self.t("sub"), wrap=True, justify=Gtk.Justification.CENTER)
+        sub.add_css_class("ember-sub")
+        box.append(sub)
+
+        self.status = Gtk.Label()
+        box.append(self.status)
+
+        head = Gtk.Box(spacing=8)
+        wl = Gtk.Label(label=self.t("wifi"), xalign=0, hexpand=True)
+        wl.add_css_class("heading")
+        head.append(wl)
+        self.spinner = Gtk.Spinner()
+        head.append(self.spinner)
+        scan = Gtk.Button(label=self.t("scan"))
+        scan.connect("clicked", lambda *_: self.refresh(rescan=True))
+        head.append(scan)
+        box.append(head)
+
+        self.list = Gtk.ListBox(selection_mode=Gtk.SelectionMode.NONE)
+        self.list.add_css_class("ember-list")
+        sc = Gtk.ScrolledWindow(vexpand=True, min_content_height=220)
+        sc.set_child(self.list)
+        box.append(sc)
+
+        btns = Gtk.Box(spacing=12, homogeneous=True)
+        try_b = Gtk.Button(label=self.t("try"))
+        try_b.add_css_class("ember-secondary")
+        try_b.connect("clicked", lambda *_: self.win.close())
+        inst = Gtk.Button(label=self.t("install"))
+        inst.add_css_class("ember-primary")
+        inst.connect("clicked", self.install)
+        btns.append(try_b)
+        btns.append(inst)
+        box.append(btns)
+
+        tv.set_content(box)
+        self.win.set_content(tv)
+
+    def toggle_lang(self, *_):
+        self.lang = "en" if self.lang == "uk" else "uk"
+        self.build()
+        self.refresh()
+
+    # ─── Сеть ───
+    def online(self):
+        rc, out = nm("-t", "-f", "CONNECTIVITY", "general", timeout=5)
+        return rc == 0 and out.strip() == "full"
+
+    def poll_online(self):
+        self.set_status()
+        return True
+
+    def set_status(self):
+        ok = self.online()
+        self.status.set_label(self.t("online") if ok else self.t("offline"))
+        for c in ("ember-status-ok", "ember-status-bad"):
+            self.status.remove_css_class(c)
+        self.status.add_css_class("ember-status-ok" if ok else "ember-status-bad")
+
+    def refresh(self, rescan=False):
+        self.set_status()
+        self.spinner.start()
+        self.clear_list()
+        self.list.append(Gtk.Label(label=self.t("scanning"), margin_top=12, margin_bottom=12))
+        threading.Thread(target=self.scan_thread, args=(rescan,), daemon=True).start()
+
+    def scan_thread(self, rescan):
+        rc, devs = nm("-t", "-f", "TYPE", "device", timeout=5)
+        has_wifi = "wifi" in devs.split()
+        nets = []
+        if has_wifi:
+            rc, out = nm("-t", "-f", "IN-USE,SSID,SIGNAL,SECURITY", "device", "wifi", "list",
+                         "--rescan", "yes" if rescan else "auto", timeout=25)
+            seen = set()
+            for line in out.splitlines():
+                p = split_terse(line)
+                if len(p) < 4 or not p[1] or p[1] in seen:
+                    continue
+                seen.add(p[1])
+                nets.append({"active": p[0] == "*", "ssid": p[1],
+                             "signal": int(p[2] or 0), "secure": p[3] not in ("", "--")})
+            nets.sort(key=lambda n: (not n["active"], -n["signal"]))
+        GLib.idle_add(self.show_nets, has_wifi, nets)
+
+    def clear_list(self):
+        child = self.list.get_first_child()
+        while child:
+            nxt = child.get_next_sibling()
+            self.list.remove(child)
+            child = nxt
+
+    def show_nets(self, has_wifi, nets):
+        self.spinner.stop()
+        self.clear_list()
+        if not has_wifi:
+            self.list.append(Gtk.Label(label=self.t("no_wifi"), wrap=True, margin_top=12,
+                                       margin_bottom=12, margin_start=12, margin_end=12))
+            return False
+        for n in nets:
+            row = Adw.ActionRow(title=GLib.markup_escape_text(n["ssid"]))
+            bars = "▂▄▆█"[: max(1, min(4, n["signal"] // 25 + 1))]
+            row.set_subtitle(f"{bars}  {n['signal']}%" + ("  🔒" if n["secure"] else ""))
+            if n["active"]:
+                ok = Gtk.Label(label="✓")
+                ok.add_css_class("ember-status-ok")
+                row.add_suffix(ok)
+            else:
+                b = Gtk.Button(label=self.t("connect"), valign=Gtk.Align.CENTER)
+                b.connect("clicked", self.on_connect, n)
+                row.add_suffix(b)
+            self.list.append(row)
+        return False
+
+    def on_connect(self, _btn, net):
+        if not net["secure"]:
+            return self.do_connect(net["ssid"], None)
+        dlg = Adw.AlertDialog.new(net["ssid"], self.t("password"))
+        entry = Gtk.PasswordEntry(show_peek_icon=True, activates_default=True)
+        dlg.set_extra_child(entry)
+        dlg.add_response("cancel", self.t("cancel"))
+        dlg.add_response("ok", self.t("connect"))
+        dlg.set_response_appearance("ok", Adw.ResponseAppearance.SUGGESTED)
+        dlg.set_default_response("ok")
+        dlg.connect("response", lambda d, r: r == "ok" and self.do_connect(net["ssid"], entry.get_text()))
+        dlg.present(self.win)
+
+    def do_connect(self, ssid, password):
+        self.status.set_label(self.t("connecting", ssid))
+        self.spinner.start()
+
+        def work():
+            args = ["device", "wifi", "connect", ssid]
+            if password:
+                args += ["password", password]
+            rc, _ = nm(*args, timeout=45)
+            GLib.idle_add(self.after_connect, rc == 0)
+
+        threading.Thread(target=work, daemon=True).start()
+
+    def after_connect(self, ok):
+        self.spinner.stop()
+        if not ok:
+            self.status.set_label(self.t("failed"))
+            self.status.add_css_class("ember-status-bad")
+        self.refresh()
+        return False
+
+    # ─── Установка ───
+    def install(self, *_):
+        subprocess.Popen(["ember-install"], start_new_session=True)
+        self.win.close()
+
+
+if __name__ == "__main__":
+    Welcome().run(None)

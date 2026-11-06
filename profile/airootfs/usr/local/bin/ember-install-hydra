@@ -3,19 +3,20 @@
 # страницы релизов на GitHub. Ставится в /opt/hydra, ярлык — в меню.
 # Без источников загрузки: их пользователь добавляет сам в настройках Hydra.
 set -euo pipefail
+. /usr/share/ember/i18n.sh
 
 API="https://api.github.com/repos/hydralauncher/hydra/releases/latest"
 DEST=/opt/hydra
 SUDO=""
 [ "$(id -u)" -ne 0 ] && SUDO="sudo"
 
-echo "Hydra Launcher: ищу последнюю версию…"
+echo "Hydra Launcher: $(msg "шукаю останню версію…" "looking for the latest version…")"
 url=$(curl -fsSL "$API" | jq -r '.assets[] | select(.name | test("\\.AppImage$")) | .browser_download_url' | head -1)
 if [ -z "$url" ]; then
-    echo "Не нашёл AppImage в последнем релизе Hydra." >&2
+    echo "$(msg "Не знайшов AppImage в останньому релізі Hydra." "No AppImage found in the latest Hydra release.")" >&2
     exit 1
 fi
-echo "Скачиваю: $url"
+echo "$(msg "Завантажую" "Downloading"): $url"
 tmp=$(mktemp)
 curl -fL --progress-bar -o "$tmp" "$url"
 
@@ -45,4 +46,4 @@ Type=Application
 Categories=Game;
 StartupWMClass=Hydra
 EOF
-echo "Hydra Launcher установлен."
+echo "Hydra Launcher: $(msg "встановлено." "installed.")"

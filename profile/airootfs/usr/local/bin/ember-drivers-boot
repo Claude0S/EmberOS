@@ -1,0 +1,12 @@
+#!/bin/bash
+# При каждом запуске: если железо изменилось (новая видеокарта, Wi-Fi…),
+# ждём интернет и ставим недостающие драйверы.
+STATE=/var/lib/ember
+now=$(lspci -nn 2>/dev/null | md5sum)
+[ -f "$STATE/hardware.hash" ] && [ "$(cat "$STATE/hardware.hash")" = "$now" ] && exit 0
+
+for _ in $(seq 60); do
+    curl -fsI --max-time 5 https://archlinux.org >/dev/null 2>&1 && break
+    sleep 5
+done
+exec /usr/local/bin/ember-drivers --auto --quiet

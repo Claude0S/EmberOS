@@ -8,6 +8,7 @@ Widget {
     cardWidth: 360
     cardHeight: 150
 
+    readonly property bool en: Qt.locale().name.startsWith("en")
     property var player: {
         var ps = Mpris.players.values
         for (var i = 0; i < ps.length; i++) if (ps[i].isPlaying) return ps[i]
@@ -43,13 +44,13 @@ Widget {
 
             Text {
                 width: parent.width
-                text: root.player ? (root.player.trackTitle || "Без названия") : "Тишина…"
+                text: root.player ? (root.player.trackTitle || (root.en ? "Untitled" : "Без назви")) : (root.en ? "Silence…" : "Тиша…")
                 color: "#fbeee0"; font.family: "Inter"; font.pixelSize: 17; font.weight: Font.DemiBold
                 elide: Text.ElideRight
             }
             Text {
                 width: parent.width
-                text: root.player ? (root.player.trackArtist || root.player.identity || "") : "Включи музыку где угодно"
+                text: root.player ? (root.player.trackArtist || root.player.identity || "") : (root.en ? "Play music anywhere" : "Увімкни музику будь-де")
                 color: "#f3a46c"; font.family: "Inter"; font.pixelSize: 14
                 elide: Text.ElideRight
             }

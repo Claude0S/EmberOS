@@ -1,0 +1,77 @@
+#!/bin/bash
+# Выполняется установщиком ВНУТРИ новой системы (chroot):
+# убирает всё, что нужно только живой сессии с флешки, и готовит загрузку.
+set -u
+log() { echo "[ember-postinstall] $*"; }
+
+log "Удаляю настройки живой сессии"
+rm -f /etc/sddm.conf.d/90-live-autologin.conf /etc/sudoers.d/10-ember-live
+rm -f /etc/systemd/system/etc-pacman.d-gnupg.mount
+for s in pacman-init choose-mirror sshd ember-live-user livecd-talk livecd-alsa-unmuter vboxservice; do
+    rm -f "/etc/systemd/system/multi-user.target.wants/$s.service"
+done
+rm -f /etc/systemd/system/{pacman-init,choose-mirror,livecd-talk,livecd-alsa-unmuter}.service
+rm -f /etc/systemd/journald.conf.d/volatile-storage.conf /etc/systemd/logind.conf.d/do-not-suspend.conf
+rm -f /etc/ssh/sshd_config.d/10-archiso.conf
+rm -rf /etc/systemd/system/getty@tty1.service.d
+rm -f /etc/systemd/network/*.network 2>/dev/null
+rm -f /root/.automated_script.sh /root/.zlogin
+rm -f /usr/local/bin/{choose-mirror,Installation_guide,livecd-sound}
+rm -f /usr/share/applications/ember-install.desktop /etc/xdg/autostart/ember-welcome.desktop
+printf '\n  Ember OS\n\n' > /etc/motd
+
+# VirtualBox-сервис нужен только внутри VirtualBox (у него есть своё условие)
+if [ "$(systemd-detect-virt 2>/dev/null)" = oracle ]; then
+    systemctl enable vboxservice.service >/dev/null 2>&1 || true
+fi
+
+log "Загрузчик образов ядра (mkinitcpio)"
+rm -f /etc/mkinitcpio.conf.d/archiso.conf
+cat > /etc/mkinitcpio.d/linux.preset <<'EOF'
+# mkinitcpio preset file for the 'linux' package (Ember OS)
+ALL_kver="/boot/vmlinuz-linux"
+PRESETS=('default' 'fallback')
+default_image="/boot/initramfs-linux.img"
+fallback_image="/boot/initramfs-linux-fallback.img"
+fallback_options="-S autodetect"
+EOF
+# Базовые хуки; модуль initcpiocfg установщика добавит encrypt и т.п. при необходимости
+sed -i 's/^HOOKS=.*/HOOKS=(base udev autodetect microcode modconf kms keyboard keymap consolefont block filesystems fsck)/' /etc/mkinitcpio.conf
+grep -qw plymouth /etc/mkinitcpio.conf || sed -i '/^HOOKS=/ s/\bkms\b/kms plymouth/' /etc/mkinitcpio.conf
+
+log "GRUB: тема Ember, тихая загрузка, Windows в меню"
+if [ -f /etc/default/grub ]; then
+    set_grub() {
+        if grep -q "^#\?$1=" /etc/default/grub; then
+            sed -i "s|^#\?$1=.*|$1=$2|" /etc/default/grub
+        else
+            echo "$1=$2" >> /etc/default/grub
+        fi
+    }
+    set_grub GRUB_DISTRIBUTOR '"Ember OS"'
+    set_grub GRUB_TIMEOUT 5
+    set_grub GRUB_CMDLINE_LINUX_DEFAULT '"quiet splash loglevel=3 vt.global_cursor_default=0"'
+    set_grub GRUB_DISABLE_OS_PROBER false
+    set_grub GRUB_GFXMODE auto
+    set_grub GRUB_GFXPAYLOAD_LINUX keep
+    set_grub GRUB_THEME '"/usr/share/grub/themes/ember/theme.txt"'
+fi
+
+log "Ключи pacman"
+pacman-key --init >/dev/null 2>&1
+pacman-key --populate archlinux >/dev/null 2>&1
+
+log "Сжатая память (zram)"
+cat > /etc/systemd/zram-generator.conf <<'EOF'
+[zram0]
+zram-size = ram / 2
+compression-algorithm = zstd
+EOF
+
+log "Убираю установщик из установленной системы"
+pacman -Rdd --noconfirm calamares >/dev/null 2>&1 || true
+rm -rf /etc/calamares
+
+mkdir -p /var/lib/ember
+log "Готово"
+exit 0

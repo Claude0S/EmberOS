@@ -1,0 +1,21 @@
+/* Ember OS — Calamares */
+QWidget { font-size: 11pt; }
+QPushButton {
+    background-color: #e8875a;
+    color: #1a1320;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 16px;
+    font-weight: bold;
+}
+QPushButton:hover { background-color: #f09a6c; }
+QPushButton:disabled { background-color: #b9a59a; color: #4a3d47; }
+QProgressBar {
+    border: none;
+    border-radius: 6px;
+    background: #e8dccd;
+    height: 12px;
+    text-align: center;
+}
+QProgressBar::chunk { background-color: #e8875a; border-radius: 6px; }
+QRadioButton::indicator:checked, QCheckBox::indicator:checked { background-color: #e8875a; }

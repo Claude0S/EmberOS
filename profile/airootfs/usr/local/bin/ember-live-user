@@ -13,3 +13,10 @@ fi
 install -m 440 /dev/stdin /etc/sudoers.d/10-ember-live <<'EOF'
 ember ALL=(ALL) NOPASSWD: ALL
 EOF
+
+# Живая сессия: значок установщика первым в доке
+pinned=/home/ember/.cache/nwg-dock-pinned
+if [ -f "$pinned" ] && ! grep -qx ember-install "$pinned"; then
+    sed -i '1i ember-install' "$pinned"
+fi
+chown -R ember: /home/ember/.cache 2>/dev/null || true

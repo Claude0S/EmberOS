@@ -8,6 +8,7 @@ Widget {
     cardWidth: 300
     cardHeight: 170
 
+    readonly property bool en: Qt.locale().name.startsWith("en")
     property real cpu: 0
     property real mem: 0
     property int battery: -1
@@ -65,11 +66,11 @@ Widget {
     Column {
         anchors.fill: parent
         spacing: 14
-        Bar { label: "󰻠  Процессор"; value: root.cpu; valueText: Math.round(root.cpu * 100) + "%" }
-        Bar { label: "󰍛  Память";    value: root.mem; valueText: Math.round(root.mem * 100) + "%" }
+        Bar { label: root.en ? "󰻠  CPU" : "󰻠  Процесор"; value: root.cpu; valueText: Math.round(root.cpu * 100) + "%" }
+        Bar { label: root.en ? "󰍛  Memory" : "󰍛  Памʼять";    value: root.mem; valueText: Math.round(root.mem * 100) + "%" }
         Bar {
             visible: root.battery >= 0
-            label: "󰁹  Батарея"; value: root.battery / 100; valueText: root.battery + "%"
+            label: root.en ? "󰁹  Battery" : "󰁹  Батарея"; value: root.battery / 100; valueText: root.battery + "%"
         }
     }
 }

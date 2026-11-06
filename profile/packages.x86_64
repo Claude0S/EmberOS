@@ -81,3 +81,20 @@ virtualbox-guest-utils
 # --- Part 4: apps ---
 fuse2
 python
+
+# --- Part 5: drivers / power ---
+power-profiles-daemon
+zram-generator
+mesa-utils
+
+# --- Part 6: installer ---
+calamares
+python-gobject
+gtk4
+libadwaita
+grub
+efibootmgr
+os-prober
+ntfs-3g
+dosfstools
+exfatprogs

@@ -4,6 +4,7 @@
 #   ember-webapp install claude   — добавить ярлык в меню и док
 #   ember-webapp run claude       — открыть окно
 set -euo pipefail
+. /usr/share/ember/i18n.sh
 
 declare -A URL=( [claude]="https://claude.ai" )
 declare -A TITLE=( [claude]="Claude" )
@@ -43,7 +44,7 @@ case "$action" in
         if ! grep -qx "ember-$app" "$pinned" 2>/dev/null; then
             { echo "ember-$app"; cat "$pinned" 2>/dev/null; } > "$pinned.tmp" && mv "$pinned.tmp" "$pinned"
         fi
-        echo "${TITLE[$app]}: ярлык в меню и доке готов."
+        echo "${TITLE[$app]}: $(msg "ярлик у меню та доку готовий." "shortcut added to the menu and dock.")"
         ;;
     *) echo "usage: ember-webapp install|run claude"; exit 1 ;;
 esac

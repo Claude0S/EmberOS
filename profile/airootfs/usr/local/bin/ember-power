@@ -1,12 +1,15 @@
 #!/bin/bash
 # Меню питания Ember OS
-choice=$(printf '󰌾  Заблокировать\n󰤄  Сон\n󰍃  Выйти\n󰜉  Перезагрузить\n󰐥  Выключить\n' \
+. /usr/share/ember/i18n.sh
+L_LOCK=$(msg "Заблокувати" "Lock"); L_SLEEP=$(msg "Сон" "Sleep"); L_OUT=$(msg "Вийти" "Log out")
+L_RB=$(msg "Перезавантажити" "Restart"); L_OFF=$(msg "Вимкнути" "Shut down")
+choice=$(printf '󰌾  %s\n󰤄  %s\n󰍃  %s\n󰜉  %s\n󰐥  %s\n' "$L_LOCK" "$L_SLEEP" "$L_OUT" "$L_RB" "$L_OFF" \
     | fuzzel --dmenu --lines 5 --width 24 --prompt "⏻  ")
 
 case "$choice" in
-    *Заблокировать*) loginctl lock-session ;;
-    *Сон*)           systemctl suspend ;;
-    *Выйти*)         command -v hyprshutdown >/dev/null && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()' ;;
-    *Перезагрузить*) systemctl reboot ;;
-    *Выключить*)     systemctl poweroff ;;
+    *"$L_LOCK"*)  loginctl lock-session ;;
+    *"$L_SLEEP"*) systemctl suspend ;;
+    *"$L_OUT"*)         command -v hyprshutdown >/dev/null && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()' ;;
+    *"$L_RB"*)    systemctl reboot ;;
+    *"$L_OFF"*)   systemctl poweroff ;;
 esac

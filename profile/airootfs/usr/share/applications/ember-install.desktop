@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Встановити Ember OS
+Name[en]=Install Ember OS
+Comment=Встановити систему на компʼютер
+Comment[en]=Install the system on this computer
+Exec=ember-welcome
+Icon=/usr/share/ember/icons/fox-avatar.png
+Terminal=false
+Type=Application
+Categories=System;

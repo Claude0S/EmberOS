@@ -22,7 +22,7 @@ Rectangle {
         target: sddm
         function onLoginFailed() {
             passField.text = ""
-            errorText.text = "Неверный пароль · Wrong password"
+            errorText.text = "Невірний пароль · Wrong password"
             shake.start()
             passField.forceActiveFocus()
         }
@@ -101,7 +101,7 @@ Rectangle {
                 id: userField
                 width: parent.width; height: 46
                 text: userModel.lastUser
-                placeholderText: "Имя пользователя · Username"
+                placeholderText: "Імʼя користувача · Username"
                 horizontalAlignment: Text.AlignHCenter
                 color: root.cream
                 placeholderTextColor: Qt.rgba(0.98, 0.93, 0.88, 0.5)
@@ -136,7 +136,7 @@ Rectangle {
                 Behavior on color { ColorAnimation { duration: 150 } }
                 Text {
                     anchors.centerIn: parent
-                    text: "Войти  →"
+                    text: "Увійти · Log in  →"
                     color: "#1a1320"
                     font.family: "Inter"; font.pixelSize: 17; font.weight: Font.Bold
                 }
@@ -180,9 +180,9 @@ Rectangle {
 
         Repeater {
             model: [
-                { label: "Сон",           act: "suspend",  ok: sddm.canSuspend },
-                { label: "Перезагрузка",  act: "reboot",   ok: sddm.canReboot },
-                { label: "Выключить",     act: "poweroff", ok: sddm.canPowerOff }
+                { label: "Сон · Sleep",                act: "suspend",  ok: sddm.canSuspend },
+                { label: "Перезавантажити · Restart", act: "reboot",   ok: sddm.canReboot },
+                { label: "Вимкнути · Shut down",      act: "poweroff", ok: sddm.canPowerOff }
             ]
             Rectangle {
                 required property var modelData

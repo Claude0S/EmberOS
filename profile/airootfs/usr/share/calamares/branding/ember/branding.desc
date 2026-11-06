@@ -1,0 +1,38 @@
+---
+componentName: ember
+
+welcomeStyleCalamares: false
+welcomeExpandingLogo: true
+windowExpanding: normal
+windowSize: 1000px,640px
+windowPlacement: center
+sidebar: widget
+navigation: widget
+
+strings:
+    productName:         "Ember OS"
+    shortProductName:    "Ember"
+    version:             "1.0"
+    shortVersion:        "1.0"
+    versionedName:       "Ember OS 1.0"
+    shortVersionedName:  "Ember 1.0"
+    bootloaderEntryName: "Ember OS"
+    productUrl:          "https://github.com/Claude0S/EmberOS"
+    supportUrl:          "https://github.com/Claude0S/EmberOS/issues"
+
+images:
+    productLogo:    "logo.png"
+    productIcon:    "icon.png"
+    productWelcome: "slide1.png"
+
+slideshow:    "show.qml"
+slideshowAPI: 2
+
+style:
+    SidebarBackground:        "#1a1320"
+    SidebarText:              "#fbeee0"
+    SidebarTextCurrent:       "#1a1320"
+    SidebarBackgroundCurrent: "#e8875a"
+
+uploadServer:
+    type: "none"

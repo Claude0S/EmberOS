@@ -1,0 +1,2 @@
+# AUR packages built in CI and baked into the ISO (local repo, not on installed system)
+calamares

@@ -1,0 +1,15 @@
+#!/bin/bash
+# /lang uk | en — мова інтерфейсу Ember OS для поточного користувача
+l="${1:-}"
+case "$l" in uk|en) ;; *) echo "usage: ember-lang uk|en"; exit 1 ;; esac
+mkdir -p "$HOME/.config/ember"
+echo "$l" > "$HOME/.config/ember/lang"
+loc=$([ "$l" = en ] && echo en_US.UTF-8 || echo uk_UA.UTF-8)
+mkdir -p "$HOME/.config/environment.d"
+echo "LANG=$loc" > "$HOME/.config/environment.d/10-ember-lang.conf"
+# Перезапуск панелі та віджетів, щоб підхопили мову
+pkill -x waybar; (LANG=$loc waybar >/dev/null 2>&1 &)
+pkill -x quickshell; [ "$(cat "$HOME/.config/ember/mode" 2>/dev/null)" = little ] || (LANG=$loc quickshell >/dev/null 2>&1 &)
+hyprctl reload >/dev/null 2>&1
+notify-send -i /usr/share/ember/icons/fox-avatar.png "Ember OS" \
+    "$([ "$l" = en ] && echo "Language: English. Some apps need a re-login." || echo "Мова: українська. Деякі програми — після повторного входу.")"
