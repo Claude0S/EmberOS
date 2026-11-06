@@ -1,0 +1,84 @@
+#!/bin/bash
+# Автотест установки (запускається ЛИШЕ з параметром ядра ember.autotest=1, тільки в CI).
+# Повторює кроки установника Calamares на віртуальному диску /dev/vda:
+#   перевірка конфігів Calamares → розмітка → копіювання системи → ядро →
+#   ember-postinstall → користувач → initramfs → GRUB → вимкнення.
+# Потім CI завантажується з цього диска і робить скриншоти.
+exec > >(tee -a /dev/ttyS0 /var/log/ember-autotest.log) 2>&1
+set -uo pipefail
+say() { echo "EMBER-AUTOTEST: $*"; }
+fail() { say "FAIL: $*"; sleep 2; systemctl poweroff; exit 1; }
+D=/dev/vda
+P=${D}1
+
+say "start"
+
+# ─── 1. Статична перевірка Calamares ───
+command -v calamares >/dev/null || fail "calamares not installed"
+for m in $(sed -n '/^sequence:/,/^branding:/p' /etc/calamares/settings.conf | grep -E '^\s+- [a-z]' | sed -E 's/^\s+- //; s/@.*//' | sort -u); do
+    [ -f "/usr/lib/calamares/modules/$m/module.desc" ] || [ -d "/usr/lib/calamares/modules/$m" ] \
+        || [ -f "/usr/lib/calamares/modules/lib$m.so" ] || ls /usr/lib/calamares/modules/ | grep -qx "$m" \
+        || fail "calamares module missing: $m"
+    say "module ok: $m"
+done
+for c in /etc/calamares/modules/shellprocess_*.conf; do
+    grep -oE '/usr/local/bin/[a-z-]+' "$c" | sort -u | while read -r b; do
+        [ -x "$b" ] || { say "FAIL: $c references missing $b"; exit 1; }
+    done || fail "shellprocess script missing"
+done
+[ -f /usr/share/calamares/branding/ember/branding.desc ] || fail "branding missing"
+for b in unsquashfs rsync grub-install mkinitcpio; do command -v "$b" >/dev/null || fail "missing tool: $b"; done
+say "calamares config ok"
+
+# ─── 2. Образ системи (те саме, що робить ember-install) ───
+sfs=$(/usr/local/bin/ember-find-sfs) || fail "system image not found"
+mkdir -p /run/ember && ln -sf "$sfs" /run/ember/airootfs.sfs
+src=$(grep -oE 'source: "[^"]+"' /etc/calamares/modules/unpackfs.conf | cut -d'"' -f2)
+[ -e "$src" ] || fail "unpackfs source does not exist: $src"
+say "image ok: $sfs (unpackfs source $src)"
+
+# ─── 3. Розмітка (як «Стерти диск» у режимі BIOS) ───
+[ -b "$D" ] || fail "no test disk $D"
+wipefs -af "$D" >/dev/null
+parted -s "$D" mklabel msdos mkpart primary ext4 1MiB 100% set 1 boot on || fail "parted"
+udevadm settle
+mkfs.ext4 -F -q -L root "$P" || fail "mkfs"
+mount "$P" /mnt || fail "mount"
+say "partition ok"
+
+# ─── 4. unpackfs ───
+unsquashfs -f -q -d /mnt "$src" >/dev/null || fail "unsquashfs"
+say "unpack ok"
+
+# ─── 5. shellprocess@before ───
+/usr/local/bin/ember-copy-kernel /mnt || fail "ember-copy-kernel"
+cp -L /etc/resolv.conf /mnt/etc/resolv.conf 2>/dev/null || true
+for d in dev proc sys run; do mount --rbind "/$d" "/mnt/$d"; done
+genfstab -U /mnt > /mnt/etc/fstab || fail "fstab"
+say "kernel+fstab ok: $(ls /mnt/boot)"
+
+# ─── 6. users + shellprocess@ember ───
+chroot /mnt /bin/bash -c '
+    useradd -m -s /bin/bash -G wheel,video,audio,input tester &&
+    echo "tester:tester" | chpasswd && echo "root:root" | chpasswd &&
+    echo "%wheel ALL=(ALL) ALL" > /etc/sudoers.d/10-wheel && chmod 440 /etc/sudoers.d/10-wheel &&
+    echo ember-test > /etc/hostname' || fail "users"
+chroot /mnt /usr/local/bin/ember-postinstall || fail "ember-postinstall"
+# Для скриншота після перезавантаження — автовхід тестового користувача
+mkdir -p /mnt/etc/sddm.conf.d
+printf '[Autologin]\nUser=tester\nSession=hyprland.desktop\n' > /mnt/etc/sddm.conf.d/99-autotest.conf
+say "postinstall ok"
+
+# ─── 7. initcpio + bootloader ───
+chroot /mnt mkinitcpio -P || fail "mkinitcpio"
+chroot /mnt grub-install --target=i386-pc "$D" || fail "grub-install"
+chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg || fail "grub-mkconfig"
+grep -q "ember" /mnt/boot/grub/grub.cfg || say "warning: no ember theme in grub.cfg"
+chroot /mnt systemctl enable NetworkManager sddm >/dev/null 2>&1
+say "boot files: $(ls /mnt/boot)"
+
+sync
+umount -R /mnt || true
+say "OK"
+sleep 2
+systemctl poweroff

@@ -102,3 +102,7 @@ exfatprogs
 # Calamares unpackfs needs these
 squashfs-tools
 rsync
+
+# installer helpers
+parted
+arch-install-scripts

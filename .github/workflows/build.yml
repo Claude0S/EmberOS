@@ -57,6 +57,11 @@ jobs:
           sudo udevadm trigger --name-match=kvm || true
           bash tests/qemu-boot.sh out/*.iso screenshots
 
+      - name: Install test in QEMU (install to a virtual disk, reboot, screenshots)
+        run: |
+          sudo apt-get install -y -qq libarchive-tools qemu-utils >/dev/null
+          bash tests/install-test.sh out/*.iso screenshots
+
       - name: Upload screenshots
         if: always()
         uses: actions/upload-artifact@v4

@@ -6,16 +6,11 @@ for b in unsquashfs rsync; do
     command -v "$b" >/dev/null || sudo pacman -Sy --needed --noconfirm squashfs-tools rsync
 done
 # Образ системи може бути на флешці або скопійований у памʼять (copytoram)
-sfs=""
-for f in /run/archiso/bootmnt/arch/x86_64/airootfs.sfs /run/archiso/copytoram/airootfs.sfs \
-         /run/archiso/bootmnt/*/x86_64/airootfs.sfs /run/archiso/copytoram/*.sfs; do
-    [ -f "$f" ] && { sfs="$f"; break; }
-done
-if [ -z "$sfs" ]; then
+sfs=$(/usr/local/bin/ember-find-sfs) || {
     echo "Не знайдено образ системи (airootfs.sfs). Перезавантаж флешку і спробуй ще раз." >&2
     ls -laR /run/archiso 2>&1 | head -40 >&2
     exit 1
-fi
+}
 sudo mkdir -p /run/ember && sudo ln -sf "$sfs" /run/ember/airootfs.sfs
 echo "System image: $sfs"
 exec sudo --preserve-env=WAYLAND_DISPLAY,XDG_RUNTIME_DIR,XDG_SESSION_TYPE,LANG,LC_ALL \

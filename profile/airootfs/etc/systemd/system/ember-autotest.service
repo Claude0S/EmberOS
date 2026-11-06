@@ -1,0 +1,13 @@
+[Unit]
+Description=Ember OS automated install test (CI only, needs ember.autotest=1)
+ConditionKernelCommandLine=ember.autotest=1
+After=multi-user.target ember-live-user.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/ember-autotest
+StandardOutput=journal+console
+TimeoutStartSec=40min
+
+[Install]
+WantedBy=multi-user.target

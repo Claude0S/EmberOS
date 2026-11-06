@@ -7,7 +7,7 @@ log() { echo "[ember-postinstall] $*"; }
 log "Удаляю настройки живой сессии"
 rm -f /etc/sddm.conf.d/90-live-autologin.conf /etc/sudoers.d/10-ember-live
 rm -f /etc/systemd/system/etc-pacman.d-gnupg.mount
-for s in pacman-init choose-mirror sshd ember-live-user livecd-talk livecd-alsa-unmuter vboxservice; do
+for s in pacman-init choose-mirror sshd ember-live-user ember-autotest livecd-talk livecd-alsa-unmuter vboxservice; do
     rm -f "/etc/systemd/system/multi-user.target.wants/$s.service"
 done
 rm -f /etc/systemd/system/{pacman-init,choose-mirror,livecd-talk,livecd-alsa-unmuter}.service
