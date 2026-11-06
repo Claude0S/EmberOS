@@ -1,53 +1,75 @@
 @import "colors.css";
-/* Ember OS — waybar */
+/* Ember OS — waybar: три скляні острівці */
 * {
   font-family: "Inter", "JetBrainsMono Nerd Font", sans-serif;
   font-size: 14px;
   min-height: 0;
   border: none;
+  border-radius: 0;
 }
 
-window#waybar {
-  background: alpha(@bg, 0.55);
-  border: 1px solid alpha(@accent2, 0.30);
-  border-radius: 16px;
-  color: @fg;
+window#waybar { background: transparent; color: @fg; }
+
+.modules-left, .modules-center, .modules-right {
+  background: alpha(@bg, 0.58);
+  border: 1px solid alpha(@fg, 0.13);
+  border-radius: 22px;
+  padding: 0 8px;
+  box-shadow: 0 6px 18px alpha(#05020a, 0.35);
 }
 
 tooltip {
-  background: alpha(@bg, 0.92);
-  border: 1px solid alpha(@accent2, 0.4);
-  border-radius: 12px;
+  background: alpha(@bg, 0.94);
+  border: 1px solid alpha(@accent2, 0.35);
+  border-radius: 14px;
 }
 
-#custom-ember {
-  color: @accent2;
-  font-weight: bold;
-  padding: 0 14px 0 16px;
-}
+#custom-ember { color: @accent2; font-weight: 700; padding: 0 10px 0 8px; }
 
+/* Робочі столи: крапки, активний — довга градієнтна пігулка */
+#workspaces { margin: 0 6px 0 2px; }
 #workspaces button {
-  color: alpha(@fg, 0.45);
-  padding: 0 6px;
-  background: transparent;
-  transition: all 0.25s ease;
+  min-width: 12px;
+  min-height: 12px;
+  padding: 0;
+  margin: 16px 4px;
+  border-radius: 6px;
+  background: alpha(@fg, 0.22);
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
-#workspaces button.active { color: @accent; }
-#workspaces button:hover  { color: @accent2; background: alpha(@accent, 0.12); border-radius: 10px; }
+#workspaces button.persistent { background: alpha(@fg, 0.14); }
+#workspaces button:not(.empty) { background: alpha(@fg, 0.55); }
+#workspaces button.active {
+  min-width: 38px;
+  background: linear-gradient(90deg, @accent, @accent3);
+}
+#workspaces button:hover { background: alpha(@accent2, 0.7); }
 
-#clock { font-weight: 600; }
+#clock { padding: 0 12px; font-size: 15px; }
+#custom-weather { padding: 0 12px 0 4px; color: alpha(@fg, 0.85); }
 
-#mpris, #network, #bluetooth, #pulseaudio, #battery, #tray, #language,
+#language, #tray, #network, #bluetooth, #pulseaudio, #battery,
 #custom-notifications, #custom-power {
-  padding: 0 10px;
-  margin: 6px 0;
-  border-radius: 10px;
+  padding: 0 9px;
+  margin: 7px 0;
+  border-radius: 14px;
+  color: alpha(@fg, 0.9);
 }
-
-#mpris { color: @accent3; }
+#language { font-weight: 600; }
+#battery.charging { color: #9bc48a; }
 #battery.warning  { color: @accent3; }
 #battery.critical { color: #ff7a6b; }
-#custom-power { color: @accent; padding-right: 16px; }
-#custom-power:hover, #custom-notifications:hover, #pulseaudio:hover, #network:hover {
-  background: alpha(@accent, 0.15);
+#custom-notifications { font-size: 15px; }
+
+#custom-power {
+  color: @accent;
+  background: alpha(@accent, 0.16);
+  min-width: 30px;
+  margin: 6px 0 6px 4px;
+  padding: 0 8px;
+}
+
+#network:hover, #bluetooth:hover, #pulseaudio:hover, #language:hover,
+#custom-notifications:hover, #custom-power:hover, #custom-ember:hover {
+  background: alpha(@accent, 0.18);
 }

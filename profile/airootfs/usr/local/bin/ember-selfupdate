@@ -55,6 +55,7 @@ managed=(
   .config/kitty/kitty.conf
   .config/quickshell/shell.qml .config/quickshell/widgets
   .config/qt6ct/qt6ct.conf
+  .config/swaync/style.css
 )
 for f in "${managed[@]}"; do
     [ -e "/etc/skel/$f" ] || continue

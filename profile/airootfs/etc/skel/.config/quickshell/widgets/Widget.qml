@@ -14,6 +14,7 @@ PanelWindow {
     readonly property color cFg:      th.fg      || "#fbeee0"
     readonly property color cBg:      th.bg      || "#1a1320"
     readonly property string foxAvatar: th.foxAvatar || "/usr/share/ember/icons/fox-avatar.png"
+    property bool cardless: false      // віджет без картки (великий годинник)
     property real cardWidth: 300
     property real cardHeight: 160
     default property alias content: inner.data
@@ -51,15 +52,27 @@ PanelWindow {
         height: w.cardHeight
         transformOrigin: Item.TopLeft
         scale: w.s
-        radius: 22
-        color: Qt.rgba(w.cBg.r, w.cBg.g, w.cBg.b, conf.opacity !== undefined ? conf.opacity : 0.7)
-        border.width: 1
-        border.color: Qt.rgba(w.cAccent2.r, w.cAccent2.g, w.cAccent2.b, 0.30)
+        radius: 28
+        color: w.cardless ? "transparent" : Qt.rgba(w.cBg.r, w.cBg.g, w.cBg.b, conf.opacity !== undefined ? conf.opacity : 0.55)
+        border.width: w.cardless ? 0 : 1
+        border.color: Qt.rgba(1, 1, 1, 0.13)
+
+        // скляний відблиск зверху
+        Rectangle {
+            visible: !w.cardless
+            anchors { left: parent.left; right: parent.right; top: parent.top; margins: 1 }
+            height: parent.height * 0.55
+            radius: parent.radius
+            gradient: Gradient {
+                GradientStop { position: 0.0; color: Qt.rgba(1, 1, 1, 0.10) }
+                GradientStop { position: 1.0; color: Qt.rgba(1, 1, 1, 0.0) }
+            }
+        }
 
         Item {
             id: inner
             anchors.fill: parent
-            anchors.margins: 18
+            anchors.margins: w.cardless ? 0 : 22
         }
 
         // Перетаскивание мышкой

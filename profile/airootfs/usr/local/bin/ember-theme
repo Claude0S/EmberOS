@@ -29,7 +29,8 @@ DATA = os.path.join(HOME, ".local", "share", "ember")
 OUTPUTS = {
     "hypr-theme.lua":   os.path.join(CFG, "hypr", "theme.lua"),
     "gtk-colors.css":   [os.path.join(CFG, "waybar", "colors.css"),
-                         os.path.join(CFG, "nwg-dock-hyprland", "colors.css")],
+                         os.path.join(CFG, "nwg-dock-hyprland", "colors.css"),
+                         os.path.join(CFG, "swaync", "colors.css")],
     "kitty-theme.conf": os.path.join(CFG, "kitty", "theme.conf"),
     "fuzzel.ini":       os.path.join(CFG, "fuzzel", "fuzzel.ini"),
     "hyprlock.conf":    os.path.join(CFG, "hypr", "hyprlock.conf"),
@@ -174,6 +175,7 @@ def reload_desktop():
     quiet("hyprctl", "reload")
     quiet("pkill", "-SIGUSR2", "waybar")          # waybar перечитує стиль
     quiet("pkill", "-SIGUSR1", "kitty")           # kitty перечитує кольори
+    quiet("swaync-client", "-rs")                 # сповіщення перечитують стиль
     quiet("pkill", "-x", "nwg-dock-hyprland")
     mode = ""
     try:

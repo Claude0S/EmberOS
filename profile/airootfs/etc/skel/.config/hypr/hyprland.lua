@@ -46,14 +46,14 @@ hl.env("GTK_THEME", "Adwaita:dark")
 hl.config({
     general = {
         gaps_in = 6,
-        gaps_out = 14,
+        gaps_out = 16,
         border_size = 2,
         resize_on_border = true,
         layout = "dwindle",
     },
 
     decoration = {
-        rounding = 14,
+        rounding = 18,
         rounding_power = 2,
         active_opacity = 1.0,
         inactive_opacity = 0.94,

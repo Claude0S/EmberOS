@@ -1,6 +1,6 @@
 {
-  "clock":   { "enabled": true, "anchor": "left",  "x": 70, "y": 110, "scale": 1.0, "opacity": 0.70 },
-  "music":   { "enabled": true, "anchor": "left",  "x": 70, "y": 330, "scale": 1.0, "opacity": 0.70 },
-  "system":  { "enabled": true, "anchor": "right", "x": 70, "y": 110, "scale": 1.0, "opacity": 0.70 },
-  "weather": { "enabled": true, "anchor": "right", "x": 70, "y": 330, "scale": 1.0, "opacity": 0.70, "city": "" }
+  "clock":   { "enabled": true, "anchor": "left",  "x": 60, "y": 80,  "scale": 1.0, "opacity": 0.55 },
+  "music":   { "enabled": true, "anchor": "left",  "x": 60, "y": 300, "scale": 1.0, "opacity": 0.55 },
+  "system":  { "enabled": true, "anchor": "right", "x": 60, "y": 80,  "scale": 1.0, "opacity": 0.55 },
+  "weather": { "enabled": true, "anchor": "right", "x": 60, "y": 270, "scale": 1.0, "opacity": 0.55, "city": "" }
 }

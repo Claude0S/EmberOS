@@ -1,11 +1,12 @@
 @import "colors.css";
-/* Ember OS — dock */
+/* Ember OS — док */
 window {
   background: alpha(@bg, 0.55);
-  border: 1px solid alpha(@accent2, 0.30);
-  border-radius: 20px;
+  border: 1px solid alpha(@fg, 0.13);
+  border-radius: 26px;
+  box-shadow: 0 10px 28px alpha(#05020a, 0.45);
 }
-#box { padding: 6px 10px; }
+#box { padding: 8px 14px; }
 button, image {
   background: none;
   border-style: none;
@@ -13,13 +14,14 @@ button, image {
   color: @fg;
 }
 button {
-  padding: 4px;
-  margin: 2px 4px;
-  border-radius: 14px;
-  transition: all 0.2s ease;
+  padding: 6px;
+  margin: 2px 5px;
+  border-radius: 16px;
+  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 }
-button:hover {
-  background: alpha(@accent, 0.18);
-}
+button image { -gtk-icon-transform: scale(1); transition: -gtk-icon-transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); }
+button:hover { background: alpha(@accent, 0.16); }
+button:hover image { -gtk-icon-transform: scale(1.18) translateY(-3px); }
 button:focus { box-shadow: none; }
-#active { border-bottom: 3px solid @accent; }
+/* відкрита програма — помаранчева крапка під іконкою */
+#active { border-bottom: 3px solid @accent; border-radius: 16px 16px 10px 10px; }
