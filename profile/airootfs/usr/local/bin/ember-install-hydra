@@ -24,16 +24,16 @@ $SUDO install -d "$DEST"
 $SUDO install -m 755 "$tmp" "$DEST/hydra.AppImage"
 rm -f "$tmp"
 
-# Иконка: достаём из AppImage, если получится
+# Иконка: достаём из AppImage во временную папку (ошибка здесь не критична)
 icon="applications-games"
-if (cd /tmp && "$DEST/hydra.AppImage" --appimage-extract '*.png' >/dev/null 2>&1); then
-    png=$(find /tmp/squashfs-root -maxdepth 1 -name '*.png' | head -1)
+tmpx=$(mktemp -d)
+if (cd "$tmpx" && "$DEST/hydra.AppImage" --appimage-extract '*.png' >/dev/null 2>&1); then
+    png=$(find "$tmpx/squashfs-root" -maxdepth 1 -name '*.png' 2>/dev/null | head -1)
     if [ -n "$png" ]; then
-        $SUDO install -m 644 "$png" "$DEST/hydra.png"
-        icon="$DEST/hydra.png"
+        $SUDO install -m 644 "$png" "$DEST/hydra.png" && icon="$DEST/hydra.png"
     fi
-    rm -rf /tmp/squashfs-root
 fi
+rm -rf "$tmpx" 2>/dev/null || true
 
 $SUDO tee /usr/share/applications/hydra-launcher.desktop >/dev/null <<EOF
 [Desktop Entry]
