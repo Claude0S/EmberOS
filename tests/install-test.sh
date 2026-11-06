@@ -18,12 +18,22 @@ bsdtar -xf "$ISO" -C "$W" arch/boot/x86_64/vmlinuz-linux arch/boot/x86_64/initra
 LABEL=$(blkid -o value -s LABEL "$ISO")
 echo "ISO label: $LABEL"
 
+# Свіжі скрипти з репозиторію на маленькому диску EMBERTEST (підміняють вбудовані)
+TESTIMG="$W/embertest.img"
+truncate -s 16M "$TESTIMG"
+mkfs.vfat -n EMBERTEST "$TESTIMG" >/dev/null
+for f in profile/airootfs/usr/local/bin/ember-autotest profile/airootfs/usr/local/bin/ember-postinstall \
+         profile/airootfs/usr/local/bin/ember-copy-kernel profile/airootfs/usr/local/bin/ember-find-sfs; do
+  mcopy -i "$TESTIMG" "$f" ::/
+done
+
 echo "=== Phase 1: automated install ==="
 timeout $((40 * 60)) qemu-system-x86_64 "${ACCEL[@]}" -m 4096 -smp 2 \
   -kernel "$W/arch/boot/x86_64/vmlinuz-linux" -initrd "$W/arch/boot/x86_64/initramfs-linux.img" \
   -append "archisobasedir=arch archisolabel=$LABEL ember.autotest=1 console=tty0 console=ttyS0,115200" \
   -drive file="$ISO",media=cdrom,readonly=on \
   -drive file="$DISK",if=virtio,format=qcow2 \
+  -drive file="$TESTIMG",if=virtio,format=raw \
   -nic user,model=virtio-net-pci \
   -vga virtio -display none -serial file:"$OUT/install-serial.log" -no-reboot
 grep -a "EMBER-AUTOTEST" "$OUT/install-serial.log" | tee "$OUT/install-result.txt"

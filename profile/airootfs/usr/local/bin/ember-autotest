@@ -15,7 +15,7 @@ say "start"
 
 # ─── 1. Статична перевірка Calamares ───
 command -v calamares >/dev/null || fail "calamares not installed"
-for m in $(sed -n '/^sequence:/,/^branding:/p' /etc/calamares/settings.conf | grep -E '^\s+- [a-z]' | sed -E 's/^\s+- //; s/@.*//' | sort -u); do
+for m in $(sed -n '/^sequence:/,/^branding:/p' /etc/calamares/settings.conf | grep -E '^\s+- [a-z][a-z0-9@-]*\s*$' | sed -E 's/^\s+- //; s/@.*//; s/\s+$//' | sort -u); do
     [ -f "/usr/lib/calamares/modules/$m/module.desc" ] || [ -d "/usr/lib/calamares/modules/$m" ] \
         || [ -f "/usr/lib/calamares/modules/lib$m.so" ] || ls /usr/lib/calamares/modules/ | grep -qx "$m" \
         || fail "calamares module missing: $m"

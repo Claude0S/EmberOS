@@ -59,8 +59,17 @@ jobs:
 
       - name: Install test in QEMU (install to a virtual disk, reboot, screenshots)
         run: |
-          sudo apt-get install -y -qq libarchive-tools qemu-utils >/dev/null
+          sudo apt-get install -y -qq libarchive-tools qemu-utils dosfstools mtools >/dev/null
           bash tests/install-test.sh out/*.iso screenshots
+
+      - name: Keep ISO for quick re-tests (2 days)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: iso
+          path: out/*.iso
+          retention-days: 2
+          compression-level: 0
 
       - name: Upload screenshots
         if: always()

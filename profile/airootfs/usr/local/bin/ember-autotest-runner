@@ -1,0 +1,11 @@
+#!/bin/bash
+# CI: якщо підключено диск з міткою EMBERTEST — запускаємо свіжий тест з нього,
+# інакше — вбудований у систему /usr/local/bin/ember-autotest.
+dev=$(blkid -L EMBERTEST 2>/dev/null)
+if [ -n "$dev" ]; then
+    mkdir -p /run/embertest && mount -o ro "$dev" /run/embertest
+    for f in /run/embertest/*; do
+        case "$f" in *.sh) ;; *) [ -f "$f" ] && install -m 755 "$f" "/usr/local/bin/$(basename "$f")" ;; esac
+    done
+fi
+exec /usr/local/bin/ember-autotest
