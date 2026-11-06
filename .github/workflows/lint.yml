@@ -18,10 +18,11 @@ jobs:
       - name: Shell scripts (bash -n + shellcheck)
         run: |
           set -e
-          for f in build.sh tests/*.sh profile/airootfs/usr/local/bin/*; do
-            bash -n "$f" && echo "syntax ok: $f"
-          done
-          shellcheck -S warning build.sh tests/*.sh profile/airootfs/usr/local/bin/* || true
+          SH=$(for f in build.sh tests/*.sh profile/airootfs/usr/local/bin/*; do head -1 "$f" | grep -q python || echo "$f"; done)
+          PY=$(for f in profile/airootfs/usr/local/bin/*; do head -1 "$f" | grep -q python && echo "$f"; done)
+          for f in $SH; do bash -n "$f" && echo "syntax ok: $f"; done
+          for f in $PY; do python -c "import ast,sys; ast.parse(open(sys.argv[1]).read())" "$f" && echo "python ok: $f"; done
+          shellcheck -S warning $SH || true
 
       - name: JSON configs
         run: |
