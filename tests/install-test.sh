@@ -28,6 +28,7 @@ for f in profile/airootfs/usr/local/bin/ember-autotest profile/airootfs/usr/loca
          profile/airootfs/usr/local/bin/ember-install-hydra profile/airootfs/usr/local/bin/ember-drivers-boot; do
   mcopy -i "$TESTIMG" "$f" ::/
 done
+for c in profile/airootfs/etc/calamares/modules/*.conf; do mcopy -i "$TESTIMG" "$c" ::/; done
 
 echo "=== Phase 1: automated install ==="
 timeout $((40 * 60)) qemu-system-x86_64 "${ACCEL[@]}" -m 4096 -smp 2 \

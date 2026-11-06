@@ -13,6 +13,8 @@ D=/dev/$(lsblk -dnbo NAME,SIZE | awk '$2==32212254720{print $1; exit}')
 case "$D" in /dev/nvme*|/dev/mmcblk*) P=${D}p1 ;; *) P=${D}1 ;; esac
 
 say "start"
+# CI швидкий перетест: свіжі конфіги Calamares з диска EMBERTEST
+for c in /run/embertest/*.conf; do [ -f "$c" ] && cp "$c" /etc/calamares/modules/ && say "fresh config: $(basename "$c")"; done
 
 # ─── 1. Статична перевірка Calamares ───
 command -v calamares >/dev/null || fail "calamares not installed"
