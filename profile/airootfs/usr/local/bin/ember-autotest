@@ -8,8 +8,9 @@ exec > >(tee -a /dev/ttyS0 /var/log/ember-autotest.log) 2>&1
 set -uo pipefail
 say() { echo "EMBER-AUTOTEST: $*"; }
 fail() { say "FAIL: $*"; sleep 2; systemctl poweroff; exit 1; }
-D=/dev/vda
-P=${D}1
+# Тестовий диск — той, що на 30 ГБ (у CI він емулює SSD, як у ноутбуці)
+D=/dev/$(lsblk -dnbo NAME,SIZE | awk '$2==32212254720{print $1; exit}')
+case "$D" in /dev/nvme*|/dev/mmcblk*) P=${D}p1 ;; *) P=${D}1 ;; esac
 
 say "start"
 
@@ -43,7 +44,27 @@ wipefs -af "$D" >/dev/null
 parted -s "$D" mklabel msdos mkpart primary ext4 1MiB 100% set 1 boot on || fail "parted"
 udevadm settle
 mkfs.ext4 -F -q -L root "$P" || fail "mkfs"
-mount "$P" /mnt || fail "mount"
+# Опції монтування — ті самі, що бере модуль mount Calamares з mount.conf
+rot=$(cat "/sys/block/$(basename "$D")/queue/rotational" 2>/dev/null || echo 1)
+opts=$(python3 - "$rot" <<'PY'
+import re, sys
+s = open("/etc/calamares/modules/mount.conf").read()
+ssd = sys.argv[1] == "0"
+def lst(block, key):
+    m = re.search(r"^\s+" + key + r":\s*\[([^\]]*)\]", block, re.M)
+    return [x.strip() for x in m.group(1).split(",") if x.strip()] if m else []
+blocks = re.split(r"\n\s*- filesystem:", "\n" + s.split("mountOptions:")[1])
+o = []
+for b in blocks:
+    name = b.strip().split()[0] if b.strip() else ""
+    if name in ("default", "ext4"):
+        o = lst(b, "options") + (lst(b, "ssdOptions") if ssd else lst(b, "hddOptions"))
+print(",".join(o) or "defaults")
+PY
+)
+say "disk $D rotational=$rot, mount options: $opts"
+mount -o "$opts" "$P" /mnt || fail "mount with Calamares options ($opts) failed"
+mountpoint -q /mnt || fail "target not mounted"
 say "partition ok"
 
 # ─── 4. unpackfs — так само, як модуль unpackfs Calamares (mount squashfs + rsync) ───

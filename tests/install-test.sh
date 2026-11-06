@@ -32,7 +32,9 @@ timeout $((40 * 60)) qemu-system-x86_64 "${ACCEL[@]}" -m 4096 -smp 2 \
   -kernel "$W/arch/boot/x86_64/vmlinuz-linux" -initrd "$W/arch/boot/x86_64/initramfs-linux.img" \
   -append "archisobasedir=arch archisolabel=$LABEL ember.autotest=1 console=tty0 console=ttyS0,115200" \
   -drive file="$ISO",media=cdrom,readonly=on \
-  -drive file="$DISK",if=virtio,format=qcow2 \
+  -device virtio-scsi-pci,id=scsi0 \
+  -drive file="$DISK",if=none,id=target,format=qcow2 \
+  -device scsi-hd,drive=target,bus=scsi0.0,rotation_rate=1 \
   -drive file="$TESTIMG",if=virtio,format=raw \
   -nic user,model=virtio-net-pci \
   -vga virtio -display none -serial file:"$OUT/install-serial.log" -no-reboot
@@ -45,7 +47,9 @@ fi
 echo "=== Phase 2: boot the installed system ==="
 MON=$W/mon.sock
 qemu-system-x86_64 "${ACCEL[@]}" -m 4096 -smp 2 \
-  -drive file="$DISK",if=virtio,format=qcow2 -boot c \
+  -device virtio-scsi-pci,id=scsi0 \
+  -drive file="$DISK",if=none,id=target,format=qcow2 \
+  -device scsi-hd,drive=target,bus=scsi0.0,rotation_rate=1,bootindex=0 \
   -nic user,model=virtio-net-pci \
   -vga virtio -display none -serial file:"$OUT/installed-serial.log" \
   -monitor unix:"$MON",server,nowait &
