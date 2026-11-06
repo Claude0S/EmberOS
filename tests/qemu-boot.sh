@@ -38,10 +38,13 @@ shot() { # name delay_seconds
 }
 
 status=0
-shot 01-bootmenu 5      || status=1
-shot 02-booting 25      || status=1
-shot 03-desktop 60      || status=1
-shot 04-desktop-later 30 || status=1
+shot 01-bootmenu 5        || status=1
+shot 02-boot-a 8           || status=1
+shot 03-boot-b 6           || status=1
+shot 04-boot-c 6           || status=1
+shot 05-boot-d 6           || status=1
+shot 06-desktop 40         || status=1
+shot 07-desktop-later 30   || status=1
 
 echo "quit" | socat - "UNIX-CONNECT:$MON" >/dev/null 2>&1 || true
 wait "$QPID" 2>/dev/null || true

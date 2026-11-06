@@ -23,7 +23,7 @@ Widget {
     Process {
         id: proc
         command: ["curl", "-sf", "--max-time", "10",
-                  "https://wttr.in/" + encodeURIComponent(root.conf.city || "") + "?format=%c|%t|%C|%l&lang=" + (root.en ? "en" : "uk")]
+                  "https://wttr.in/" + encodeURIComponent(root.conf.city || "") + "?format=%c|%t|%C|%l&m&lang=" + (root.en ? "en" : "uk")]
         stdout: StdioCollector { onStreamFinished: root.parse(this.text) }
     }
     Timer { interval: 30 * 60 * 1000; repeat: true; running: true; triggeredOnStart: true; onTriggered: proc.running = true }

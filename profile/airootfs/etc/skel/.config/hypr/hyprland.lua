@@ -17,7 +17,7 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("hyprpaper")
     hl.exec_cmd("waybar")
     hl.exec_cmd("swaync")
-    hl.exec_cmd('nwg-dock-hyprland -d -i 42 -mb 10 -hd 0 -c "fuzzel"')
+    hl.exec_cmd('nwg-dock-hyprland -x -i 42 -mb 10 -c "fuzzel"')
     hl.exec_cmd("/usr/local/bin/ember-autostart-widgets")
     hl.exec_cmd("hypridle")
     hl.exec_cmd("systemctl --user start hyprpolkitagent")
@@ -80,6 +80,7 @@ hl.config({
 
     misc = {
         disable_hyprland_logo = true,
+        disable_splash_rendering = true,
         force_default_wallpaper = 0,
         background_color = 0xff1a1320,
         focus_on_activate = true,
