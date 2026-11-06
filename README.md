@@ -5,65 +5,95 @@
 <h1 align="center">Ember OS</h1>
 
 <p align="center">
-  Тепла, гарна й легка система на базі Arch Linux.<br>
   A warm, good-looking and lightweight Arch-based system.
 </p>
+
+<p align="center"><b>English</b> · <a href="README.uk.md">Українська</a></p>
 
 <p align="center">
   <img src="assets/wallpaper.png" width="720" alt="Ember OS wallpaper">
 </p>
 
-## Завантажити / Download
+## Download
 
-Готовий ISO — на сторінці **[Releases](../../releases/latest)** (файл `emberos-….iso`).
-Кожна збірка автоматично запускається у віртуальній машині, скриншоти — в релізі.
+Get the ISO from the **[Releases](../../releases/latest)** page (the `emberos-….iso` file, about 1.8 GB).
 
-## Що всередині
+Every build is tested automatically before it is published:
+- the live system boots to the desktop in a virtual machine;
+- the installer configuration is checked against the official Calamares schemas;
+- Ember OS is installed to a virtual disk, rebooted, and must reach the desktop.
 
-- **Робочий стіл** Hyprland: напівпрозорі вікна, плавні анімації, панель, док, обої з озером
-- **Віджети**: музика (Spotify, YouTube у Firefox, будь-який плеєр), годинник, погода, процесор/памʼять/батарея — перетягуються мишкою
-- **Win + Enter** — командний рядок Ember на весь екран, `/desktop` — назад
-- **Програми**: Firefox, Claude в окремому вікні, Steam, Hydra Launcher, файли `.exe` подвійним кліком
-- **Драйвери** — автоматично під будь-яке залізо (Intel, AMD, NVIDIA, Wi-Fi, звук, ноутбуки)
-- **Встановлювач** з Wi-Fi: стерти диск / поруч з Windows / замінити розділ / вручну
-- **Красиве завантаження**: меню, заставка з лисеням, екран входу й блокування
-- **Мови**: українська, English, русский
+Screenshots from these tests are attached to each release.
 
-## Команди (Win + Enter)
+## What's inside
 
-| Команда | Що робить |
+- **Desktop**: Hyprland with translucent windows, smooth animations, a top bar, a dock and a lake-at-sunset wallpaper
+- **Widgets**: music (Spotify, YouTube in Firefox, any player), clock, weather, CPU / memory / battery. Drag them with the mouse
+- **Win + Enter** opens the Ember command line full-screen; `/desktop` takes you back
+- **Apps**: Firefox, Claude in its own window, Steam, Hydra Launcher, and `.exe` files that open with a double click
+- **Drivers** are installed automatically for any hardware (Intel, AMD, NVIDIA, Wi-Fi, audio, laptops)
+- **Installer** with Wi-Fi setup: erase disk / install alongside Windows / replace a partition / manual
+- **A polished boot**: themed boot menu, a fox splash screen, and themed login and lock screens
+- **Languages**: Ukrainian, English, Russian
+
+## Commands (Win + Enter)
+
+| Command | What it does |
 |---|---|
-| `/search котики` | Firefox з пошуком |
-| `/desktop` | повернутися на робочий стіл |
-| `/download steam` | встановити програму (`/apps` — список) |
-| `/little` · `/full` | легкий режим для старих компʼютерів · повний режим |
-| `/widgets` | віджети: `on`/`off`/`opacity`/`scale`/`reset` |
-| `/status` | процесор, памʼять, диск, батарея |
-| `/drivers` | перевірити драйвери |
-| `/wifi` · `/update` · `/files` | Wi-Fi · оновлення · провідник |
-| `/lang uk` · `/lang en` · `/lang ru` | мова |
+| `/search cats` | open Firefox with a search |
+| `/desktop` | back to the desktop |
+| `/download steam` | install an app (`/apps` shows the list) |
+| `/little` · `/full` | light mode for older computers · full mode |
+| `/widgets` | widgets: `on` / `off` / `opacity` / `scale` / `reset` |
+| `/status` | CPU, memory, disk, battery |
+| `/drivers` | check and install drivers |
+| `/wifi` · `/update` · `/files` | Wi-Fi · system update · file manager |
+| `/lang uk` · `/lang en` · `/lang ru` | interface language |
 
-Усе інше, що ти напишеш без `/`, виконується як звичайна команда терміналу.
+Anything you type without a leading `/` runs as a normal terminal command.
 
-## Гарячі клавіші
+## Keyboard shortcuts
 
-`Win+Enter` командний рядок · `Win+D` програми · `Win+T` термінал · `Win+E` файли · `Win+B` браузер · `Win+L` блокування · `Win+Q` закрити вікно · `Win+F` на весь екран · `Win+1…9` робочі столи · `Print` скриншот · `Alt+Shift` мова клавіатури (EN · UA · RU)
+| Keys | Action |
+|---|---|
+| `Win + Enter` | Ember command line (show / hide) |
+| `Win + D` | app launcher |
+| `Win + T` · `Win + E` · `Win + B` | terminal · files · browser |
+| `Win + Q` | close the window |
+| `Win + F` | full screen on / off |
+| `Win + V` | make the window free-floating (move and resize it like in Windows) |
+| `Win` + left mouse drag | move a window |
+| `Win` + right mouse drag | resize a window |
+| `Win + 1…9` | switch to desktop 1…9 |
+| `Win + Shift + 1…9` | send the window to desktop 1…9 (a way to "hide" it without closing) |
+| `Win + L` | lock the screen |
+| `Print` · `Shift + Print` | screenshot of an area (copied) · full screenshot (saved to Pictures) |
+| `Alt + Shift` | keyboard layout EN → UA → RU |
 
-## Як спробувати
+## How to try it
 
-**VirtualBox:** нова ВМ → тип *Linux / Arch Linux (64-bit)*, 4 ГБ памʼяті, 2+ ядра, диск 30 ГБ.
-Display → Graphics Controller **VMSVGA**, увімкни **3D Acceleration**, Video Memory 128 МБ. Підключи ISO і запусти.
+**VirtualBox:** create a new VM with type *Linux / Arch Linux (64-bit)*, 4 GB RAM, 2+ CPUs and a 30 GB disk.
+Under Display, set Graphics Controller to **VMSVGA**, enable **3D Acceleration** and set Video Memory to 128 MB. Attach the ISO and start the VM.
 
-**Флешка:** запиши ISO через [Ventoy](https://www.ventoy.net), Rufus (режим DD) або balenaEtcher.
-Перед запуском вимкни **Secure Boot** у BIOS (ThinkPad: F1 → Security → Secure Boot → Disabled).
+**USB stick:** write the ISO with [Ventoy](https://www.ventoy.net), balenaEtcher or Rufus. In Rufus, choose **DD Image mode** when asked.
+Turn off **Secure Boot** in the BIOS first. On a ThinkPad: F1 → Security → Secure Boot → Disabled. Then boot from the USB stick (F12 on ThinkPads).
 
-## Збірка вручну / Manual build
+**Installing:** in the welcome window, connect to Wi-Fi and click **Install Ember OS**. On the *Partitions* step, choose **Erase disk** (or **Install alongside** to keep Windows).
+After the first boot, Steam, Wine and Hydra Launcher download in the background, and a notification tells you when they are ready.
+
+## Tips
+
+- Lost a widget off-screen? Run `/widgets reset` in the command line.
+- An app is missing? Try `/download <name>`, or `/apps` for the list of known apps.
+- Old or slow computer? `/little` turns off blur, shadows, heavy animations and widgets.
+
+## Building it yourself
 
 ```bash
 docker run --rm --privileged -v "$PWD:/repo" archlinux:latest bash /repo/build.sh
-# ISO зʼявиться в ./out
+# the ISO appears in ./out
 ```
 
 ---
 
-Ember OS is an independent hobby project. It is not affiliated with Arch Linux, Anthropic, Valve, or any other company.
+Ember OS is an independent hobby project. It is not affiliated with Arch Linux, Anthropic, Valve, the Hydra project, or any other company.

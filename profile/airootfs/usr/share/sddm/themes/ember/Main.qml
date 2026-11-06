@@ -12,6 +12,17 @@ Rectangle {
     readonly property color ember: "#e8875a"
     readonly property color amber: "#f3a46c"
     property int sessionIndex: sessionModel.lastIndex >= 0 ? sessionModel.lastIndex : 0
+    property string firstUser: ""
+
+    // Перший звичайний користувач (щоб не підставлявся root)
+    Repeater {
+        model: userModel
+        delegate: Item {
+            required property int index
+            required property string name
+            Component.onCompleted: if (root.firstUser === "" && name !== "root") root.firstUser = name
+        }
+    }
 
     function doLogin() {
         errorText.text = ""
@@ -100,7 +111,7 @@ Rectangle {
             TextField {
                 id: userField
                 width: parent.width; height: 46
-                text: userModel.lastUser
+                text: (userModel.lastUser !== "" && userModel.lastUser !== "root") ? userModel.lastUser : root.firstUser
                 placeholderText: "Імʼя користувача · Username"
                 horizontalAlignment: Text.AlignHCenter
                 color: root.cream
