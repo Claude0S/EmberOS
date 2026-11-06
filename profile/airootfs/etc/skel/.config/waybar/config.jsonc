@@ -1,0 +1,98 @@
+// Ember OS — верхняя панель
+{
+  "layer": "top",
+  "position": "top",
+  "height": 40,
+  "margin-top": 8,
+  "margin-left": 14,
+  "margin-right": 14,
+  "spacing": 6,
+
+  "modules-left": ["custom/ember", "hyprland/workspaces", "mpris"],
+  "modules-center": ["clock"],
+  "modules-right": ["hyprland/language", "tray", "network", "bluetooth", "pulseaudio", "battery", "custom/notifications", "custom/power"],
+
+  "custom/ember": {
+    "format": "  Ember",
+    "tooltip": false,
+    "on-click": "fuzzel",
+    "on-click-right": "/usr/local/bin/ember-toggle-shell"
+  },
+
+  "hyprland/workspaces": {
+    "format": "{icon}",
+    "format-icons": { "active": "●", "default": "○" },
+    "persistent-workspaces": { "*": 4 },
+    "on-scroll-up": "hyprctl dispatch workspace e-1",
+    "on-scroll-down": "hyprctl dispatch workspace e+1"
+  },
+
+  "mpris": {
+    "format": "{status_icon}  {dynamic}",
+    "format-paused": "{status_icon}  <i>{dynamic}</i>",
+    "dynamic-order": ["artist", "title"],
+    "dynamic-len": 32,
+    "status-icons": { "playing": "󰐊", "paused": "󰏤", "stopped": "󰓛" },
+    "on-click": "playerctl play-pause",
+    "on-scroll-up": "playerctl next",
+    "on-scroll-down": "playerctl previous"
+  },
+
+  "clock": {
+    "format": "{:%H:%M  ·  %a %d %b}",
+    "tooltip-format": "<tt>{calendar}</tt>",
+    "calendar": {
+      "mode": "month",
+      "format": { "today": "<span color='#e8875a'><b>{}</b></span>" }
+    }
+  },
+
+  "hyprland/language": {
+    "format": "{short}",
+    "on-click": "hyprctl switchxkblayout all next"
+  },
+
+  "tray": { "icon-size": 16, "spacing": 8 },
+
+  "network": {
+    "format-wifi": "󰤨  {essid}",
+    "format-ethernet": "󰈀",
+    "format-disconnected": "󰤭",
+    "tooltip-format": "{ifname}  {ipaddr}",
+    "on-click": "nm-connection-editor"
+  },
+
+  "bluetooth": {
+    "format": "󰂯",
+    "format-disabled": "",
+    "format-connected": "󰂱 {num_connections}",
+    "on-click": "blueman-manager"
+  },
+
+  "pulseaudio": {
+    "format": "{icon}  {volume}%",
+    "format-muted": "󰝟",
+    "format-icons": { "default": ["󰕿", "󰖀", "󰕾"] },
+    "on-click": "pavucontrol",
+    "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+  },
+
+  "battery": {
+    "states": { "warning": 25, "critical": 12 },
+    "format": "{icon}  {capacity}%",
+    "format-charging": "󰂄  {capacity}%",
+    "format-icons": ["󰁺", "󰁼", "󰁾", "󰂀", "󰁹"]
+  },
+
+  "custom/notifications": {
+    "format": "󰂚",
+    "tooltip": false,
+    "on-click": "swaync-client -t -sw"
+  },
+
+  "custom/power": {
+    "format": "⏻",
+    "tooltip": false,
+    "on-click": "/usr/local/bin/ember-power"
+  }
+}

@@ -1,0 +1,12 @@
+[Unit]
+Description=Ember OS live session user
+ConditionKernelCommandLine=archisobasedir
+Before=display-manager.service systemd-user-sessions.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/ember-live-user
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

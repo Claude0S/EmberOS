@@ -1,0 +1,12 @@
+#!/bin/bash
+# Меню питания Ember OS
+choice=$(printf '󰌾  Заблокировать\n󰤄  Сон\n󰍃  Выйти\n󰜉  Перезагрузить\n󰐥  Выключить\n' \
+    | fuzzel --dmenu --lines 5 --width 24 --prompt "⏻  ")
+
+case "$choice" in
+    *Заблокировать*) loginctl lock-session ;;
+    *Сон*)           systemctl suspend ;;
+    *Выйти*)         hyprctl dispatch exit ;;
+    *Перезагрузить*) systemctl reboot ;;
+    *Выключить*)     systemctl poweroff ;;
+esac

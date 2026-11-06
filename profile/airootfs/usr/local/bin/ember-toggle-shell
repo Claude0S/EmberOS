@@ -1,0 +1,14 @@
+#!/bin/bash
+# Win+Enter: рабочий стол <-> командная строка Ember (на весь экран).
+# Командная строка живёт на «специальном» рабочем столе Hyprland,
+# поэтому открывается мгновенно и с анимацией, а рабочий стол остаётся как был.
+
+if ! hyprctl clients -j | grep -q '"class": "ember-shell"'; then
+    if command -v ember-shell >/dev/null 2>&1; then
+        kitty --class ember-shell -e ember-shell &
+    else
+        kitty --class ember-shell &
+    fi
+    sleep 0.3
+fi
+hyprctl dispatch togglespecialworkspace shell >/dev/null

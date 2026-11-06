@@ -1,0 +1,15 @@
+#!/bin/bash
+# Живая сессия: создаёт пользователя "ember" без пароля и с sudo.
+# Запускается только на флешке (см. ember-live-user.service).
+set -e
+if ! id ember >/dev/null 2>&1; then
+    groups=""
+    for g in wheel video audio input network storage lp render; do
+        getent group "$g" >/dev/null && groups="${groups:+$groups,}$g"
+    done
+    useradd -m -s /bin/bash -c "Ember" -G "$groups" ember
+    passwd -d ember >/dev/null
+fi
+install -m 440 /dev/stdin /etc/sudoers.d/10-ember-live <<'EOF'
+ember ALL=(ALL) NOPASSWD: ALL
+EOF

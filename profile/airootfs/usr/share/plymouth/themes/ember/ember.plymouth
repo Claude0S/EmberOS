@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=Ember
+Description=Ember OS boot splash
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/ember
+ScriptFile=/usr/share/plymouth/themes/ember/ember.script

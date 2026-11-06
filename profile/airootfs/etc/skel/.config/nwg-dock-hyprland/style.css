@@ -1,0 +1,24 @@
+/* Ember OS — dock */
+window {
+  background: rgba(26, 19, 32, 0.55);
+  border: 1px solid rgba(240, 160, 112, 0.30);
+  border-radius: 20px;
+}
+#box { padding: 6px 10px; }
+button, image {
+  background: none;
+  border-style: none;
+  box-shadow: none;
+  color: #fbeee0;
+}
+button {
+  padding: 4px;
+  margin: 2px 4px;
+  border-radius: 14px;
+  transition: all 0.2s ease;
+}
+button:hover {
+  background: rgba(232, 135, 90, 0.18);
+}
+button:focus { box-shadow: none; }
+#active { border-bottom: 3px solid #e8875a; }

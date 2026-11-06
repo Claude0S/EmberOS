@@ -1,0 +1,65 @@
+# Ember OS — boot splash: лисёнок и «тлеющие» точки
+
+Window.SetBackgroundTopColor(0.11, 0.08, 0.16);
+Window.SetBackgroundBottomColor(0.20, 0.10, 0.16);
+
+W = Window.GetWidth();
+H = Window.GetHeight();
+
+fox_img = Image("fox.png");
+fox = Sprite(fox_img);
+fox.SetX(W / 2 - fox_img.GetWidth() / 2);
+fox.SetY(H / 2 - fox_img.GetHeight() / 2 - 40);
+fox.SetOpacity(0);
+
+title_img = Image.Text("Ember OS", 0.95, 0.64, 0.42, 1, "Sans Bold 26");
+title = Sprite(title_img);
+title.SetX(W / 2 - title_img.GetWidth() / 2);
+title.SetY(H / 2 + fox_img.GetHeight() / 2 - 10);
+title.SetOpacity(0);
+
+dot_img = Image("dot.png");
+for (i = 0; i < 5; i++) {
+    dots[i] = Sprite(dot_img);
+    dots[i].SetX(W / 2 - 2.5 * 30 + i * 30 + 6);
+    dots[i].SetY(H / 2 + fox_img.GetHeight() / 2 + 50);
+    dots[i].SetOpacity(0.2);
+}
+
+t = 0;
+fun refresh() {
+    t++;
+    a = t / 40;
+    if (a > 1) a = 1;
+    fox.SetOpacity(a);
+    title.SetOpacity(a);
+    for (i = 0; i < 5; i++) {
+        phase = Math.Sin(t / 9 - i * 0.8);
+        dots[i].SetOpacity(0.25 + 0.75 * (phase + 1) / 2);
+    }
+}
+Plymouth.SetRefreshFunction(refresh);
+
+# ─── Ввод пароля (зашифрованный диск) ───
+fun display_password(prompt, bullets) {
+    p = "";
+    for (i = 0; i < bullets; i++) p += "• ";
+    pw_img = Image.Text(prompt + "   " + p, 0.98, 0.93, 0.88, 1, "Sans 16");
+    pw.sprite = Sprite(pw_img);
+    pw.sprite.SetX(W / 2 - pw_img.GetWidth() / 2);
+    pw.sprite.SetY(H * 0.8);
+}
+Plymouth.SetDisplayPasswordFunction(display_password);
+
+fun display_normal() {
+    if (pw.sprite) pw.sprite.SetOpacity(0);
+}
+Plymouth.SetDisplayNormalFunction(display_normal);
+
+fun message(text) {
+    msg_img = Image.Text(text, 0.98, 0.93, 0.88, 0.8, "Sans 12");
+    msg.sprite = Sprite(msg_img);
+    msg.sprite.SetX(W / 2 - msg_img.GetWidth() / 2);
+    msg.sprite.SetY(H * 0.9);
+}
+Plymouth.SetMessageFunction(message);

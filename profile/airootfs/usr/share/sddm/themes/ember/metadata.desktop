@@ -1,0 +1,12 @@
+[SddmGreeterTheme]
+Name=Ember
+Description=Ember OS login screen
+Author=Ember OS
+Type=sddm-theme
+Version=1.0
+Website=https://github.com/Claude0S/EmberOS
+MainScript=Main.qml
+ConfigFile=theme.conf
+Theme-Id=ember
+Theme-API=2.0
+QtVersion=6

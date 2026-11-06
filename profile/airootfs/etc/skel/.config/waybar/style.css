@@ -1,0 +1,52 @@
+/* Ember OS — waybar */
+* {
+  font-family: "Inter", "JetBrainsMono Nerd Font", sans-serif;
+  font-size: 14px;
+  min-height: 0;
+  border: none;
+}
+
+window#waybar {
+  background: rgba(26, 19, 32, 0.55);
+  border: 1px solid rgba(240, 160, 112, 0.30);
+  border-radius: 16px;
+  color: #fbeee0;
+}
+
+tooltip {
+  background: rgba(26, 19, 32, 0.92);
+  border: 1px solid rgba(240, 160, 112, 0.4);
+  border-radius: 12px;
+}
+
+#custom-ember {
+  color: #f3a46c;
+  font-weight: bold;
+  padding: 0 14px 0 16px;
+}
+
+#workspaces button {
+  color: rgba(251, 238, 224, 0.45);
+  padding: 0 6px;
+  background: transparent;
+  transition: all 0.25s ease;
+}
+#workspaces button.active { color: #e8875a; }
+#workspaces button:hover  { color: #f3a46c; background: rgba(232, 135, 90, 0.12); border-radius: 10px; }
+
+#clock { font-weight: 600; }
+
+#mpris, #network, #bluetooth, #pulseaudio, #battery, #tray, #language,
+#custom-notifications, #custom-power {
+  padding: 0 10px;
+  margin: 6px 0;
+  border-radius: 10px;
+}
+
+#mpris { color: #f2c37a; }
+#battery.warning  { color: #f2c37a; }
+#battery.critical { color: #ff7a6b; }
+#custom-power { color: #e8875a; padding-right: 16px; }
+#custom-power:hover, #custom-notifications:hover, #pulseaudio:hover, #network:hover {
+  background: rgba(232, 135, 90, 0.15);
+}

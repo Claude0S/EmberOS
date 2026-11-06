@@ -1,0 +1,58 @@
+name: Lint configs
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install tools
+        run: pacman -Syu --noconfirm --needed hyprland quickshell qt6-declarative python shellcheck >/dev/null
+
+      - name: Shell scripts (bash -n + shellcheck)
+        run: |
+          set -e
+          for f in build.sh tests/*.sh profile/airootfs/usr/local/bin/*; do
+            bash -n "$f" && echo "syntax ok: $f"
+          done
+          shellcheck -S warning build.sh tests/*.sh profile/airootfs/usr/local/bin/* || true
+
+      - name: JSON configs
+        run: |
+          python - <<'EOF'
+          import json, re, glob, sys
+          bad = 0
+          for f in glob.glob('profile/**/*.json*', recursive=True):
+              s = open(f).read()
+              s = re.sub(r'^\s*//.*$', '', s, flags=re.M)
+              try: json.loads(s); print('json ok:', f)
+              except Exception as e: print('JSON ERROR:', f, e); bad = 1
+          sys.exit(bad)
+          EOF
+
+      - name: Hyprland config (--verify-config)
+        run: |
+          H=$(mktemp -d)
+          cp -r profile/airootfs/etc/skel/. "$H/"
+          export HOME="$H" XDG_RUNTIME_DIR=$(mktemp -d)
+          out=$(Hyprland --verify-config -c "$H/.config/hypr/hyprland.conf" 2>&1 || true)
+          echo "$out"
+          echo "--- little mode ---"
+          cp profile/airootfs/usr/share/ember/little/mode.conf "$H/.config/hypr/mode.conf"
+          out2=$(Hyprland --verify-config -c "$H/.config/hypr/hyprland.conf" 2>&1 || true)
+          echo "$out2"
+          if echo "$out$out2" | grep -qiE 'error|invalid|unknown'; then echo "::error::Hyprland config has problems"; exit 1; fi
+
+      - name: QML (qmllint)
+        run: |
+          L=/usr/lib/qt6/bin/qmllint
+          for f in $(find profile -name '*.qml'); do
+            echo "== $f"
+            $L -I /usr/lib/qt6/qml -I "$(dirname "$f")" "$f" 2>&1 | grep -E 'Error|error' || echo "no errors"
+          done

@@ -59,6 +59,26 @@ sed -i \
 grep -rlI "Arch Linux" "$PROFILE/grub" "$PROFILE/syslinux" "$PROFILE/efiboot" 2>/dev/null \
   | xargs -r sed -i 's/Arch Linux install medium/Ember OS/g; s/Arch Linux/Ember OS/g' || true
 
+# --- Part 2: graphical live session ---
+# Boot splash picture for BIOS (syslinux) menu
+cp "$REPO/profile/airootfs/usr/share/ember/syslinux/splash.png" "$PROFILE/syslinux/splash.png"
+# No text-console autologin: SDDM takes over
+rm -f "$PROFILE/airootfs/etc/systemd/system/getty@tty1.service.d/autologin.conf"
+# NetworkManager instead of systemd-networkd / iwd
+rm -f "$PROFILE/airootfs/etc/systemd/system/multi-user.target.wants/systemd-networkd.service" \
+      "$PROFILE/airootfs/etc/systemd/system/multi-user.target.wants/iwd.service" \
+      "$PROFILE/airootfs/etc/systemd/system/sockets.target.wants/systemd-networkd.socket" \
+      "$PROFILE/airootfs/etc/systemd/system/network-online.target.wants/systemd-networkd-wait-online.service" \
+      "$PROFILE/airootfs/etc/systemd/system/systemd-networkd-wait-online.service.wants/"* 2>/dev/null || true
+# Plymouth in the live initramfs (after kms)
+for f in "$PROFILE"/airootfs/etc/mkinitcpio.conf.d/*.conf "$PROFILE/airootfs/etc/mkinitcpio.conf"; do
+  [[ -f "$f" ]] && grep -q '^HOOKS=' "$f" && grep -qw kms "$f" && ! grep -qw plymouth "$f" \
+    && sed -i '/^HOOKS=/ s/\bkms\b/kms plymouth/' "$f" && echo "plymouth hook -> $f"
+done
+# quiet boot + splash on every boot entry
+grep -rlI 'archisobasedir=' "$PROFILE/grub" "$PROFILE/syslinux" "$PROFILE/efiboot" 2>/dev/null \
+  | xargs -r sed -i '/archisobasedir=/ { /splash/! s/archisobasedir=/quiet splash loglevel=3 vt.global_cursor_default=0 archisobasedir=/ }' || true
+
 log "Profile ready:"
 grep -E '^(iso_name|iso_label|iso_publisher)=' "$PROFILE/profiledef.sh"
 echo "packages: $(wc -l < "$PROFILE/packages.x86_64")"

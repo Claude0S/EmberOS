@@ -1,0 +1,16 @@
+#!/bin/bash
+# Выполняется при каждом входе в Hyprland; первый вход — приветствие.
+# Также досоздаёт конфиги из /etc/skel, если пользователь их удалил.
+set -u
+for f in .config/hypr/mode.conf .config/hypr/user.conf .config/ember/widgets.json; do
+    [ -e "$HOME/$f" ] || { mkdir -p "$(dirname "$HOME/$f")"; cp "/etc/skel/$f" "$HOME/$f" 2>/dev/null; }
+done
+mkdir -p "$HOME/Pictures"
+
+marker="$HOME/.config/ember/.welcomed"
+if [ ! -e "$marker" ]; then
+    touch "$marker"
+    sleep 3
+    notify-send -i /usr/share/ember/icons/fox-avatar.png "Добро пожаловать в Ember OS" \
+        "Win+Enter — командная строка · Win+D — программы · Win+L — блокировка"
+fi
