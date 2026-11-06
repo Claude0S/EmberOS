@@ -5,7 +5,6 @@ hl.config({
         shadow = { enabled = false },
         inactive_opacity = 1.0,
     },
-    misc = { vfr = true },
 })
 hl.animation({ leaf = "windowsIn",   enabled = true,  speed = 2, bezier = "default" })
 hl.animation({ leaf = "windowsOut",  enabled = true,  speed = 2, bezier = "default" })
