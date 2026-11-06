@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Ember Shell
+Name[uk]=Командний рядок Ember
+Comment=/search, /download, /little …
+Exec=ember-toggle-shell
+Icon=ember-shell
+Terminal=false
+Type=Application
+Categories=System;TerminalEmulator;
+StartupWMClass=ember-shell

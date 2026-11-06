@@ -49,6 +49,8 @@
 
   "hyprland/language": {
     "format": "{short}",
+    "format-us": "EN", "format-en": "EN",
+    "format-ua": "UA", "format-uk": "UA",
     "on-click": "hyprctl switchxkblayout all next"
   },
 

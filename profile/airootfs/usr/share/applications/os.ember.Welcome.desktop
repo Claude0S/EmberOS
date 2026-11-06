@@ -5,7 +5,6 @@ Comment=Встановити систему на компʼютер
 Comment[en]=Install the system on this computer
 Exec=ember-welcome
 Icon=ember-fox
-StartupWMClass=os.ember.Welcome
 Terminal=false
 Type=Application
 Categories=System;

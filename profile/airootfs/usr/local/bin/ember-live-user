@@ -16,7 +16,7 @@ EOF
 
 # Живая сессия: значок установщика первым в доке
 pinned=/home/ember/.cache/nwg-dock-pinned
-if [ -f "$pinned" ] && ! grep -qx ember-install "$pinned"; then
-    sed -i '1i ember-install' "$pinned"
+if [ -f "$pinned" ] && ! grep -qx os.ember.Welcome "$pinned"; then
+    sed -i '1i os.ember.Welcome' "$pinned"
 fi
 chown -R ember: /home/ember/.cache 2>/dev/null || true

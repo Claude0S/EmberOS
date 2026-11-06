@@ -1,0 +1,6 @@
+[org.gnome.desktop.interface]
+icon-theme='Papirus-Dark'
+gtk-theme='Adwaita-dark'
+color-scheme='prefer-dark'
+cursor-theme='Adwaita'
+font-name='Inter 10'

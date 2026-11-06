@@ -17,7 +17,7 @@ rm -rf /etc/systemd/system/getty@tty1.service.d
 rm -f /etc/systemd/network/*.network 2>/dev/null
 rm -f /root/.automated_script.sh /root/.zlogin
 rm -f /usr/local/bin/{choose-mirror,Installation_guide,livecd-sound}
-rm -f /usr/share/applications/ember-install.desktop /etc/xdg/autostart/ember-welcome.desktop
+rm -f /usr/share/applications/os.ember.Welcome.desktop /etc/xdg/autostart/ember-welcome.desktop
 printf '\n  Ember OS\n\n' > /etc/motd
 
 # VirtualBox-сервис нужен только внутри VirtualBox (у него есть своё условие)

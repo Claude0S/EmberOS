@@ -124,6 +124,27 @@ log "Building ISO (this takes a while)"
 mkdir -p "$OUT"
 mkarchiso -v -w "$WORK" -o "$OUT" "$PROFILE"
 
+# --- Check: every app in the menu/dock has an icon ---
+ROOTFS="$WORK/x86_64/airootfs"
+if [[ -d "$ROOTFS/usr/share/applications" ]]; then
+  log "Icon check"
+  missing=0
+  for d in "$ROOTFS"/usr/share/applications/*.desktop; do
+    grep -q '^NoDisplay=true' "$d" && continue
+    icon=$(grep -m1 '^Icon=' "$d" | cut -d= -f2-)
+    [[ -z "$icon" ]] && continue
+    if [[ "$icon" == /* ]]; then
+      [[ -e "$ROOTFS$icon" ]] && continue
+    elif find "$ROOTFS/usr/share/icons/Papirus-Dark" "$ROOTFS/usr/share/icons/Papirus" \
+              "$ROOTFS/usr/share/icons/hicolor" "$ROOTFS/usr/share/icons/Adwaita" "$ROOTFS/usr/share/pixmaps" \
+              -name "$icon.*" -print -quit 2>/dev/null | grep -q .; then
+      continue
+    fi
+    echo "  MISSING ICON: $(basename "$d") -> $icon"; missing=$((missing+1))
+  done
+  echo "  icons missing: $missing"
+fi
+
 cd "$OUT"
 for iso in *.iso; do sha256sum "$iso" > "$iso.sha256"; done
 log "Done:"
