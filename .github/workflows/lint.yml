@@ -13,7 +13,16 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install tools
-        run: pacman -Syu --noconfirm --needed hyprland quickshell qt6-declarative python shellcheck >/dev/null
+        run: pacman -Syu --noconfirm --needed hyprland quickshell qt6-declarative python python-yaml python-jsonschema shellcheck git >/dev/null
+
+      - name: Calamares configs vs official schemas
+        run: |
+          cd /tmp && git clone -q https://aur.archlinux.org/calamares.git aur-cal
+          . aur-cal/PKGBUILD
+          curl -fsSL -o cal.tar.gz "${source[0]#*::}"
+          mkdir cal && tar -xzf cal.tar.gz -C cal --strip-components=1
+          cd "$GITHUB_WORKSPACE"
+          python tests/calamares-schema.py /tmp/cal profile/airootfs/etc/calamares
 
       - name: Shell scripts (bash -n + shellcheck)
         run: |
