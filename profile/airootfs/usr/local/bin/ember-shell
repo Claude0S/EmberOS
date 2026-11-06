@@ -236,14 +236,42 @@ FOX = [
 ]
 
 
+def mascot_lines():
+    """Голова маскота з поточної теми (/theme, /mascot) — ~/.local/share/ember/mascot/head.json."""
+    try:
+        with open(os.path.expanduser("~/.local/share/ember/mascot/head.json")) as f:
+            h = json.load(f)
+        esc = {}
+        for ch, hx in h["colors"].items():
+            hx = hx.lstrip("#")
+            esc[ch] = "\033[38;2;%d;%d;%dm" % (int(hx[0:2], 16), int(hx[2:4], 16), int(hx[4:6], 16))
+        out = []
+        for row in h["rows"]:
+            line, cur = "", None
+            for ch in row.rstrip("."):
+                if ch == ".":
+                    line += "  "
+                    continue
+                if ch != cur:
+                    line += esc.get(ch, "")
+                    cur = ch
+                line += "██"
+            out.append(line + X)
+        width = 2 * max(len(r) for r in h["rows"])
+        return out, width
+    except (OSError, ValueError, KeyError, IndexError):
+        d = "\033[38;2;42;28;38m"
+        return [line.format(o=O, c=C, d=d, x=X) for line in FOX], 28
+
+
 def banner():
     os.system("clear")
-    d = "\033[38;2;42;28;38m"
     cols = shutil.get_terminal_size((100, 30)).columns
-    pad = " " * max(0, (cols - 28) // 2)
+    lines, width = mascot_lines()
+    pad = " " * max(0, (cols - width) // 2)
     print()
-    for line in FOX:
-        print(pad + line.format(o=O, c=C, d=d, x=X))
+    for line in lines:
+        print(pad + line)
     print()
     title = f"{B}{O}Ember OS{X}"
     print(" " * max(0, (cols - 8) // 2) + title)
@@ -468,6 +496,19 @@ def cmd_widgets(args):
     say(t("w_saved"), G)
 
 
+def look(args):
+    """/theme, /mascot: змінити вигляд і одразу перемалювати лисеня в шапці."""
+    try:
+        r = subprocess.run(["ember-theme"] + args, capture_output=True, text=True, timeout=60)
+    except (OSError, subprocess.TimeoutExpired) as e:
+        return say(str(e), R)
+    if r.returncode == 0:
+        banner()
+    out = (r.stdout + r.stderr).strip()
+    if out:
+        print(out)
+
+
 def cmd_simple(cmd):
     return lambda _: run(cmd)
 
@@ -483,10 +524,10 @@ COMMANDS = {
     "status": cmd_status,
     "lang": cmd_lang,
     "widgets": cmd_widgets,
-    "theme": lambda a: run(["ember-theme", "set", a[0]] if a else ["ember-theme", "list"]),
+    "theme": lambda a: look(["set", a[0]]) if a else run(["ember-theme", "list"]),
     "themes": lambda a: run(["ember-theme", "list"]),
-    "mascot": lambda a: run(["ember-theme", "mascot", a[0]] if a else ["ember-theme", "status"]),
-    "maskot": lambda a: run(["ember-theme", "mascot", a[0]] if a else ["ember-theme", "status"]),
+    "mascot": lambda a: look(["mascot", a[0]]) if a else run(["ember-theme", "status"]),
+    "maskot": lambda a: look(["mascot", a[0]]) if a else run(["ember-theme", "status"]),
     "wallpaper": lambda a: run(["ember-theme", "wallpaper"] + a if a else ["ember-theme", "status"]),
     "drivers": cmd_simple("sudo ember-drivers"),
     "wifi": cmd_simple("nmtui"),

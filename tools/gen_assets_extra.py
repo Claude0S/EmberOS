@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Six extra Ember OS themes (aurora, cyber, autumn, desert, winter, cosmos):
 scene overlays + mascot variants on top of gen_assets.py.
-Run: python3 tools/gen_assets_extra.py OUTDIR"""
+Run: python3 tools/gen_assets_extra.py OUTDIR
+     python3 tools/gen_assets_extra.py --heads THEMESDIR   (only head.json for the terminal banner)"""
 import math, random, re, sys, os, subprocess, json
 src=open(os.path.join(os.path.dirname(os.path.abspath(__file__)),"gen_assets.py")).read()
 src=src.split("def run(*a)")[0]
-OUTARG=sys.argv[1] if len(sys.argv)>1 else "out-assets"; sys.argv=["x",OUTARG]
+OUTARG=sys.argv[1] if len(sys.argv)>1 else "out-assets"; sys.argv_heads=sys.argv[2] if len(sys.argv)>2 else ""; sys.argv=["x",OUTARG]
 exec(src)
 W,H=1920,1080
 
@@ -111,7 +112,7 @@ def wallpaper_x(t):
     s=s.replace("</svg>", overlay_front(t)+"\n</svg>")
     return s
 
-def grid_x(kind):
+def grid_x(kind, normalize=True):
     G=fox_grid()
     def put(r,c,ch): G[(r,c)]=ch
     if kind=="fennec":
@@ -139,8 +140,36 @@ def grid_x(kind):
                 d=math.hypot(r-cy,(c-cx))
                 if 9.6<=d<10.6: G.setdefault((r,c),'R')
         for (r,c) in [(-1,4),(0,3),(1,3)]: G[(r,c)]='r'
+    if not normalize: return G
     mr=min(r for r,_ in G); mc=min(c for _,c in G)
     return {(r-mr,c-mc):v for (r,c),v in G.items()}
+
+def head_json(t, kind):
+    """Head of the mascot (with its hat/visor/ears) for the terminal banner."""
+    f=t["fox"]; G=grid_x(kind, normalize=False)
+    H={(r,c):v for (r,c),v in G.items() if r<=11 and 1<=c<=16 and not (r>=9 and c>=16)}
+    if kind!="scarf": H={k:v for k,v in H.items() if k[0]<=10}
+    if kind=="helmet":   # full round glass helmet around the head only
+        base=fox_grid()
+        H={k:(base[k] if v in "Rr" else v) for k,v in H.items() if v not in "Rr" or k in base}
+        for r in range(-5,16):
+            for c in range(-2,20):
+                d=math.hypot(r-5.0,c-8.5)
+                if 8.0<=d<9.0 and (r,c) not in H: H[(r,c)]='R'
+        for rc in [(-1,5),(-1,4),(0,2)]: H[rc]="r"
+
+    col={'O':f["fur"],'C':f["chest"],'E':f["eye"],'N':f["nose"]}
+    col.update({k:v for k,v in f.items() if len(k)==1})
+    if "rim" in f:
+        col['m']=f["rim"]
+        for (r,c),v in list(H.items()):
+            if v in "RrV": continue
+            for dr,dc in ((-1,0),(1,0),(0,-1),(0,1)):
+                if (r+dr,c+dc) not in H: H[(r+dr,c+dc)]='m'
+    r0=min(r for r,_ in H); r1=max(r for r,_ in H); c0=min(c for _,c in H); c1=max(c for _,c in H)
+    rows=["".join(H.get((r,c),'.') for c in range(c0,c1+1)) for r in range(r0,r1+1)]
+    used={ch for row in rows for ch in row if ch!='.'}
+    return {"rows":rows,"colors":{k:v for k,v in col.items() if k in used}}
 
 def fox_svg_x(t,bg):
     f=t["fox"]; G=grid_x(t["mascot"])
@@ -170,8 +199,16 @@ def fox_svg_x(t,bg):
     o.append('</svg>'); return "\n".join(o)
 
 def run(*a): subprocess.run(a, check=True)
+
+def write_heads(themes_dir):
+    for key,t in list(THEMES.items())+list(NEW.items()):
+        d=os.path.join(themes_dir,key)
+        if os.path.isdir(d):
+            json.dump(head_json(t, t.get("mascot","plain")), open(f"{d}/head.json","w"))
+
+if OUTARG=="--heads":
+    write_heads(sys.argv_heads); print("heads ok"); sys.exit(0)
 OUT=OUTARG; os.makedirs(OUT,exist_ok=True)
-only=sys.argv[1:] if False else None
 for key,t in NEW.items():
     d=os.path.join(OUT,key); os.makedirs(d,exist_ok=True)
     tt=dict(t)
@@ -181,4 +218,5 @@ for key,t in NEW.items():
     run("convert",f"{d}/fox.png","-trim","+repage","-filter","point","-resize","220x220",f"{d}/fox-small.png")
     pal={k:t[k] for k in ("name","accent","accent2","accent3","fg","bg","surface")}; pal["fox"]={k:v for k,v in t["fox"].items()}
     json.dump(pal,open(f"{d}/theme.json","w"),indent=2)
+write_heads(OUT)
 print("ok")
