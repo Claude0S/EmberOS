@@ -36,6 +36,11 @@ for d in usr/share/ember usr/share/sddm/themes/ember usr/share/plymouth/themes/e
     [ -d "$S/$d" ] && mkdir -p "/$d" && cp -r "$S/$d/." "/$d/"
 done
 for f in "$S"/usr/share/applications/ember-*.desktop; do install -m 644 "$f" /usr/share/applications/; done
+# Фонові служби Ember (драйвери, докачка програм)
+for f in "$S"/etc/systemd/system/ember-drivers.service "$S"/etc/systemd/system/ember-setup-apps.service; do
+    [ -f "$f" ] && install -m 644 "$f" /etc/systemd/system/
+done
+systemctl daemon-reload 2>/dev/null || true
 # Шаблон нових користувачів
 cp -r "$S/etc/skel/." /etc/skel/
 gtk-update-icon-cache -q /usr/share/icons/hicolor 2>/dev/null || true

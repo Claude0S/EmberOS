@@ -7,7 +7,7 @@ ConditionKernelCommandLine=!archisobasedir
 ConditionPathExists=!/var/lib/ember/apps-done
 
 [Service]
-Type=oneshot
+Type=exec
 ExecStart=/usr/local/bin/ember-setup-apps
 Nice=10
 TimeoutStartSec=2h

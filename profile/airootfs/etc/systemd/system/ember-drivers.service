@@ -5,7 +5,7 @@ After=network-online.target
 ConditionKernelCommandLine=!archisobasedir
 
 [Service]
-Type=oneshot
+Type=exec
 ExecStart=/usr/local/bin/ember-drivers-boot
 Nice=10
 TimeoutStartSec=1h
