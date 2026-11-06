@@ -65,8 +65,8 @@ Widget {
             Column {
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 4
-                Text { text: root.desc; color: root.cFg; font.family: "Inter"; font.pixelSize: 15; font.weight: Font.Medium; width: 170; elide: Text.ElideRight }
-                Text { text: root.sub; color: root.cFg; opacity: 0.6; font.family: "Inter"; font.pixelSize: 13; width: 170; elide: Text.ElideRight }
+                Text { text: root.desc; color: root.cFg; font.family: "Inter"; font.pixelSize: 15; font.weight: Font.Medium; width: 200; elide: Text.ElideRight }
+                Text { text: root.sub; color: root.cFg; opacity: 0.6; font.family: "Inter"; font.pixelSize: 13; width: 200; elide: Text.ElideRight }
             }
         }
         Row {

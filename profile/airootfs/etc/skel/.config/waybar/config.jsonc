@@ -10,7 +10,7 @@
 
   "modules-left": ["custom/ember", "hyprland/workspaces"],
   "modules-center": ["clock", "custom/weather"],
-  "modules-right": ["hyprland/language", "tray", "network", "bluetooth", "pulseaudio", "battery", "custom/notifications", "custom/power"],
+  "modules-right": ["custom/lang", "tray", "network", "bluetooth", "pulseaudio", "battery", "custom/notifications", "custom/power"],
 
   "custom/ember": {
     "format": "󰈺  Ember",
@@ -27,7 +27,7 @@
   },
 
   "clock": {
-    "format": "<b>{:%H:%M}</b>  <span alpha='75%'>{:%a, %d %B}</span>",
+    "format": "<b>{0:%H:%M}</b>  <span alpha='75%'>{0:%a, %d %B}</span>",
     "tooltip-format": "<tt>{calendar}</tt>",
     "calendar": {
       "mode": "month",
@@ -43,11 +43,10 @@
     "on-click": "firefox --new-tab https://wttr.in"
   },
 
-  "hyprland/language": {
-    "format": "{short}",
-    "format-us": "EN", "format-en": "EN",
-    "format-ua": "UA", "format-uk": "UA",
-    "format-ru": "RU",
+  "custom/lang": {
+    "exec": "/usr/local/bin/ember-kb-layout",
+    "format": "{}",
+    "tooltip": false,
     "on-click": "hyprctl switchxkblayout all next"
   },
 

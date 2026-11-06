@@ -32,8 +32,8 @@ tooltip {
   min-width: 12px;
   min-height: 12px;
   padding: 0;
-  margin: 16px 4px;
-  border-radius: 6px;
+  margin: 17px 4px;
+  border-radius: 5px;
   background: alpha(@fg, 0.22);
   transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -48,14 +48,14 @@ tooltip {
 #clock { padding: 0 12px; font-size: 15px; }
 #custom-weather { padding: 0 12px 0 4px; color: alpha(@fg, 0.85); }
 
-#language, #tray, #network, #bluetooth, #pulseaudio, #battery,
+#custom-lang, #tray, #network, #bluetooth, #pulseaudio, #battery,
 #custom-notifications, #custom-power {
   padding: 0 9px;
   margin: 7px 0;
   border-radius: 14px;
   color: alpha(@fg, 0.9);
 }
-#language { font-weight: 600; }
+#custom-lang { font-weight: 600; }
 #battery.charging { color: #9bc48a; }
 #battery.warning  { color: @accent3; }
 #battery.critical { color: #ff7a6b; }
@@ -69,7 +69,7 @@ tooltip {
   padding: 0 8px;
 }
 
-#network:hover, #bluetooth:hover, #pulseaudio:hover, #language:hover,
+#network:hover, #bluetooth:hover, #pulseaudio:hover, #custom-lang:hover,
 #custom-notifications:hover, #custom-power:hover, #custom-ember:hover {
   background: alpha(@accent, 0.18);
 }
