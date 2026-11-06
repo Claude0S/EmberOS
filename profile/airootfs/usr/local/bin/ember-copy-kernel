@@ -1,0 +1,14 @@
+#!/bin/bash
+# Копіює ядро і мікрокод у /boot нової системи (з флешки або з самої системи)
+ROOT="${1:?root}"
+mkdir -p "$ROOT/boot"
+k=""
+for f in /run/archiso/bootmnt/arch/boot/x86_64/vmlinuz-linux "$ROOT"/usr/lib/modules/*/vmlinuz; do
+    [ -f "$f" ] && { k="$f"; break; }
+done
+[ -n "$k" ] || { echo "kernel not found" >&2; exit 1; }
+cp "$k" "$ROOT/boot/vmlinuz-linux"
+for u in intel-ucode amd-ucode; do
+    [ -f "/run/archiso/bootmnt/arch/boot/$u.img" ] && cp "/run/archiso/bootmnt/arch/boot/$u.img" "$ROOT/boot/"
+done
+exit 0

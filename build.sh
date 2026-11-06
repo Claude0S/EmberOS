@@ -121,7 +121,7 @@ for f in "$PROFILE"/airootfs/etc/mkinitcpio.conf.d/*.conf "$PROFILE/airootfs/etc
 done
 # quiet boot + splash on every boot entry
 grep -rlI 'archisobasedir=' "$PROFILE/grub" "$PROFILE/syslinux" "$PROFILE/efiboot" 2>/dev/null \
-  | xargs -r sed -i '/archisobasedir=/ { /splash/! s/archisobasedir=/quiet splash loglevel=3 vt.global_cursor_default=0 archisobasedir=/ }' || true
+  | xargs -r sed -i '/archisobasedir=/ { /splash/! s/archisobasedir=/quiet splash loglevel=3 vt.global_cursor_default=0 copytoram=n archisobasedir=/ }' || true
 
 log "Profile ready:"
 grep -E '^(iso_name|iso_label|iso_publisher)=' "$PROFILE/profiledef.sh"
