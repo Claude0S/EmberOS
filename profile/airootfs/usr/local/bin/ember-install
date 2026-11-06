@@ -12,6 +12,28 @@ sfs=$(/usr/local/bin/ember-find-sfs) || {
     exit 1
 }
 sudo mkdir -p /run/ember && sudo ln -sf "$sfs" /run/ember/airootfs.sfs
+
+# Перевірка флешки: чи не пошкоджений образ системи (найчастіша причина помилки rsync 11)
+. /usr/share/ember/i18n.sh
+sumfile="${sfs%.sfs}.sha512"
+if [ ! -f /run/ember/verified ] && [ -f "$sumfile" ]; then
+    echo "$(msg "Перевіряю флешку (1–3 хвилини)…" "Checking the USB stick (1–3 minutes)…" "Проверяю флешку (1–3 минуты)…")"
+    notify-send -i /usr/share/ember/icons/fox-avatar.png "Ember OS" "$(msg "Перевіряю флешку перед установкою…" "Checking the USB stick before installing…" "Проверяю флешку перед установкой…")" 2>/dev/null
+    if (cd "$(dirname "$sfs")" && sha512sum -c --status "$(basename "$sumfile")"); then
+        sudo touch /run/ember/verified
+        echo "$(msg "Флешка в порядку ✓" "USB stick is OK ✓" "Флешка в порядке ✓")"
+    else
+        m="$(msg "Образ системи на флешці пошкоджений. Перезапиши флешку (Rufus → режим DD) або візьми іншу флешку, потім спробуй знову." \
+                 "The system image on the USB stick is damaged. Rewrite the stick (Rufus → DD mode) or use another one, then try again." \
+                 "Образ системы на флешке повреждён. Перезапиши флешку (Rufus → режим DD) или возьми другую, потом попробуй снова.")"
+        echo "$m" >&2
+        notify-send -u critical -i /usr/share/ember/icons/fox-avatar.png "Ember OS" "$m" 2>/dev/null
+        dmesg 2>/dev/null | grep -iE "squashfs|I/O error|blk_update" | tail -5 >&2
+        exit 1
+    fi
+fi
+# Місце на диску / журнал установки — для діагностики
+echo "Log: /tmp/calamares.log"
 echo "System image: $sfs"
 exec sudo --preserve-env=WAYLAND_DISPLAY,XDG_RUNTIME_DIR,XDG_SESSION_TYPE,LANG,LC_ALL \
     env QT_QPA_PLATFORM="wayland;xcb" QT_QPA_PLATFORMTHEME=qt6ct QT_QUICK_CONTROLS_STYLE=Basic \

@@ -46,9 +46,23 @@ mkfs.ext4 -F -q -L root "$P" || fail "mkfs"
 mount "$P" /mnt || fail "mount"
 say "partition ok"
 
-# ─── 4. unpackfs ───
-unsquashfs -f -q -d /mnt "$src" >/dev/null || fail "unsquashfs"
-say "unpack ok"
+# ─── 4. unpackfs — так само, як модуль unpackfs Calamares (mount squashfs + rsync) ───
+sum="${sfs%.sfs}.sha512"
+if [ -f "$sum" ]; then
+    (cd "$(dirname "$sfs")" && sha512sum -c --status "$(basename "$sum")") && say "image checksum ok" || fail "image checksum mismatch"
+else
+    say "warning: no $sum on the ISO"
+fi
+mkdir -p /run/ember/src
+mount -t squashfs -o loop,ro "$src" /run/ember/src || fail "mount squashfs"
+rsync -aHAXSr --filter='-x trusted.*' --filter='-x security.evm' \
+      --exclude /proc/ --exclude /sys/ --exclude /dev/ --exclude /run/ --exclude /tmp/ \
+      /run/ember/src/ /mnt/
+rc=$?
+umount /run/ember/src
+[ $rc -eq 0 ] || fail "rsync exit code $rc"
+mkdir -p /mnt/proc /mnt/sys /mnt/dev /mnt/run /mnt/tmp
+say "unpack ok (rsync)"
 
 # ─── 5. shellprocess@before ───
 /usr/local/bin/ember-copy-kernel /mnt || fail "ember-copy-kernel"
