@@ -23,7 +23,9 @@ TESTIMG="$W/embertest.img"
 truncate -s 16M "$TESTIMG"
 mkfs.vfat -n EMBERTEST "$TESTIMG" >/dev/null
 for f in profile/airootfs/usr/local/bin/ember-autotest profile/airootfs/usr/local/bin/ember-postinstall \
-         profile/airootfs/usr/local/bin/ember-copy-kernel profile/airootfs/usr/local/bin/ember-find-sfs; do
+         profile/airootfs/usr/local/bin/ember-copy-kernel profile/airootfs/usr/local/bin/ember-find-sfs \
+         profile/airootfs/usr/local/bin/ember-setup-apps profile/airootfs/usr/local/bin/ember-drivers \
+         profile/airootfs/usr/local/bin/ember-install-hydra profile/airootfs/usr/local/bin/ember-drivers-boot; do
   mcopy -i "$TESTIMG" "$f" ::/
 done
 
@@ -65,11 +67,17 @@ shot 10-installed-grub 3     || st=1
 shot 11-installed-boot 8     || st=1
 shot 12-installed-desktop 50 || st=1
 shot 13-installed-later 30   || st=1
-sleep $(( 30 * SCALE ))
+# Ждём, пока установленная система сама докачает Steam / Wine / Hydra (до 25 мин)
+for i in $(seq 150); do
+  grep -aq "EMBER-INSTALLED: apps " "$OUT/installed-serial.log" && break
+  sleep 10
+done
+sleep 5
+shot 14-installed-apps 1 || true
 echo quit | socat - "UNIX-CONNECT:$MON" >/dev/null 2>&1 || true
 wait "$QPID" 2>/dev/null
 grep -a "EMBER-INSTALLED" "$OUT/installed-serial.log" | tee -a "$OUT/install-result.txt"
-for need in "multi-user OK" "Hyprland running"; do
+for need in "multi-user OK" "Hyprland running" "apps done" "hydra installed"; do
   grep -aq "EMBER-INSTALLED: $need" "$OUT/installed-serial.log" \
     || { echo "::error::Installed system check failed: $need"; st=1; }
 done

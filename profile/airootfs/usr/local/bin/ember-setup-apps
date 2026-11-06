@@ -1,25 +1,62 @@
 #!/bin/bash
-# Первый запуск установленной системы: в фоне докачивает тяжёлые программы,
-# которые не помещаются в ISO: Steam, Wine/Proton, Hydra Launcher.
-# Статус пишется в /var/lib/ember/apps-status (его показывает ember-firstrun).
+# Перший запуск встановленої системи: у фоні докачує програми, які не влазять в ISO:
+# Steam, Wine/Proton, Hydra Launcher. Кожна частина ставиться окремо (одна помилка
+# не блокує інші), з повторними спробами. Журнал: /var/log/ember-setup-apps.log
+# Статус для сповіщень: /var/lib/ember/apps-status
 set -u
 STATE=/var/lib/ember
+LOG=/var/log/ember-setup-apps.log
 mkdir -p "$STATE"
-status() { echo "$1" > "$STATE/apps-status"; }
+exec >>"$LOG" 2>&1
+echo "=== $(date) ember-setup-apps start"
+status() { echo "$1" > "$STATE/apps-status"; echo "status: $1"; }
 
-# Ждём интернет (до 10 минут)
-for _ in $(seq 120); do
+wait_pacman() {   # інша служба (драйвери, /update) може тримати базу пакетів
+    for _ in $(seq 360); do
+        [ -e /var/lib/pacman/db.lck ] || return 0
+        pgrep -x pacman >/dev/null || { rm -f /var/lib/pacman/db.lck; return 0; }
+        sleep 5
+    done
+}
+
+# Інтернет (до 15 хвилин)
+for _ in $(seq 180); do
     curl -fsI --max-time 5 https://archlinux.org >/dev/null 2>&1 && break
     status "waiting-network"
     sleep 5
 done
 
+# 32-бітний Vulkan-драйвер для Steam — під свою відеокарту, а не наосліп
+gpu=$(lspci -nn 2>/dev/null | grep -iE 'VGA|3D|Display')
+vk=()
+echo "$gpu" | grep -qi '\[8086:' && vk+=(vulkan-intel lib32-vulkan-intel)
+echo "$gpu" | grep -qi '\[1002:' && vk+=(vulkan-radeon lib32-vulkan-radeon)
+if echo "$gpu" | grep -qi '\[10de:'; then
+    if pacman -Q nvidia-utils >/dev/null 2>&1; then vk+=(lib32-nvidia-utils); else vk+=(vulkan-nouveau lib32-vulkan-nouveau); fi
+fi
+[ ${#vk[@]} -eq 0 ] && vk+=(vulkan-swrast lib32-vulkan-swrast)
+echo "vulkan drivers: ${vk[*]}"
+
+step() {   # step <name> <command...>  — з 3 спробами
+    local name="$1"; shift
+    [ -e "$STATE/done-$name" ] && { echo "$name: already done"; return 0; }
+    for try in 1 2 3; do
+        wait_pacman
+        echo "--- $name (try $try)"
+        if "$@"; then touch "$STATE/done-$name"; echo "$name: OK"; return 0; fi
+        sleep 60
+    done
+    echo "$name: FAILED"; return 1
+}
+
 status "installing"
+wait_pacman
+pacman -Sy --noconfirm || true
 ok=1
-pacman -Sy --noconfirm >/dev/null 2>&1
-pacman -S --needed --noconfirm steam gamemode lib32-gamemode mangohud \
-    wine wine-mono wine-gecko winetricks umu-launcher || ok=0
-ember-install-hydra || ok=0
+step steam pacman -S --needed --noconfirm "${vk[@]}" lib32-mesa steam || ok=0
+step wine  pacman -S --needed --noconfirm wine wine-mono wine-gecko winetricks || ok=0
+step extras pacman -S --needed --noconfirm gamemode lib32-gamemode mangohud umu-launcher || true
+step hydra /usr/local/bin/ember-install-hydra || ok=0
 
 if [ "$ok" = 1 ]; then
     status "done"
@@ -27,3 +64,4 @@ if [ "$ok" = 1 ]; then
 else
     status "failed"
 fi
+echo "=== $(date) ember-setup-apps end (ok=$ok)"

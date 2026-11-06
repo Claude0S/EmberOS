@@ -84,6 +84,14 @@ umount /run/ember/src
 [ $rc -eq 0 ] || fail "rsync exit code $rc"
 mkdir -p /mnt/proc /mnt/sys /mnt/dev /mnt/run /mnt/tmp
 say "unpack ok (rsync)"
+# CI швидкий перетест: свіжі скрипти з диска EMBERTEST — і в нову систему теж
+if mountpoint -q /run/embertest 2>/dev/null; then
+    for f in /run/embertest/ember-*; do
+        case "$(basename "$f")" in ember-autotest*) continue ;; esac
+        install -m 755 "$f" "/mnt/usr/local/bin/$(basename "$f")"
+    done
+    say "fresh scripts injected"
+fi
 
 # ─── 5. shellprocess@before ───
 /usr/local/bin/ember-copy-kernel /mnt || fail "ember-copy-kernel"
@@ -107,10 +115,28 @@ Description=CI beacon (autotest only)
 After=sddm.service
 [Service]
 Type=oneshot
-ExecStart=/bin/sh -c 'echo "EMBER-INSTALLED: multi-user OK" > /dev/ttyS0; for i in $(seq 90); do pgrep -x Hyprland >/dev/null && { echo "EMBER-INSTALLED: Hyprland running" > /dev/ttyS0; break; }; sleep 1; done; true'
+ExecStart=/usr/local/bin/ember-ci-beacon
 [Install]
 WantedBy=multi-user.target
 EOB
+cat > /mnt/usr/local/bin/ember-ci-beacon <<'EOB'
+#!/bin/sh
+say() { echo "EMBER-INSTALLED: $*" > /dev/ttyS0; }
+say "multi-user OK"
+for i in $(seq 90); do pgrep -x Hyprland >/dev/null && { say "Hyprland running"; break; }; sleep 1; done
+# Фонова докачка Steam / Wine / Hydra (до 25 хв)
+for i in $(seq 300); do
+    st=$(cat /var/lib/ember/apps-status 2>/dev/null)
+    case "$st" in done|failed) break ;; esac
+    sleep 5
+done
+say "apps ${st:-none}"
+ls /var/lib/ember/ | tr '\n' ' ' > /dev/ttyS0; echo > /dev/ttyS0
+[ "$st" = done ] || tail -40 /var/log/ember-setup-apps.log > /dev/ttyS0 2>/dev/null
+pacman -Q steam wine 2>&1 | sed 's/^/EMBER-INSTALLED: pkg /' > /dev/ttyS0
+[ -x /opt/hydra/hydra.AppImage ] && say "hydra installed"
+EOB
+chmod 755 /mnt/usr/local/bin/ember-ci-beacon
 ln -sf /etc/systemd/system/ember-ci-beacon.service /mnt/etc/systemd/system/multi-user.target.wants/ember-ci-beacon.service
 # Для скриншота після перезавантаження — автовхід тестового користувача
 mkdir -p /mnt/etc/sddm.conf.d

@@ -127,6 +127,11 @@ if [ "$AUTO" = 0 ]; then
     case "$ans" in n|N|н|Н) exit 0 ;; esac
 fi
 
+for _ in $(seq 360); do   # інша служба може тримати базу пакетів
+    [ -e /var/lib/pacman/db.lck ] || break
+    pgrep -x pacman >/dev/null || { rm -f /var/lib/pacman/db.lck; break; }
+    sleep 5
+done
 pacman -Sy --noconfirm >/dev/null 2>&1
 # Ставим по одному набору, чтобы отсутствие одного пакета не ломало всё
 if ! pacman -S --needed --noconfirm "${missing[@]}"; then

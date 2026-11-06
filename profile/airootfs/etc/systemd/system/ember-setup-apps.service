@@ -1,7 +1,7 @@
 [Unit]
 Description=Ember OS: install Steam, Wine and Hydra on first boot
 Wants=network-online.target
-After=network-online.target
+After=network-online.target ember-drivers.service
 # Not in the live session, and only until it succeeded once
 ConditionKernelCommandLine=!archisobasedir
 ConditionPathExists=!/var/lib/ember/apps-done

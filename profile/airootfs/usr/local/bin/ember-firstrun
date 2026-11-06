@@ -33,7 +33,7 @@ if [ -e /etc/systemd/system/multi-user.target.wants/ember-setup-apps.service ] &
             case "$st" in
                 installing) [ -z "$notified" ] && notify-send -i /usr/share/ember/icons/fox-avatar.png "Ember OS" "$(msg "У фоні встановлюю Steam, Wine та Hydra Launcher…" "Installing Steam, Wine and Hydra Launcher in the background…" "В фоне устанавливаю Steam, Wine и Hydra Launcher…")" && notified=1 ;;
                 done) notify-send -i /usr/share/ember/icons/fox-avatar.png "Ember OS" "$(msg "Готово: Steam, Wine та Hydra Launcher встановлено 🎮" "Done: Steam, Wine and Hydra Launcher are installed 🎮" "Готово: Steam, Wine и Hydra Launcher установлены 🎮")"; break ;;
-                failed) notify-send -u critical "Ember OS" "$(msg "Не вдалося докачати програми. Спробуй /download steam і /download hydra" "Could not download apps. Try /download steam and /download hydra" "Не удалось докачать программы. Попробуй /download steam и /download hydra")"; break ;;
+                failed) notify-send -u critical "Ember OS" "$(msg "Не вдалося докачати програми (журнал: /var/log/ember-setup-apps.log). Спробуй /download steam і /download hydra" "Could not download apps. Try /download steam and /download hydra" "Не удалось докачать программы. Попробуй /download steam и /download hydra")"; break ;;
             esac
         done
     ) &
