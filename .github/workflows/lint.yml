@@ -28,7 +28,9 @@ jobs:
           python - <<'EOF'
           import json, re, glob, sys
           bad = 0
-          for f in glob.glob('profile/**/*.json*', recursive=True):
+          import os
+          files = [os.path.join(d, n) for d, _, fs in os.walk('profile') for n in fs if '.json' in n]
+          for f in files:
               s = open(f).read()
               s = re.sub(r'^\s*//.*$', '', s, flags=re.M)
               try: json.loads(s); print('json ok:', f)
@@ -38,16 +40,20 @@ jobs:
 
       - name: Hyprland config (--verify-config)
         run: |
-          H=$(mktemp -d)
-          cp -r profile/airootfs/etc/skel/. "$H/"
-          export HOME="$H" XDG_RUNTIME_DIR=$(mktemp -d)
-          out=$(Hyprland --verify-config -c "$H/.config/hypr/hyprland.conf" 2>&1 || true)
+          useradd -m linter
+          cp -r profile/airootfs/etc/skel/. /home/linter/
+          cp profile/airootfs/usr/share/ember/little/mode.conf /tmp/little.conf
+          chown -R linter: /home/linter
+          cat > /tmp/verify.sh <<'EOS'
+          export XDG_RUNTIME_DIR=$(mktemp -d)
+          C=$HOME/.config/hypr/hyprland.conf
+          echo "=== full mode ==="; Hyprland --verify-config -c "$C" 2>&1
+          cp /tmp/little.conf $HOME/.config/hypr/mode.conf
+          echo "=== little mode ==="; Hyprland --verify-config -c "$C" 2>&1
+          EOS
+          out=$(su linter -c 'bash /tmp/verify.sh' || true)
           echo "$out"
-          echo "--- little mode ---"
-          cp profile/airootfs/usr/share/ember/little/mode.conf "$H/.config/hypr/mode.conf"
-          out2=$(Hyprland --verify-config -c "$H/.config/hypr/hyprland.conf" 2>&1 || true)
-          echo "$out2"
-          if echo "$out$out2" | grep -qiE 'error|invalid|unknown'; then echo "::error::Hyprland config has problems"; exit 1; fi
+          if echo "$out" | grep -E 'ERR|rror|nvalid|nknown|deprecated' | grep -v 'DEBUG'; then echo "::error::Hyprland config has problems"; exit 1; fi
 
       - name: QML (qmllint)
         run: |
