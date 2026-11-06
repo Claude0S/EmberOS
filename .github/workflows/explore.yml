@@ -3,7 +3,7 @@ name: Explore (dev helper)
 # Dev helper: push to the "explore" branch to run .github/explore.sh in Arch.
 on:
   push:
-    branches: [explore]
+    branches: ['explore*']
 
 jobs:
   run:
