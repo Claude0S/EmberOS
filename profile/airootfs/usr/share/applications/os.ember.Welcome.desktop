@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Встановити Ember OS
 Name[en]=Install Ember OS
+Name[ru]=Установить Ember OS
 Comment=Встановити систему на компʼютер
 Comment[en]=Install the system on this computer
 Exec=ember-welcome

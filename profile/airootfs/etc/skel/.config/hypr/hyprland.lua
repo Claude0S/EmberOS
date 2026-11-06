@@ -26,13 +26,14 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("/usr/local/bin/ember-firstrun")
 end)
 
--- Мова інтерфейсу (/lang uk | en)
+-- Мова інтерфейсу (/lang uk | en | ru)
 pcall(function()
     local f = io.open(os.getenv("HOME") .. "/.config/ember/lang", "r")
     if f then
         local l = f:read("*l"); f:close()
         if l == "en" then hl.env("LANG", "en_US.UTF-8")
-        elseif l == "uk" then hl.env("LANG", "uk_UA.UTF-8") end
+        elseif l == "uk" then hl.env("LANG", "uk_UA.UTF-8")
+        elseif l == "ru" then hl.env("LANG", "ru_RU.UTF-8") end
     end
 end)
 
@@ -87,7 +88,7 @@ hl.config({
     },
 
     input = {
-        kb_layout = "us,ua",
+        kb_layout = "us,ua,ru",
         kb_options = "grp:alt_shift_toggle",
         follow_mouse = 1,
         touchpad = {

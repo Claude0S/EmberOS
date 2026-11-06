@@ -57,7 +57,7 @@ if echo "$gpu" | grep -qi '\[10de:'; then
     fi
 fi
 if [ "$(echo "$gpu" | grep -c .)" -ge 2 ]; then
-    found "$(msg "Дві відеокарти (ноутбук): перемикання через switcheroo" "Two GPUs (laptop): switching via switcheroo")"
+    found "$(msg "Дві відеокарти (ноутбук): перемикання через switcheroo" "Two GPUs (laptop): switching via switcheroo" "Две видеокарты (ноутбук): переключение через switcheroo")"
     add switcheroo-control
     SERVICES+=(switcheroo-control.service)
 fi
@@ -79,13 +79,13 @@ fi
 
 # ─── Звук ───
 if echo "$pci" | grep -qiE 'audio device|multimedia audio'; then
-    found "$(msg "Звук" "Audio"): $(echo "$pci" | grep -iE 'audio device|multimedia audio' | head -1 | sed 's/.*: //')"
+    found "$(msg "Звук" "Audio" "Звук"): $(echo "$pci" | grep -iE 'audio device|multimedia audio' | head -1 | sed 's/.*: //')"
     add sof-firmware alsa-ucm-conf alsa-firmware
 fi
 
 # ─── Ноутбук ───
 if ls /sys/class/power_supply/ 2>/dev/null | grep -q '^BAT'; then
-    found "$(msg "Ноутбук: батарея, енергозбереження" "Laptop: battery, power saving")"
+    found "$(msg "Ноутбук: батарея, енергозбереження" "Laptop: battery, power saving" "Ноутбук: батарея, энергосбережение")"
     add power-profiles-daemon brightnessctl
     SERVICES+=(power-profiles-daemon.service)
 fi
@@ -109,28 +109,28 @@ for p in "${UNIQUE[@]}"; do
     pacman -Q "$p" >/dev/null 2>&1 || missing+=("$p")
 done
 
-say "${O}$(msg "Знайдено:" "Found:")${X}"
+say "${O}$(msg "Знайдено:" "Found:" "Найдено:")${X}"
 for f in "${FOUND[@]}"; do say "  • $f"; done
 if [ "${#missing[@]}" -eq 0 ]; then
-    say "${G}$(msg "Усі драйвери вже встановлено." "All drivers are already installed.")${X}"
+    say "${G}$(msg "Усі драйвери вже встановлено." "All drivers are already installed." "Все драйверы уже установлены.")${X}"
     mkdir -p "$STATE"; echo "$pci" | md5sum > "$HASH_FILE" 2>/dev/null
     exit 0
 fi
-say "${O}$(msg "Потрібно встановити:" "To install:")${X} ${missing[*]}"
+say "${O}$(msg "Потрібно встановити:" "To install:" "Нужно установить:")${X} ${missing[*]}"
 [ "$LIST" = 1 ] && exit 0
 
 if [ "$(id -u)" -ne 0 ]; then
     exec sudo "$0" "$@"
 fi
 if [ "$AUTO" = 0 ]; then
-    read -rp "$(msg "Встановити? [Y/n] " "Install? [Y/n] ")" ans
+    read -rp "$(msg "Встановити? [Y/n] " "Install? [Y/n] " "Установить? [Y/n] ")" ans
     case "$ans" in n|N|н|Н) exit 0 ;; esac
 fi
 
 pacman -Sy --noconfirm >/dev/null 2>&1
 # Ставим по одному набору, чтобы отсутствие одного пакета не ломало всё
 if ! pacman -S --needed --noconfirm "${missing[@]}"; then
-    for p in "${missing[@]}"; do pacman -S --needed --noconfirm "$p" || say "${D}$(msg "пропущено" "skipped"): $p${X}"; done
+    for p in "${missing[@]}"; do pacman -S --needed --noconfirm "$p" || say "${D}$(msg "пропущено" "skipped" "пропущено"): $p${X}"; done
 fi
 
 for s in "${SERVICES[@]}"; do systemctl enable "$s" >/dev/null 2>&1; done
@@ -142,4 +142,4 @@ if [ "${NVIDIA_KMS:-0}" = 1 ]; then
 fi
 
 mkdir -p "$STATE"; echo "$pci" | md5sum > "$HASH_FILE"
-say "${G}$(msg "Драйвери встановлено. Для деяких потрібне перезавантаження." "Drivers installed. Some need a reboot.")${X}"
+say "${G}$(msg "Драйвери встановлено. Для деяких потрібне перезавантаження." "Drivers installed. Some need a reboot." "Драйверы установлены. Для некоторых нужна перезагрузка.")${X}"

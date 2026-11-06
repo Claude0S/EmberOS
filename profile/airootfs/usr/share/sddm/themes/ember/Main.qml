@@ -22,7 +22,7 @@ Rectangle {
         target: sddm
         function onLoginFailed() {
             passField.text = ""
-            errorText.text = "Невірний пароль · Wrong password"
+            errorText.text = "Невірний пароль · Wrong password · Неверный пароль"
             shake.start()
             passField.forceActiveFocus()
         }

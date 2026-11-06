@@ -51,6 +51,24 @@ TEXT = {
         "failed": "Could not connect. Check the password.",
         "install": "Install Ember OS",
         "try": "Try without installing",
+        "lang": "RU",
+    },
+    "ru": {
+        "title": "Добро пожаловать в Ember OS",
+        "sub": "Сначала подключись к интернету — так установятся драйверы, Steam и Hydra.",
+        "wifi": "Wi-Fi",
+        "scan": "Обновить",
+        "scanning": "Ищу сети…",
+        "no_wifi": "Wi-Fi адаптер не найден. Подключи кабель или продолжай без интернета.",
+        "online": "Интернет подключён ✓",
+        "offline": "Нет интернета",
+        "password": "Пароль",
+        "connect": "Подключить",
+        "cancel": "Отмена",
+        "connecting": "Подключаюсь к {}…",
+        "failed": "Не удалось подключиться. Проверь пароль.",
+        "install": "Установить Ember OS",
+        "try": "Попробовать без установки",
         "lang": "UA",
     },
 }
@@ -86,7 +104,8 @@ def split_terse(line):
 class Welcome(Adw.Application):
     def __init__(self):
         super().__init__(application_id="os.ember.Welcome")
-        self.lang = "en" if os.environ.get("LANG", "").startswith("en") else "uk"
+        env = os.environ.get("LANG", "")
+        self.lang = "en" if env.startswith("en") else "ru" if env.startswith("ru") else "uk"
         self.win = None
 
     def t(self, k, *a):
@@ -171,7 +190,7 @@ class Welcome(Adw.Application):
         self.win.set_content(tv)
 
     def toggle_lang(self, *_):
-        self.lang = "en" if self.lang == "uk" else "uk"
+        self.lang = {"uk": "en", "en": "ru", "ru": "uk"}[self.lang]
         self.build()
         self.refresh()
 

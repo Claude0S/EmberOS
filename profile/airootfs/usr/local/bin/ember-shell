@@ -54,7 +54,7 @@ T = {
         "little": "Легкий режим увімкнено: без розмиття, тіней і важких анімацій.",
         "full": "Повний режим увімкнено: вся краса повернулась.",
         "lang_set": "Мову змінено: українська.",
-        "lang_usage": "Використання: /lang uk | en",
+        "lang_usage": "Використання: /lang uk | en | ru",
         "w_usage": "Використання: /widgets [on|off|opacity|scale|reset] [віджет] [значення]",
         "w_saved": "Віджети оновлено.",
         "w_list": "Віджети (перетягуй мишкою на робочому столі):",
@@ -74,7 +74,7 @@ T = {
             ("/wifi", "підключитися до Wi-Fi"),
             ("/update", "оновити систему"),
             ("/files", "провідник"),
-            ("/lang uk|en", "мова"),
+            ("/lang uk|en|ru", "мова"),
             ("/clear", "очистити екран"),
             ("будь-що інше", "виконується як звичайна команда терміналу"),
         ],
@@ -96,7 +96,7 @@ T = {
         "little": "Little mode on: no blur, no shadows, light animations.",
         "full": "Full mode on: all the eye candy is back.",
         "lang_set": "Language changed: English.",
-        "lang_usage": "Usage: /lang uk | en",
+        "lang_usage": "Usage: /lang uk | en | ru",
         "w_usage": "Usage: /widgets [on|off|opacity|scale|reset] [widget] [value]",
         "w_saved": "Widgets updated.",
         "w_list": "Widgets (drag them with the mouse on the desktop):",
@@ -116,9 +116,51 @@ T = {
             ("/wifi", "connect to Wi-Fi"),
             ("/update", "update the system"),
             ("/files", "file manager"),
-            ("/lang uk|en", "language"),
+            ("/lang uk|en|ru", "language"),
             ("/clear", "clear the screen"),
             ("anything else", "runs as a normal terminal command"),
+        ],
+    },
+    "ru": {
+        "hello": "Добро пожаловать в Ember OS",
+        "hint": "/help — все команды · /desktop — рабочий стол · Win+Enter — скрыть",
+        "unknown": "Неизвестная команда: {}. Напиши /help",
+        "search_usage": "Использование: /search что искать",
+        "searching": "Ищу в Firefox: {}",
+        "desktop": "Возвращаю рабочий стол…",
+        "dl_usage": "Использование: /download название (например /download steam)",
+        "dl_start": "Устанавливаю {}…",
+        "dl_ok": "Готово! {} установлен.",
+        "dl_fail": "Не удалось установить {}.",
+        "dl_notfound": "Не нашёл «{}». Похожие программы:",
+        "dl_none": "Ничего похожего не нашёл. Попробуй другое название.",
+        "dl_pick": "Номер программы (Enter — отмена): ",
+        "little": "Лёгкий режим включён: без размытия, теней и тяжёлых анимаций.",
+        "full": "Полный режим включён: вся красота вернулась.",
+        "lang_set": "Язык изменён: русский.",
+        "lang_usage": "Использование: /lang uk | en | ru",
+        "w_usage": "Использование: /widgets [on|off|opacity|scale|reset] [виджет] [значение]",
+        "w_saved": "Виджеты обновлены.",
+        "w_list": "Виджеты (перетаскивай мышкой на рабочем столе):",
+        "bye": "Пока!",
+        "status_mode": "Режим",
+        "help_title": "Команды Ember OS",
+        "help": [
+            ("/search <запрос>", "открыть Firefox с поиском"),
+            ("/desktop", "вернуться на рабочий стол"),
+            ("/download <программа>", "установить программу (steam, hydra, discord, telegram…)"),
+            ("/apps", "список популярных программ для /download"),
+            ("/little", "лёгкий режим для слабых компьютеров"),
+            ("/full", "полный режим с анимациями"),
+            ("/widgets", "настроить виджеты рабочего стола"),
+            ("/status", "процессор, память, диск, батарея"),
+            ("/drivers", "проверить и установить драйверы"),
+            ("/wifi", "подключиться к Wi-Fi"),
+            ("/update", "обновить систему"),
+            ("/files", "проводник"),
+            ("/lang uk|en|ru", "язык"),
+            ("/clear", "очистить экран"),
+            ("что угодно другое", "выполняется как обычная команда терминала"),
         ],
     },
 }
@@ -132,7 +174,11 @@ def lang():
     except OSError:
         pass
     env = os.environ.get("LANG", "")
-    return "en" if env.startswith("en") else "uk"
+    if env.startswith("en"):
+        return "en"
+    if env.startswith("ru"):
+        return "ru"
+    return "uk"
 
 
 def t(key, *args):

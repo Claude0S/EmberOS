@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Ember Shell
 Name[uk]=Командний рядок Ember
+Name[ru]=Командная строка Ember
 Comment=/search, /download, /little …
 Exec=ember-toggle-shell
 Icon=ember-shell

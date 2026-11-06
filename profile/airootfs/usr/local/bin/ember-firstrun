@@ -17,8 +17,8 @@ marker="$HOME/.config/ember/.welcomed"
 if [ ! -e "$marker" ]; then
     touch "$marker"
     sleep 3
-    notify-send -i /usr/share/ember/icons/fox-avatar.png "$(msg "Ласкаво просимо до Ember OS" "Welcome to Ember OS")" \
-        "$(msg "Win+Enter — командний рядок · Win+D — програми · Win+L — блокування" "Win+Enter — command line · Win+D — apps · Win+L — lock")"
+    notify-send -i /usr/share/ember/icons/fox-avatar.png "$(msg "Ласкаво просимо до Ember OS" "Welcome to Ember OS" "Добро пожаловать в Ember OS")" \
+        "$(msg "Win+Enter — командний рядок · Win+D — програми · Win+L — блокування" "Win+Enter — command line · Win+D — apps · Win+L — lock" "Win+Enter — командная строка · Win+D — программы · Win+L — блокировка")"
 fi
 
 # Сообщить, когда в фоне докачаются Steam / Wine / Hydra (установленная система)
@@ -29,9 +29,9 @@ if [ -e /etc/systemd/system/multi-user.target.wants/ember-setup-apps.service ] &
         while sleep 15; do
             st=$(cat /var/lib/ember/apps-status 2>/dev/null)
             case "$st" in
-                installing) [ -z "$notified" ] && notify-send -i /usr/share/ember/icons/fox-avatar.png "Ember OS" "$(msg "У фоні встановлюю Steam, Wine та Hydra Launcher…" "Installing Steam, Wine and Hydra Launcher in the background…")" && notified=1 ;;
-                done) notify-send -i /usr/share/ember/icons/fox-avatar.png "Ember OS" "$(msg "Готово: Steam, Wine та Hydra Launcher встановлено 🎮" "Done: Steam, Wine and Hydra Launcher are installed 🎮")"; break ;;
-                failed) notify-send -u critical "Ember OS" "$(msg "Не вдалося докачати програми. Спробуй /download steam і /download hydra" "Could not download apps. Try /download steam and /download hydra")"; break ;;
+                installing) [ -z "$notified" ] && notify-send -i /usr/share/ember/icons/fox-avatar.png "Ember OS" "$(msg "У фоні встановлюю Steam, Wine та Hydra Launcher…" "Installing Steam, Wine and Hydra Launcher in the background…" "В фоне устанавливаю Steam, Wine и Hydra Launcher…")" && notified=1 ;;
+                done) notify-send -i /usr/share/ember/icons/fox-avatar.png "Ember OS" "$(msg "Готово: Steam, Wine та Hydra Launcher встановлено 🎮" "Done: Steam, Wine and Hydra Launcher are installed 🎮" "Готово: Steam, Wine и Hydra Launcher установлены 🎮")"; break ;;
+                failed) notify-send -u critical "Ember OS" "$(msg "Не вдалося докачати програми. Спробуй /download steam і /download hydra" "Could not download apps. Try /download steam and /download hydra" "Не удалось докачать программы. Попробуй /download steam и /download hydra")"; break ;;
             esac
         done
     ) &
