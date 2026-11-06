@@ -509,6 +509,22 @@ def look(args):
         print(out)
 
 
+def look_cmd(cmd, redraw):
+    """/theme, /mascot: after a change redraw the banner so the fox here follows the mascot."""
+    if not redraw:
+        return run(cmd)
+    try:
+        res = subprocess.run(cmd, capture_output=True, text=True)
+        out = (res.stdout + res.stderr).strip()
+    except FileNotFoundError:
+        return 127
+    if res.returncode == 0:
+        banner()
+    if out:
+        say(out, A if res.returncode == 0 else R)
+    return res.returncode
+
+
 def cmd_simple(cmd):
     return lambda _: run(cmd)
 
@@ -524,10 +540,10 @@ COMMANDS = {
     "status": cmd_status,
     "lang": cmd_lang,
     "widgets": cmd_widgets,
-    "theme": lambda a: look(["set", a[0]]) if a else run(["ember-theme", "list"]),
+    "theme": lambda a: look_cmd(["ember-theme", "set", a[0]] if a else ["ember-theme", "list"], bool(a)),
     "themes": lambda a: run(["ember-theme", "list"]),
-    "mascot": lambda a: look(["mascot", a[0]]) if a else run(["ember-theme", "status"]),
-    "maskot": lambda a: look(["mascot", a[0]]) if a else run(["ember-theme", "status"]),
+    "mascot": lambda a: look_cmd(["ember-theme", "mascot", a[0]] if a else ["ember-theme", "status"], bool(a)),
+    "maskot": lambda a: look_cmd(["ember-theme", "mascot", a[0]] if a else ["ember-theme", "status"], bool(a)),
     "wallpaper": lambda a: run(["ember-theme", "wallpaper"] + a if a else ["ember-theme", "status"]),
     "drivers": cmd_simple("sudo ember-drivers"),
     "wifi": cmd_simple("nmtui"),

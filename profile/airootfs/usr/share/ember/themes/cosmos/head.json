@@ -1,1 +1,28 @@
-{"rows": [".....RRRRRRRR.....", "...RR........RR...", "..RRrr........RR..", "..rO..........OR..", ".R.OO........OO.R.", ".R.OCO......OCO.R.", "R..OCOOOOOOOOCO..R", "R.OOOOOOOOOOOOOO.R", "R.OOOEEOOOOEEOOO.R", "R.OOOEEOOOOEEOOO.R", "R.CCOOOOOOOOOOCC.R", ".R.CCCCOOOOOCCCCR.", ".R..CCCCNNCCCC..R.", "..R...CCCCCC...R..", "..RR..........RR..", "...RR........RR...", ".....RRRRRRRR....."], "colors": {"O": "#e8875a", "C": "#fbeee0", "E": "#2a1c26", "N": "#2a1c26", "R": "#c8d8ff", "r": "#ffffff"}}
+{
+ "rows": [
+  ".........RRR.........",
+  "......RRR...RRR......",
+  "....RR.........RR....",
+  "...RR...........RR...",
+  "..R..r............R..",
+  ".RR.r..........O..RR.",
+  ".R..rO........OO...R.",
+  "RR..OCO......OCO...RR",
+  "R...OCOOOOOOOOCO....R",
+  "R..OOOOOOOOOOOOOO...R",
+  "R..OOOEEOOOOEEOOO...R",
+  "R..OOOEEOOOOEEOOO...R",
+  "R..CCOOOOOOOOOOCC...R",
+  "R...CCCCOOOOOCCCC...R",
+  "RR...CCCCNNCCCC......",
+  ".R.....CCCCCC........"
+ ],
+ "colors": {
+  "O": "#e8875a",
+  "C": "#fbeee0",
+  "E": "#2a1c26",
+  "N": "#2a1c26",
+  "R": "#c8d8ff",
+  "r": "#ffffff"
+ }
+}

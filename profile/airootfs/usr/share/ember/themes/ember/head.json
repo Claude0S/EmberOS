@@ -1,1 +1,21 @@
-{"rows": [".O..........O.", ".OO........OO.", ".OCO......OCO.", ".OCOOOOOOOOCO.", "OOOOOOOOOOOOOO", "OOOEEOOOOEEOOO", "OOOEEOOOOEEOOO", "CCOOOOOOOOOOCC", ".CCCCOOOOOCCCC", "..CCCCNNCCCC..", "....CCCCCC...."], "colors": {"O": "#e8875a", "C": "#fbeee0", "E": "#2a1c26", "N": "#2a1c26"}}
+{
+ "rows": [
+  ".O..........O.",
+  ".OO........OO.",
+  ".OCO......OCO.",
+  ".OCOOOOOOOOCO.",
+  "OOOOOOOOOOOOOO",
+  "OOOEEOOOOEEOOO",
+  "OOOEEOOOOEEOOO",
+  "CCOOOOOOOOOOCC",
+  ".CCCCOOOOOCCCC",
+  "..CCCCNNCCCC..",
+  "....CCCCCC...."
+ ],
+ "colors": {
+  "O": "#e8875a",
+  "C": "#fbeee0",
+  "E": "#2a1c26",
+  "N": "#2a1c26"
+ }
+}

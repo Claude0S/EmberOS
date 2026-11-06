@@ -141,6 +141,7 @@ def grid_x(kind, normalize=True):
                 if 9.6<=d<10.6: G.setdefault((r,c),'R')
         for (r,c) in [(-1,4),(0,3),(1,3)]: G[(r,c)]='r'
     if not normalize: return G
+    if not normalize: return G
     mr=min(r for r,_ in G); mc=min(c for _,c in G)
     return {(r-mr,c-mc):v for (r,c),v in G.items()}
 
@@ -220,3 +221,33 @@ for key,t in NEW.items():
     json.dump(pal,open(f"{d}/theme.json","w"),indent=2)
 write_heads(OUT)
 print("ok")
+
+
+# ─── Terminal mascot (ember-shell banner): head.json for every theme ───
+def head_json(fox, kind):
+    """Head rows of the pixel mascot (with hat/visor/ears...) as chars + colours."""
+    G = grid_x(kind, normalize=False) if kind else fox_grid()
+    last = 11 if kind == "scarf" else 10          # original head rows: <=10, tail starts at col 15
+    cells = {(r, c): v for (r, c), v in G.items() if r <= last and (c <= 15 or v in "Rr")}
+    if "rim" in fox:
+        for (r, c), v in list(cells.items()):
+            if v in "RrV":
+                continue
+            for dr, dc in ((-1, 0), (1, 0), (0, -1), (0, 1)):
+                if (r + dr, c + dc) not in cells and r + dr <= last:
+                    cells.setdefault((r + dr, c + dc), "m")
+    mr = min(r for r, _ in cells); mc = min(c for _, c in cells)
+    R = max(r for r, _ in cells) - mr + 1; Cn = max(c for _, c in cells) - mc + 1
+    rows = ["".join(cells.get((r + mr, c + mc), ".") for c in range(Cn)) for r in range(R)]
+    colors = {"O": fox["fur"], "C": fox["chest"], "E": fox["eye"], "N": fox["nose"]}
+    colors.update({k: v for k, v in fox.items() if len(k) == 1})
+    if "rim" in fox:
+        colors["m"] = fox["rim"]
+    return {"rows": rows, "colors": colors}
+
+
+if __name__ == "__main__":
+    for key, t in list(THEMES.items()) + list(NEW.items()):
+        d = os.path.join(OUT, key); os.makedirs(d, exist_ok=True)
+        json.dump(head_json(t["fox"], t.get("mascot")), open(f"{d}/head.json", "w"), indent=1)
+    print("heads ok")
