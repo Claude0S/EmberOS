@@ -101,7 +101,7 @@ class Welcome(Adw.Application):
         Gtk.StyleContext.add_provider_for_display(
             Gdk.Display.get_default(), prov, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
         if self.win is None:
-            self.win = Adw.ApplicationWindow(application=self, default_width=620, default_height=720)
+            self.win = Adw.ApplicationWindow(application=self, default_width=600, default_height=560)
             self.win.add_css_class("ember")
             self.win.set_title("Ember OS")
         self.build()
@@ -122,7 +122,7 @@ class Welcome(Adw.Application):
 
         if os.path.exists(FOX):
             pic = Gtk.Picture.new_for_filename(FOX)
-            pic.set_size_request(110, 110)
+            pic.set_size_request(80, 80)
             pic.set_can_shrink(True)
             pic.set_halign(Gtk.Align.CENTER)
             box.append(pic)
@@ -150,7 +150,7 @@ class Welcome(Adw.Application):
 
         self.list = Gtk.ListBox(selection_mode=Gtk.SelectionMode.NONE)
         self.list.add_css_class("ember-list")
-        sc = Gtk.ScrolledWindow(vexpand=True, min_content_height=220)
+        sc = Gtk.ScrolledWindow(vexpand=True, min_content_height=150)
         sc.set_child(self.list)
         box.append(sc)
 
@@ -165,7 +165,9 @@ class Welcome(Adw.Application):
         btns.append(inst)
         box.append(btns)
 
-        tv.set_content(box)
+        outer = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER, vexpand=True)
+        outer.set_child(box)
+        tv.set_content(outer)
         self.win.set_content(tv)
 
     def toggle_lang(self, *_):

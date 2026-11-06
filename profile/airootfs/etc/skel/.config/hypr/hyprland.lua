@@ -124,7 +124,7 @@ hl.window_rule({
     name  = "ember-welcome",
     match = { class = "^(os.ember.Welcome)$" },
     float = true,
-    size  = "640 720",
+    size  = "600 560",
     center = true,
 })
 hl.window_rule({
