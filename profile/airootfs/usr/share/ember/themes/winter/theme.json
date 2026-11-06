@@ -1,0 +1,17 @@
+{
+  "name": "Winter",
+  "accent": "#7fb2e8",
+  "accent2": "#c8a8f0",
+  "accent3": "#e8f2ff",
+  "fg": "#f2f6fc",
+  "bg": "#10141e",
+  "surface": "#34405a",
+  "fox": {
+    "fur": "#e8875a",
+    "chest": "#fbeee0",
+    "eye": "#2a1c26",
+    "nose": "#2a1c26",
+    "K": "#c83a4a",
+    "k": "#f2f2f2"
+  }
+}

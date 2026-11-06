@@ -1,0 +1,16 @@
+{
+  "name": "Desert",
+  "accent": "#e6a352",
+  "accent2": "#f2c27a",
+  "accent3": "#7fc8c0",
+  "fg": "#fbf1e0",
+  "bg": "#1c140c",
+  "surface": "#5a3e26",
+  "fox": {
+    "fur": "#e8c08a",
+    "chest": "#fbf1e0",
+    "eye": "#2a1a10",
+    "nose": "#2a1a10",
+    "P": "#d89a8a"
+  }
+}

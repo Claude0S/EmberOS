@@ -1,0 +1,17 @@
+{
+  "name": "Cyber",
+  "accent": "#ff4fa3",
+  "accent2": "#4fe3ff",
+  "accent3": "#b98bff",
+  "fg": "#f3ecff",
+  "bg": "#0d0818",
+  "surface": "#33204f",
+  "fox": {
+    "fur": "#2c2240",
+    "chest": "#d9c8ff",
+    "eye": "#4fe3ff",
+    "nose": "#120b20",
+    "rim": "#ff4fa3",
+    "V": "#4fe3ff"
+  }
+}

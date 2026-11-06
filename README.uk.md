@@ -40,7 +40,7 @@
 | `/download steam` | встановити програму (`/apps` — список) |
 | `/little` · `/full` | легкий режим для старих компʼютерів · повний режим |
 | `/widgets` | віджети: `on`/`off`/`opacity`/`scale`/`reset` |
-| `/theme night` | тема: `ember`, `night`, `ocean`, `forest`, `sakura`, `mono` (кольори, лисеня й обої разом) |
+| `/theme night` | тема: `ember`, `night`, `ocean`, `forest`, `sakura`, `mono`, `aurora`, `cyber`, `autumn`, `desert`, `winter`, `cosmos` (кольори, лисеня й обої разом) |
 | `/mascot ember` | лисеня від іншої теми (`auto` — як у теми) |
 | `/wallpaper ocean` | обої від іншої теми або свій файл: `/wallpaper ~/Pictures/фото.jpg` (`auto` — як у теми) |
 | `/status` | процесор, памʼять, диск, батарея |

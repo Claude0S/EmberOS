@@ -1,0 +1,16 @@
+{
+  "name": "Aurora",
+  "accent": "#5fe0c0",
+  "accent2": "#8fb8ff",
+  "accent3": "#c3f5e6",
+  "fg": "#eaf6f8",
+  "bg": "#0a1218",
+  "surface": "#1f3a48",
+  "fox": {
+    "fur": "#e6eef2",
+    "chest": "#ffffff",
+    "eye": "#16303e",
+    "nose": "#16303e",
+    "rim": "#7fb6c8"
+  }
+}

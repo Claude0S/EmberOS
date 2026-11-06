@@ -1,0 +1,17 @@
+{
+  "name": "Autumn",
+  "accent": "#e0693a",
+  "accent2": "#f0a03c",
+  "accent3": "#f5d27a",
+  "fg": "#fbefe2",
+  "bg": "#1a110c",
+  "surface": "#4e2e1e",
+  "fox": {
+    "fur": "#d9622e",
+    "chest": "#fbefe2",
+    "eye": "#2a160e",
+    "nose": "#2a160e",
+    "S": "#8a2a3a",
+    "s": "#b8404e"
+  }
+}

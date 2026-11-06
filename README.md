@@ -45,7 +45,7 @@ Screenshots from these tests are attached to each release.
 | `/download steam` | install an app (`/apps` shows the list) |
 | `/little` · `/full` | light mode for older computers · full mode |
 | `/widgets` | widgets: `on` / `off` / `opacity` / `scale` / `reset` |
-| `/theme night` | theme: `ember`, `night`, `ocean`, `forest`, `sakura`, `mono` (colours, fox and wallpaper together) |
+| `/theme night` | theme: `ember`, `night`, `ocean`, `forest`, `sakura`, `mono`, `aurora`, `cyber`, `autumn`, `desert`, `winter`, `cosmos` (colours, fox and wallpaper together) |
 | `/mascot ember` | fox from another theme (`auto` = follow the theme) |
 | `/wallpaper ocean` | wallpaper from another theme, or your own file: `/wallpaper ~/Pictures/photo.jpg` (`auto` = follow the theme) |
 | `/status` | CPU, memory, disk, battery |

@@ -1,0 +1,17 @@
+{
+  "name": "Cosmos",
+  "accent": "#9a7cff",
+  "accent2": "#ff9ad8",
+  "accent3": "#7ce0ff",
+  "fg": "#eeeaff",
+  "bg": "#08061a",
+  "surface": "#2a2458",
+  "fox": {
+    "fur": "#e8875a",
+    "chest": "#fbeee0",
+    "eye": "#2a1c26",
+    "nose": "#2a1c26",
+    "R": "#c8d8ff",
+    "r": "#ffffff"
+  }
+}
