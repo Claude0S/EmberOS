@@ -70,7 +70,7 @@ if [[ -f "$REPO/profile/aur.txt" ]]; then
 fi
 
 # --- GRUB theme fonts (for the installed system's boot menu) ---
-pacman -S --noconfirm --needed grub ttf-dejavu >/dev/null
+pacman -S --noconfirm --needed grub ttf-dejavu freetype2 >/dev/null
 GT="$PROFILE/airootfs/usr/share/grub/themes/ember"
 if [[ -d "$GT" ]]; then
   grub-mkfont -s 16 -o "$GT/dejavu_16.pf2" /usr/share/fonts/TTF/DejaVuSans.ttf
