@@ -98,3 +98,7 @@ os-prober
 ntfs-3g
 dosfstools
 exfatprogs
+
+# Calamares unpackfs needs these
+squashfs-tools
+rsync

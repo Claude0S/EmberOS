@@ -1,6 +1,14 @@
 #!/bin/bash
 # Запуск установщика Ember OS (Calamares) из живой сессии.
 pgrep -x calamares >/dev/null && exit 0
+# Перевірка: усе, що потрібно установщику, на місці
+for b in unsquashfs rsync; do
+    command -v "$b" >/dev/null || sudo pacman -Sy --needed --noconfirm squashfs-tools rsync
+done
+if [ ! -f /run/archiso/bootmnt/arch/x86_64/airootfs.sfs ]; then
+    echo "Не знайдено образ системи на флешці: /run/archiso/bootmnt/arch/x86_64/airootfs.sfs" >&2
+    ls -la /run/archiso/bootmnt/arch/x86_64/ 2>&1 >&2
+fi
 exec sudo --preserve-env=WAYLAND_DISPLAY,XDG_RUNTIME_DIR,XDG_SESSION_TYPE,LANG,LC_ALL \
     env QT_QPA_PLATFORM="wayland;xcb" QT_QUICK_CONTROLS_STYLE=Basic \
-    calamares "$@"
+    calamares -d "$@" 2>&1 | tee /tmp/calamares.log
