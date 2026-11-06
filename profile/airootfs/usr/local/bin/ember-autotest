@@ -53,8 +53,9 @@ say "unpack ok"
 # ─── 5. shellprocess@before ───
 /usr/local/bin/ember-copy-kernel /mnt || fail "ember-copy-kernel"
 cp -L /etc/resolv.conf /mnt/etc/resolv.conf 2>/dev/null || true
+# fstab — лише корінь (як модуль fstab Calamares), ДО bind-монтувань /dev /run …
+echo "UUID=$(blkid -s UUID -o value "$P")  /  ext4  defaults,noatime  0 1" > /mnt/etc/fstab
 for d in dev proc sys run; do mount --rbind "/$d" "/mnt/$d"; done
-genfstab -U /mnt > /mnt/etc/fstab || fail "fstab"
 say "kernel+fstab ok: $(ls /mnt/boot)"
 
 # ─── 6. users + shellprocess@ember ───
