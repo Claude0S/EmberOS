@@ -1,26 +1,17 @@
 name: Explore (dev helper)
 
+# Dev helper: push to the "explore" branch to run .github/explore.sh in Arch.
 on:
-  workflow_dispatch:
-    inputs:
-      packages:
-        description: "Packages to install"
-        required: false
-        default: ""
-      script:
-        description: "Bash script to run"
-        required: true
+  push:
+    branches: [explore]
 
 jobs:
   run:
     runs-on: ubuntu-latest
     container: archlinux:latest
     steps:
+      - uses: actions/checkout@v4
       - name: Run
-        env:
-          PKGS: ${{ inputs.packages }}
-          SCRIPT: ${{ inputs.script }}
         run: |
-          pacman -Syu --noconfirm --needed $PKGS >/dev/null 2>&1 || pacman -Syu --noconfirm --needed $PKGS
-          echo "$SCRIPT" > /tmp/s.sh
-          bash /tmp/s.sh
+          pacman -Syu --noconfirm --needed $(cat .github/explore.pkgs 2>/dev/null) >/dev/null 2>&1
+          bash .github/explore.sh
