@@ -6,7 +6,7 @@ choice=$(printf '󰌾  Заблокировать\n󰤄  Сон\n󰍃  Выйт�
 case "$choice" in
     *Заблокировать*) loginctl lock-session ;;
     *Сон*)           systemctl suspend ;;
-    *Выйти*)         hyprctl dispatch exit ;;
+    *Выйти*)         command -v hyprshutdown >/dev/null && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()' ;;
     *Перезагрузить*) systemctl reboot ;;
     *Выключить*)     systemctl poweroff ;;
 esac

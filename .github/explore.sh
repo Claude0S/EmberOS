@@ -1,7 +1,8 @@
-hyprctl --help 2>&1 | head -60
-echo "=== hyprctl dispatch help"; hyprctl dispatch 2>&1 | head
-echo "=== files"; find /usr/share -iname '*hypr*' -maxdepth 3 | head -30
-echo "=== hypridle example"; cat /usr/share/hypr/hypridle.conf 2>/dev/null || find / -name 'hypridle.conf' -not -path '/proc/*' 2>/dev/null
-echo "=== dpms strings"; strings /usr/bin/Hyprland | grep -iE 'dpms' | head -20
-echo "=== legacy dispatch strings"; strings /usr/bin/Hyprland | grep -iE 'legacy|hyprlang dispatch|dispatch.*lua' | head -20
-echo "=== wayland sessions"; ls /usr/share/wayland-sessions; cat /usr/share/wayland-sessions/*.desktop
+R=/usr/share/archiso/configs/releng
+cat $R/profiledef.sh
+echo "=== RELENG PKGS + sizes"
+pacman -Sy >/dev/null
+for p in $(cat $R/packages.x86_64) $(grep -vE '^\s*(#|$)' profile/packages.x86_64); do
+  s=$(pacman -Si "$p" 2>/dev/null | awk -F': ' '/^Download Size/{print $2; exit}'); echo "$s $p"
+done | sort -h -k1,1 | awk '{print}' | tail -60
+echo "=== bootloader entries"; ls $R/efiboot/loader/entries $R/syslinux $R/grub 2>/dev/null

@@ -11,4 +11,4 @@ if ! hyprctl clients -j | grep -q '"class": "ember-shell"'; then
     fi
     sleep 0.3
 fi
-hyprctl dispatch togglespecialworkspace shell >/dev/null
+hyprctl dispatch 'hl.dsp.workspace.toggle_special("shell")' >/dev/null
