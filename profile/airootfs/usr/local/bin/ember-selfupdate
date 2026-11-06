@@ -74,7 +74,7 @@ if [ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]; then
     pkill -x waybar; (waybar >/dev/null 2>&1 &)
     pkill -f "quickshell" ; (quickshell -p /usr/share/ember/wallpaper/shell.qml >/dev/null 2>&1 &)
     [ "$(cat "$HOME/.config/ember/mode" 2>/dev/null)" = little ] || (quickshell >/dev/null 2>&1 &)
-    pkill -x nwg-dock-hyprland; (nwg-dock-hyprland -x -i 42 -mb 10 -c fuzzel >/dev/null 2>&1 &)
+    pkill -f nwg-dock-hyprland; (nwg-dock-hyprland -x -i 42 -mb 10 -c fuzzel >/dev/null 2>&1 &)
     pkill -x hyprpaper 2>/dev/null || true
 fi
 echo -e "${G}Готово! Ember OS оновлено. Спробуй /theme night 🦊${X}"
