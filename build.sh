@@ -41,6 +41,7 @@ sed -i \
   -e 's|^iso_label=.*|iso_label="EMBER_$(date --date="@${SOURCE_DATE_EPOCH:-$(date +%s)}" +%Y%m)"|' \
   -e 's|^iso_publisher=.*|iso_publisher="Ember OS <https://github.com/Claude0S/EmberOS>"|' \
   -e 's|^iso_application=.*|iso_application="Ember OS Live/Install"|' \
+  -e "s|^airootfs_image_tool_options=.*|airootfs_image_tool_options=('-comp' 'zstd' '-Xcompression-level' '15' '-b' '1M')|" \
   "$PROFILE/profiledef.sh"
 
 # Executable permissions for our scripts (appended to the associative array)
