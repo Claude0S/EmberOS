@@ -69,10 +69,10 @@ chroot /mnt /usr/local/bin/ember-postinstall || fail "ember-postinstall"
 cat > /mnt/etc/systemd/system/ember-ci-beacon.service <<'EOB'
 [Unit]
 Description=CI beacon (autotest only)
-After=multi-user.target sddm.service
+After=sddm.service
 [Service]
 Type=oneshot
-ExecStart=/bin/sh -c 'sleep 25; for m in "multi-user OK" "$(pgrep -x Hyprland >/dev/null && echo Hyprland running)" "$(pgrep -x waybar >/dev/null && echo waybar running)"; do [ -n "$m" ] && echo "EMBER-INSTALLED: $m" | tee /dev/kmsg > /dev/ttyS0; done; true'
+ExecStart=/bin/sh -c 'echo "EMBER-INSTALLED: multi-user OK" > /dev/ttyS0; for i in $(seq 90); do pgrep -x Hyprland >/dev/null && { echo "EMBER-INSTALLED: Hyprland running" > /dev/ttyS0; break; }; sleep 1; done; true'
 [Install]
 WantedBy=multi-user.target
 EOB

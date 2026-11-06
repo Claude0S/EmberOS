@@ -61,6 +61,7 @@ shot 10-installed-grub 3     || st=1
 shot 11-installed-boot 8     || st=1
 shot 12-installed-desktop 50 || st=1
 shot 13-installed-later 30   || st=1
+sleep $(( 30 * SCALE ))
 echo quit | socat - "UNIX-CONNECT:$MON" >/dev/null 2>&1 || true
 wait "$QPID" 2>/dev/null
 grep -a "EMBER-INSTALLED" "$OUT/installed-serial.log" | tee -a "$OUT/install-result.txt"
