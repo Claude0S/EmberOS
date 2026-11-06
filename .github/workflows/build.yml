@@ -28,13 +28,23 @@ jobs:
           sudo docker image prune --all --force || true
           df -h /
 
+      - name: Week number (Calamares is rebuilt weekly, to match Qt updates)
+        id: week
+        run: echo "w=$(date +%G-%V)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache AUR packages (Calamares)
+        uses: actions/cache@v4
+        with:
+          path: aur-cache
+          key: aur-${{ hashFiles('profile/aur.txt') }}-${{ steps.week.outputs.w }}
+
       - name: Build ISO (Arch Linux container)
         run: |
           docker run --rm --privileged \
             -v "$PWD:/repo" \
             -e SOURCE_DATE_EPOCH="$(date +%s)" \
             archlinux:latest bash /repo/build.sh
-          sudo chown -R "$(id -u):$(id -g)" out
+          sudo chown -R "$(id -u):$(id -g)" out aur-cache
           ls -lh out
 
       - name: Boot test in QEMU (screenshots)

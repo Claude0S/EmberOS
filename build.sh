@@ -54,8 +54,15 @@ if [[ -f "$REPO/profile/aur.txt" ]]; then
   rm -rf "$AURREPO"; mkdir -p "$AURREPO"; chown builder: "$AURREPO"
   while read -r pkg; do
     [[ -z "$pkg" || "$pkg" == \#* ]] && continue
+    CACHE="$REPO/aur-cache"; mkdir -p "$CACHE"
+    if compgen -G "$CACHE/$pkg-[0-9]*.pkg.tar.zst" >/dev/null; then
+      log "  $pkg: from cache"
+      cp "$CACHE/$pkg"-[0-9]*.pkg.tar.zst "$AURREPO/"
+      continue
+    fi
     log "  makepkg $pkg"
     sudo -u builder bash -c "set -e; cd /tmp; rm -rf aur-$pkg; git clone -q https://aur.archlinux.org/$pkg.git aur-$pkg; cd aur-$pkg; makepkg -s --noconfirm --needed --nocheck; cp ./*.pkg.tar.zst $AURREPO/"
+    cp "$AURREPO/$pkg"-[0-9]*.pkg.tar.zst "$CACHE/"
   done < "$REPO/profile/aur.txt"
   repo-add -q "$AURREPO/ember-aur.db.tar.gz" "$AURREPO"/*.pkg.tar.zst
   # Only the build-time pacman.conf knows this repo (not the live/installed system)
