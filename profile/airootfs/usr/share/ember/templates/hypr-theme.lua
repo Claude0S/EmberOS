@@ -8,3 +8,6 @@ hl.config({
     },
     misc = { background_color = 0xff{{bg}} },
 })
+
+-- кольори для заголовків вікон (hyprbars)
+ember_colors = { bg = "{{bg}}", fg = "{{fg}}", surface = "{{surface}}", accent = "{{accent}}" }

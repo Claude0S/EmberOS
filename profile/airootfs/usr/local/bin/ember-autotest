@@ -126,6 +126,18 @@ cat > /mnt/usr/local/bin/ember-ci-beacon <<'EOB'
 say() { echo "EMBER-INSTALLED: $*" > /dev/ttyS0; }
 say "multi-user OK"
 for i in $(seq 90); do pgrep -x Hyprland >/dev/null && { say "Hyprland running"; break; }; sleep 1; done
+sleep 15
+# Команди в сесії tester (вікно з кнопками-«світлофором» + скріншоти лаунчера/антивірусу)
+U=$(id -u tester); R=/run/user/$U
+SIG=$(ls "$R/hypr" 2>/dev/null | head -1)
+asu() { su tester -c "env XDG_RUNTIME_DIR=$R HYPRLAND_INSTANCE_SIGNATURE=$SIG WAYLAND_DISPLAY=wayland-1 $*"; }
+hx() {   # запустити в сесії Hyprland: hx <ім'я> <команда…>
+    printf '#!/bin/sh\n%s\n' "$2" > "/tmp/hx-$1.sh"; chmod 755 "/tmp/hx-$1.sh"
+    asu "hyprctl dispatch 'hl.dsp.exec_cmd(\"/tmp/hx-$1.sh\")'" >/dev/null 2>&1
+}
+hx term "kitty --title Ember"
+sleep 3
+hyprctl_out=$(asu "hyprctl plugin list" 2>&1 | head -3 | tr '\n' ' '); say "plugins $hyprctl_out"
 # Фонова докачка Steam / Wine / Hydra (до 25 хв)
 for i in $(seq 300); do
     st=$(cat /var/lib/ember/apps-status 2>/dev/null)
@@ -137,14 +149,6 @@ ls /var/lib/ember/ | tr '\n' ' ' > /dev/ttyS0; echo > /dev/ttyS0
 [ "$st" = done ] || tail -40 /var/log/ember-setup-apps.log > /dev/ttyS0 2>/dev/null
 pacman -Q steam wine 2>&1 | sed 's/^/EMBER-INSTALLED: pkg /' > /dev/ttyS0
 [ -x /opt/hydra/hydra.AppImage ] && say "hydra installed"
-# Скріншоти лаунчера й антивірусу (у сесії tester)
-U=$(id -u tester); R=/run/user/$U
-SIG=$(ls "$R/hypr" 2>/dev/null | head -1)
-asu() { su tester -c "env XDG_RUNTIME_DIR=$R HYPRLAND_INSTANCE_SIGNATURE=$SIG WAYLAND_DISPLAY=wayland-1 $*"; }
-hx() {   # запустити в сесії Hyprland: hx <ім'я> <команда…>
-    printf '#!/bin/sh\n%s\n' "$2" > "/tmp/hx-$1.sh"; chmod 755 "/tmp/hx-$1.sh"
-    asu "hyprctl dispatch 'hl.dsp.exec_cmd(\"/tmp/hx-$1.sh\")'" >/dev/null 2>&1
-}
 hx launcher "quickshell -p /usr/share/ember/launcher/shell.qml >/tmp/ql.log 2>&1"
 sleep 10
 say "launcher shown"

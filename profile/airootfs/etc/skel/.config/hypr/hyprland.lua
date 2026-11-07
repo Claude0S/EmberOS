@@ -194,3 +194,41 @@ pcall(require, "theme")
 pcall(require, "mode")
 -- Личные настройки пользователя (не перезаписываются обновлениями)
 pcall(require, "user")
+
+-- ─── Кнопки вікон як на Mac: 🔴 закрити · 🟡 згорнути · 🟢 на весь екран ───
+-- Плагін hyprbars збирається під твій Hyprland (ember-bars-build; /update перезбирає сам).
+-- Вимкнути: у user.lua напиши  ember_no_bars = true
+local BARS = "/usr/lib/ember/hyprbars.so"
+local function exists(p) local ok, f = pcall(io.open, p, "r"); if ok and f then f:close(); return true end; return false end
+if not ember_no_bars and exists(BARS) and exists(BARS .. ".version") then
+    pcall(hl.plugin.load, BARS)
+end
+if not ember_no_bars and hl.plugin and hl.plugin.hyprbars then
+    local c = ember_colors or { bg = "1a1320", fg = "fbeee0", surface = "523049", accent = "e8875a" }
+    hl.config({ plugin = { hyprbars = {
+        bar_height = 30,
+        bar_color = "rgba(" .. c.bg .. "e6)",
+        ["col.text"] = "rgba(" .. c.fg .. "cc)",
+        inactive_button_color = "rgba(" .. c.surface .. "ff)",
+        bar_blur = true,
+        bar_text_font = "Inter",
+        bar_text_size = 11,
+        bar_text_weight = "semibold",
+        bar_text_align = "center",
+        bar_buttons_alignment = "left",
+        bar_padding = 12,
+        bar_button_padding = 8,
+        bar_part_of_window = true,
+        bar_precedence_over_border = true,
+        icon_on_hover = true,
+        on_double_click = [[hyprctl dispatch 'hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" })']],
+    } } })
+    local function btn(color, icon, action)
+        pcall(hl.plugin.hyprbars.add_button, { bg_color = color, fg_color = "rgba(00000099)", size = 13, icon = icon, action = action })
+    end
+    btn("rgb(ff5f57)", "×", [[hyprctl dispatch 'hl.dsp.window.close()']])
+    btn("rgb(febc2e)", "–", [[hyprctl dispatch 'hl.dsp.window.move({ workspace = "special:minimized", follow = false })']])
+    btn("rgb(28c840)", "+", [[hyprctl dispatch 'hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" })']])
+end
+-- Згорнуті вікна: Super+M показати / сховати (щоб повернути — Super+Shift+номер столу)
+hl.bind(mod .. " + M", hl.dsp.workspace.toggle_special("minimized"))

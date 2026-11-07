@@ -37,6 +37,13 @@ sudo pacman -S --needed --noconfirm zenity ufw >/dev/null 2>&1 || true
 
 ember-selfupdate || exit 1
 
+# Кнопки вікон (hyprbars) під поточний Hyprland — збирається лише коли треба
+if sudo /usr/local/bin/ember-bars-build >/dev/null 2>&1; then
+    hyprctl reload >/dev/null 2>&1 || true
+else
+    echo -e "${R}Кнопки вікон не зібрались (не страшно, все інше працює).${X}"
+fi
+
 if [ ! -e /var/lib/ember/apps-done ]; then
     say "Докачую Steam, Wine та Hydra у фоні (сповіщення прийде, коли буде готово)…"
     sudo systemctl reset-failed ember-setup-apps.service 2>/dev/null || true

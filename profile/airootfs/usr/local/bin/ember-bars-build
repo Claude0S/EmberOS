@@ -1,0 +1,26 @@
+#!/bin/bash
+# ember-bars-build — збирає плагін hyprbars (кнопки вікон як на Mac) під встановлений Hyprland.
+# Викликається при збірці ISO і з /update (тільки якщо Hyprland оновився).
+#   ember-bars-build [вихідний .so] [--force]
+set -euo pipefail
+OUT=/usr/lib/ember/hyprbars.so; FORCE=0
+for a in "$@"; do case $a in --force) FORCE=1 ;; *) OUT=$a ;; esac; done
+HV=$(pacman -Q hyprland 2>/dev/null | awk '{print $2}')
+[ -n "$HV" ] || { echo "hyprland not installed" >&2; exit 1; }
+if [ "$FORCE" = 0 ] && [ -f "$OUT" ] && [ "$(cat "$OUT.version" 2>/dev/null)" = "$HV" ]; then
+    exit 0
+fi
+need=()
+for p in gcc make git pkgconf; do command -v "${p/pkgconf/pkg-config}" >/dev/null || need+=("$p"); done
+[ ${#need[@]} -eq 0 ] || pacman -S --needed --noconfirm base-devel git pkgconf >/dev/null
+HASH=$(grep -oP 'GIT_COMMIT_HASH\s+"\K[0-9a-f]+' /usr/include/hyprland/src/version.h 2>/dev/null || true)
+T=$(mktemp -d); trap 'rm -rf "$T"' EXIT
+git clone -q https://github.com/hyprwm/hyprland-plugins "$T/p"
+PIN=""
+[ -n "$HASH" ] && PIN=$(grep -F "\"$HASH\"" "$T/p/hyprpm.toml" | grep -oP '",\s*"\K[0-9a-f]{40}' | head -1 || true)
+[ -n "$PIN" ] && git -C "$T/p" checkout -q "$PIN"
+echo "hyprbars: Hyprland $HV (${HASH:0:8}) → plugins ${PIN:0:8}${PIN:-main}"
+make -s -C "$T/p/hyprbars" all
+install -Dm755 "$T/p/hyprbars/hyprbars.so" "$OUT"
+echo "$HV" > "$OUT.version"
+echo "hyprbars: $OUT"

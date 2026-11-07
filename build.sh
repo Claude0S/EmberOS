@@ -135,6 +135,11 @@ echo "packages: $(wc -l < "$PROFILE/packages.x86_64")"
 
 log "Building ISO (this takes a while)"
 mkdir -p "$OUT"
+# Кнопки вікон як на Mac: hyprbars під ту саму версію Hyprland, що й в ISO
+pacman -S --noconfirm --needed hyprland base-devel git pkgconf >/dev/null
+bash "$REPO/profile/airootfs/usr/local/bin/ember-bars-build" "$PROFILE/airootfs/usr/lib/ember/hyprbars.so" \
+  || echo "::warning::hyprbars build failed (windows will have no title buttons)"
+
 mkarchiso -v -w "$WORK" -o "$OUT" "$PROFILE"
 
 # --- Check: every app in the menu/dock has an icon ---
