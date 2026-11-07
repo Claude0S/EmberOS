@@ -75,6 +75,10 @@ for i in $(seq 150); do
 done
 sleep 5
 shot 14-installed-apps 1 || true
+waitmark() { for i in $(seq "$2"); do grep -aq "EMBER-INSTALLED: $1" "$OUT/installed-serial.log" && return 0; sleep 2; done; return 1; }
+waitmark "launcher shown" 60 && { sleep 3; shot 15-launcher 0 || true; }
+waitmark "antivirus shown" 240 && { sleep 3; shot 16-antivirus 0 || true; }
+sleep 10
 echo quit | socat - "UNIX-CONNECT:$MON" >/dev/null 2>&1 || true
 wait "$QPID" 2>/dev/null
 grep -a "EMBER-INSTALLED" "$OUT/installed-serial.log" | tee -a "$OUT/install-result.txt"

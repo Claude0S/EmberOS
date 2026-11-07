@@ -32,6 +32,9 @@ free_pacman
 say "Оновлюю пакети системи…"
 sudo pacman -Syu --noconfirm || { echo -e "${R}pacman не зміг оновитись (див. вище).${X}"; exit 1; }
 
+# Нові частини Ember (вікно вибору папки, файрвол)
+sudo pacman -S --needed --noconfirm zenity ufw >/dev/null 2>&1 || true
+
 ember-selfupdate || exit 1
 
 if [ ! -e /var/lib/ember/apps-done ]; then

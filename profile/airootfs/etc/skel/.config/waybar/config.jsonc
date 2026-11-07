@@ -16,14 +16,14 @@
     "exec": "echo $HOME/.local/share/ember/mascot/fox-small.png",
     "interval": 3600,
     "size": 24,
-    "on-click": "fuzzel",
+    "on-click": "ember-launcher",
     "tooltip": false
   },
 
   "custom/ember": {
     "format": "Ember",
     "tooltip": false,
-    "on-click": "fuzzel",
+    "on-click": "ember-launcher",
     "on-click-right": "/usr/local/bin/ember-toggle-shell"
   },
 

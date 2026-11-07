@@ -51,6 +51,8 @@ Screenshots from these tests are attached to each release.
 | `/status` | CPU, memory, disk, battery |
 | `/drivers` | check and install drivers |
 | `/wifi` · `/update` · `/files` | Wi-Fi · system update · file manager |
+| `/antivirus` | Ember Antivirus: quick/full/folder scan, quarantine, firewall (ClamAV + ufw) |
+| `Super+Space` | Ember Launcher: apps, games with covers, recent, Ember commands — follows the theme |
 | `/lang uk` · `/lang en` · `/lang ru` | interface language |
 
 Anything you type without a leading `/` runs as a normal terminal command.

@@ -1,0 +1,5 @@
+#!/bin/bash
+# Ember Launcher: відкрити / закрити (Super+Space, Super+D, кнопка в доці)
+QML=/usr/share/ember/launcher/shell.qml
+if pkill -f "quickshell -p $QML" 2>/dev/null; then exit 0; fi
+exec setsid -f quickshell -p "$QML" >/dev/null 2>&1

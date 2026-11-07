@@ -1,0 +1,5 @@
+#!/bin/bash
+# Ember Антивірус (/antivirus): графічне вікно; перевірка працює у фоні й після закриття
+QML=/usr/share/ember/antivirus/shell.qml
+if pkill -f "quickshell -p $QML" 2>/dev/null; then exit 0; fi
+exec setsid -f quickshell -p "$QML" >/dev/null 2>&1

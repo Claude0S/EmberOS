@@ -106,3 +106,5 @@ rsync
 # installer helpers
 parted
 arch-install-scripts
+zenity
+ufw

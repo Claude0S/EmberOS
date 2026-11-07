@@ -1,0 +1,230 @@
+#!/usr/bin/env python3
+"""ember-apps — дані для Ember Launcher.
+
+  ember-apps list            JSON: програми, ігри (Steam + .desktop з категорією Game), недавні
+  ember-apps run <id>        запустити програму / гру і запам'ятати як недавню
+  ember-apps cmd "/theme x"  виконати команду Ember (у терміналі, якщо їй потрібен ввід)
+"""
+import configparser, glob, json, os, re, shlex, subprocess, sys, time
+
+HOME = os.path.expanduser("~")
+STATE = os.path.join(os.environ.get("XDG_STATE_HOME", HOME + "/.local/state"), "ember")
+RECENT = os.path.join(STATE, "launcher-recent.json")
+LANG = (open(HOME + "/.config/ember/lang").read().strip() if os.path.exists(HOME + "/.config/ember/lang")
+        else os.environ.get("LANG", "uk")[:2])
+
+DATA_DIRS = [os.environ.get("XDG_DATA_HOME", HOME + "/.local/share")] + \
+            os.environ.get("XDG_DATA_DIRS", "/usr/local/share:/usr/share").split(":")
+if "/var/lib/flatpak/exports/share" not in DATA_DIRS:
+    DATA_DIRS += ["/var/lib/flatpak/exports/share", HOME + "/.local/share/flatpak/exports/share"]
+
+ICON_THEMES = ["Papirus-Dark", "Papirus", "Adwaita", "hicolor"]
+ICON_SIZES = ["scalable", "128x128", "96x96", "64x64", "48x48", "256x256", "512x512", "32x32"]
+_icon_cache = {}
+
+
+def icon_path(name):
+    if not name:
+        return ""
+    if name.startswith("/"):
+        return name if os.path.exists(name) else ""
+    if name in _icon_cache:
+        return _icon_cache[name]
+    found = ""
+    for base in [d + "/icons" for d in DATA_DIRS] + [HOME + "/.icons"]:
+        for theme in ICON_THEMES:
+            for size in ICON_SIZES:
+                for ext in ("svg", "png"):
+                    p = f"{base}/{theme}/{size}/apps/{name}.{ext}"
+                    if os.path.exists(p):
+                        found = p
+                        break
+                if found: break
+            if found: break
+        if found: break
+    if not found:
+        for ext in ("png", "svg", "xpm"):
+            if os.path.exists(f"/usr/share/pixmaps/{name}.{ext}"):
+                found = f"/usr/share/pixmaps/{name}.{ext}"
+                break
+    _icon_cache[name] = found
+    return found
+
+
+def localized(sec, key):
+    for k in (f"{key}[{LANG}]", key):
+        if k in sec:
+            return sec[k]
+    return ""
+
+
+def desktop_entries():
+    seen, out = set(), []
+    for d in DATA_DIRS:
+        for path in sorted(glob.glob(d + "/applications/**/*.desktop", recursive=True)):
+            did = os.path.relpath(path, d + "/applications").replace("/", "-")
+            if did in seen:
+                continue
+            seen.add(did)
+            cp = configparser.RawConfigParser(strict=False, interpolation=None)
+            cp.optionxform = str
+            try:
+                cp.read(path, encoding="utf-8")
+                sec = cp["Desktop Entry"]
+            except Exception:
+                continue
+            if sec.get("Type", "Application") != "Application":
+                continue
+            if sec.get("NoDisplay", "false").lower() == "true" or sec.get("Hidden", "false").lower() == "true":
+                continue
+            onlyin = sec.get("OnlyShowIn", "")
+            if onlyin and "Hyprland" not in onlyin:
+                continue
+            cats = [c for c in sec.get("Categories", "").split(";") if c]
+            out.append({
+                "id": "app:" + did,
+                "name": localized(sec, "Name") or did[:-8],
+                "comment": localized(sec, "Comment") or localized(sec, "GenericName"),
+                "icon": icon_path(sec.get("Icon", "")),
+                "keywords": (localized(sec, "Keywords") + " " + sec.get("Exec", "")).lower(),
+                "game": "Game" in cats,
+                "path": path,
+            })
+    out.sort(key=lambda a: a["name"].lower())
+    return out
+
+
+def steam_root():
+    for p in (HOME + "/.local/share/Steam", HOME + "/.steam/steam", HOME + "/.var/app/com.valvesoftware.Steam/.local/share/Steam"):
+        if os.path.isdir(p + "/steamapps"):
+            return p
+    return ""
+
+
+SKIP = re.compile(r"proton|steam linux runtime|steamworks|redistributable|steamvr", re.I)
+
+
+def steam_games():
+    root = steam_root()
+    if not root:
+        return []
+    libs = {root}
+    try:
+        txt = open(root + "/steamapps/libraryfolders.vdf", encoding="utf-8", errors="ignore").read()
+        libs |= set(re.findall(r'"path"\s+"([^"]+)"', txt))
+    except OSError:
+        pass
+    games = []
+    for lib in libs:
+        for acf in glob.glob(lib + "/steamapps/appmanifest_*.acf"):
+            try:
+                txt = open(acf, encoding="utf-8", errors="ignore").read()
+            except OSError:
+                continue
+            m = dict(re.findall(r'^\s*"(appid|name|LastPlayed)"\s+"([^"]*)"', txt, re.M))
+            if "appid" not in m or SKIP.search(m.get("name", "")):
+                continue
+            appid = m["appid"]
+            cover = ""
+            for pat in (f"{root}/appcache/librarycache/{appid}/library_600x900*.jpg",
+                        f"{root}/appcache/librarycache/{appid}/*/library_600x900*.jpg",
+                        f"{root}/appcache/librarycache/{appid}_library_600x900.jpg",
+                        f"{root}/appcache/librarycache/{appid}/header.jpg",
+                        f"{root}/appcache/librarycache/{appid}/*/header.jpg",
+                        f"{root}/appcache/librarycache/{appid}_header.jpg"):
+                hits = glob.glob(pat)
+                if hits:
+                    cover = hits[0]
+                    break
+            games.append({"id": "steam:" + appid, "name": m.get("name", appid), "cover": cover,
+                          "icon": icon_path("steam"), "last": int(m.get("LastPlayed", "0") or 0), "src": "Steam"})
+    return games
+
+
+def load_recent():
+    try:
+        return json.load(open(RECENT))
+    except (OSError, ValueError):
+        return {}
+
+
+def cmd_list():
+    apps = desktop_entries()
+    recent = load_recent()
+    games = steam_games()
+    for a in apps:
+        if a["game"] and a["id"] not in ("app:steam.desktop",):
+            games.append({"id": a["id"], "name": a["name"], "cover": "", "icon": a["icon"], "last": 0, "src": ""})
+    for g in games:
+        g["last"] = max(g["last"], int(recent.get(g["id"], 0)))
+    games.sort(key=lambda g: (-g["last"], g["name"].lower()))
+    rec = sorted([a for a in apps if a["id"] in recent], key=lambda a: -recent[a["id"]])[:12]
+    for a in apps:
+        a.pop("path", None)
+    json.dump({"apps": apps, "games": games, "recent": [a["id"] for a in rec]}, sys.stdout, ensure_ascii=False)
+
+
+def detach(cmd, **kw):
+    subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True, **kw)
+
+
+def strip_codes(exec_line):
+    return [a for a in shlex.split(exec_line) if not re.fullmatch(r"%[fFuUdDnNickvm]", a)]
+
+
+def cmd_run(item):
+    os.makedirs(STATE, exist_ok=True)
+    rec = load_recent()
+    rec[item] = int(time.time())
+    try:
+        json.dump(rec, open(RECENT, "w"))
+    except OSError:
+        pass
+    if item.startswith("steam:"):
+        return detach(["steam", "steam://rungameid/" + item[6:]])
+    for e in desktop_entries():
+        if e["id"] != item:
+            continue
+        cp = configparser.RawConfigParser(strict=False, interpolation=None)
+        cp.optionxform = str
+        cp.read(e["path"], encoding="utf-8")
+        sec = cp["Desktop Entry"]
+        argv = strip_codes(sec.get("Exec", ""))
+        if not argv:
+            return
+        if sec.get("Terminal", "false").lower() == "true":
+            argv = ["kitty", "-e"] + argv
+        return detach(argv, cwd=sec.get("Path") or HOME)
+
+
+# команди, яким потрібен термінал (пароль, ввід, довгий вивід)
+TERMINAL_CMDS = {"update", "download", "install", "drivers", "wifi", "status", "help", "apps", "lang"}
+
+
+def cmd_cmd(line):
+    line = line.strip()
+    if not line.startswith("/"):
+        line = "/" + line
+    name = line[1:].split()[0].lower() if line[1:].split() else ""
+    if name in ("antivirus", "av"):
+        return detach(["ember-antivirus"])
+    if name in TERMINAL_CMDS:
+        return detach(["kitty", "--class", "ember-cmd", "-e", "bash", "-c",
+                       f"ember-shell {shlex.quote(line)}; echo; read -rsn1 -p '  ⏎ …'"])
+    detach(["ember-shell", line])
+
+
+def main():
+    a = sys.argv[1:]
+    if not a or a[0] == "list":
+        cmd_list()
+    elif a[0] == "run" and len(a) > 1:
+        cmd_run(a[1])
+    elif a[0] == "cmd" and len(a) > 1:
+        cmd_cmd(" ".join(a[1:]))
+    else:
+        print(__doc__)
+
+
+if __name__ == "__main__":
+    main()

@@ -57,6 +57,9 @@ step steam pacman -S --needed --noconfirm "${vk[@]}" lib32-mesa steam || ok=0
 step wine  pacman -S --needed --noconfirm wine wine-mono wine-gecko winetricks || ok=0
 step extras pacman -S --needed --noconfirm gamemode lib32-gamemode mangohud umu-launcher || true
 step hydra /usr/local/bin/ember-install-hydra || ok=0
+# Ember Антивірус: ClamAV + бази, файрвол увімкнений (не критично)
+step antivirus /usr/local/bin/ember-av-root install || true
+step firewall /usr/local/bin/ember-av-root firewall on || true
 
 if [ "$ok" = 1 ]; then
     status "done"

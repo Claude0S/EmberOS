@@ -183,7 +183,7 @@ def reload_desktop():
     except OSError:
         pass
     size = "36" if mode == "little" else "42"
-    subprocess.Popen(["nwg-dock-hyprland", "-x", "-i", size, "-mb", "10", "-c", "fuzzel"],
+    subprocess.Popen(["nwg-dock-hyprland", "-x", "-i", size, "-mb", "10", "-c", "ember-launcher"],
                      stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
     # Обої та віджети (Quickshell) самі стежать за ~/.config/ember/*.json
 

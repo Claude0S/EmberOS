@@ -137,6 +137,35 @@ ls /var/lib/ember/ | tr '\n' ' ' > /dev/ttyS0; echo > /dev/ttyS0
 [ "$st" = done ] || tail -40 /var/log/ember-setup-apps.log > /dev/ttyS0 2>/dev/null
 pacman -Q steam wine 2>&1 | sed 's/^/EMBER-INSTALLED: pkg /' > /dev/ttyS0
 [ -x /opt/hydra/hydra.AppImage ] && say "hydra installed"
+# Скріншоти лаунчера й антивірусу (у сесії tester)
+U=$(id -u tester); R=/run/user/$U
+SIG=$(ls "$R/hypr" 2>/dev/null | head -1)
+asu() { su tester -c "env XDG_RUNTIME_DIR=$R HYPRLAND_INSTANCE_SIGNATURE=$SIG WAYLAND_DISPLAY=wayland-1 $*"; }
+hx() {   # запустити в сесії Hyprland: hx <ім'я> <команда…>
+    printf '#!/bin/sh\n%s\n' "$2" > "/tmp/hx-$1.sh"; chmod 755 "/tmp/hx-$1.sh"
+    asu "hyprctl dispatch 'hl.dsp.exec_cmd(\"/tmp/hx-$1.sh\")'" >/dev/null 2>&1
+}
+hx launcher "quickshell -p /usr/share/ember/launcher/shell.qml >/tmp/ql.log 2>&1"
+sleep 10
+say "launcher shown"
+sleep 8
+grep -iE "warn|error|fail" /tmp/ql.log 2>/dev/null | head -20 | sed 's/^/EMBER-INSTALLED: qml launcher: /' > /dev/ttyS0
+pkill -f "launcher/shell.qml"
+if command -v clamscan >/dev/null && ls /var/lib/clamav/*.c[vl]d >/dev/null 2>&1; then
+    H=$(getent passwd tester | cut -d: -f6); mkdir -p "$H/Downloads"
+    printf '%s' 'X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*' > "$H/Downloads/eicar-test.exe"
+    chown -R tester: "$H/Downloads"
+    asu "ember-av scan quick" >/dev/null 2>&1
+    for i in $(seq 120); do
+        asu "ember-av status" 2>/dev/null | grep -q '"state": "\(done\|failed\)"' && break; sleep 3
+    done
+    say "av $(asu 'ember-av status' | python3 -c 'import json,sys;d=json.load(sys.stdin);s=d.get("scan") or {};print(s.get("state"), "found", len(s.get("found",[])))')"
+fi
+hx antivirus "quickshell -p /usr/share/ember/antivirus/shell.qml >/tmp/qa.log 2>&1"
+sleep 10
+say "antivirus shown"
+sleep 8
+grep -iE "warn|error|fail" /tmp/qa.log 2>/dev/null | head -20 | sed 's/^/EMBER-INSTALLED: qml antivirus: /' > /dev/ttyS0
 EOB
 chmod 755 /mnt/usr/local/bin/ember-ci-beacon
 ln -sf /etc/systemd/system/ember-ci-beacon.service /mnt/etc/systemd/system/multi-user.target.wants/ember-ci-beacon.service

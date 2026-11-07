@@ -1,0 +1,55 @@
+#!/bin/bash
+# ember-av-root — дії антивірусу, яким потрібні права root (через pkexec або від служб).
+#   install          встановити ClamAV, завантажити бази, увімкнути автооновлення баз
+#   update           оновити бази зараз
+#   firewall on|off  файрвол ufw: вхідні заборонені, вихідні дозволені
+set -u
+[ "$(id -u)" = 0 ] || { echo "run as root" >&2; exit 1; }
+
+wait_pacman() {
+    for _ in $(seq 120); do
+        [ -e /var/lib/pacman/db.lck ] || return 0
+        pgrep -x pacman >/dev/null || { rm -f /var/lib/pacman/db.lck; return 0; }
+        sleep 5
+    done
+}
+
+freshen() {
+    local was=0
+    systemctl is-active -q clamav-freshclam.service && { was=1; systemctl stop clamav-freshclam.service; }
+    freshclam --quiet --stdout
+    local rc=$?
+    [ "$was" = 1 ] && systemctl start clamav-freshclam.service
+    ls /var/lib/clamav/*.c[vl]d >/dev/null 2>&1 && return 0
+    return $rc
+}
+
+case "${1:-}" in
+    install)
+        if ! command -v clamscan >/dev/null; then
+            wait_pacman
+            pacman -S --needed --noconfirm clamav || exit 1
+        fi
+        freshen || exit 1
+        systemctl enable --now clamav-freshclam.service >/dev/null 2>&1 || true
+        ;;
+    update)
+        command -v freshclam >/dev/null || exec "$0" install
+        freshen
+        ;;
+    firewall)
+        command -v ufw >/dev/null || { wait_pacman; pacman -S --needed --noconfirm ufw || exit 1; }
+        if [ "${2:-}" = on ]; then
+            ufw default deny incoming >/dev/null
+            ufw default allow outgoing >/dev/null
+            ufw allow 1714:1764/udp >/dev/null 2>&1 || true   # KDE Connect (телефон)
+            ufw allow 1714:1764/tcp >/dev/null 2>&1 || true
+            ufw --force enable >/dev/null
+            systemctl enable --now ufw.service >/dev/null 2>&1
+        else
+            ufw --force disable >/dev/null
+            systemctl disable --now ufw.service >/dev/null 2>&1
+        fi
+        ;;
+    *) echo "usage: ember-av-root install|update|firewall on|off" >&2; exit 2 ;;
+esac

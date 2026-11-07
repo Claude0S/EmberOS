@@ -4,7 +4,7 @@ case "${1:-full}" in
     little)
         pkill -fx quickshell 2>/dev/null          # виджеты выключены
         pkill -x nwg-dock-hyprland 2>/dev/null   # док без анимаций —
-        nwg-dock-hyprland -x -i 36 -mb 8 -c fuzzel >/dev/null 2>&1 &
+        nwg-dock-hyprland -x -i 36 -mb 8 -c ember-launcher >/dev/null 2>&1 &
         command -v powerprofilesctl >/dev/null && powerprofilesctl set power-saver 2>/dev/null
         ;;
     full)

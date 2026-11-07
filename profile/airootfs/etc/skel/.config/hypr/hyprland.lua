@@ -9,7 +9,7 @@ hl.monitor({ output = "", mode = "preferred", position = "auto", scale = "auto" 
 local terminal = "kitty"
 local files    = "thunar"
 local browser  = "firefox"
-local menu     = "fuzzel"
+local menu     = "/usr/local/bin/ember-launcher"
 local mod      = "SUPER"
 
 -- ─── Автозапуск ───
@@ -17,7 +17,7 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("quickshell -p /usr/share/ember/wallpaper/shell.qml")
     hl.exec_cmd("waybar")
     hl.exec_cmd("swaync")
-    hl.exec_cmd('nwg-dock-hyprland -x -i 42 -mb 10 -c "fuzzel"')
+    hl.exec_cmd('nwg-dock-hyprland -x -i 42 -mb 10 -c "ember-launcher"')
     hl.exec_cmd("/usr/local/bin/ember-autostart-widgets")
     hl.exec_cmd("hypridle")
     hl.exec_cmd("systemctl --user start hyprpolkitagent")
@@ -136,7 +136,7 @@ hl.window_rule({
     fullscreen = true,
 })
 
-for _, ns in ipairs({ "waybar", "launcher", "swaync-control-center", "nwg-dock", "ember-widget" }) do
+for _, ns in ipairs({ "waybar", "launcher", "ember-launcher", "ember-antivirus", "swaync-control-center", "nwg-dock", "ember-widget" }) do
     hl.layer_rule({ name = "ember-blur-" .. ns, match = { namespace = "^" .. ns .. "$" }, blur = true, ignore_alpha = 0.1 })
 end
 

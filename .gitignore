@@ -2,3 +2,4 @@ out/
 screenshots/
 work/
 aur-cache/
+__pycache__/
