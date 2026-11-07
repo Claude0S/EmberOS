@@ -58,6 +58,16 @@ def localized(sec, key):
     return ""
 
 
+# службові ярлики, яким не місце в лаунчері
+HIDE = {"qv4l2.desktop", "qvidcap.desktop", "xgps.desktop", "xgpsspeed.desktop", "thunar-settings.desktop",
+        "thunar-bulk-rename.desktop", "thunar-volman-settings.desktop", "avahi-discover.desktop", "bssh.desktop",
+        "bvnc.desktop", "lstopo.desktop", "cmake-gui.desktop", "uuctl.desktop", "electron.desktop",
+        "org.freedesktop.IBus.Setup.desktop", "xdg-desktop-portal-gtk.desktop", "jconsole-java-openjdk.desktop",
+        "jshell-java-openjdk.desktop", "rofi.desktop", "rofi-theme-selector.desktop", "fuzzel.desktop",
+        "nwg-dock-hyprland.desktop", "wine.desktop", "winetricks.desktop", "wine-mime-msi.desktop",
+        "gcr-prompter.desktop", "gcr-viewer.desktop", "kitty-open.desktop", "nvtop.desktop"}
+
+
 def desktop_entries():
     seen, out = set(), []
     for d in DATA_DIRS:
@@ -76,6 +86,8 @@ def desktop_entries():
             if sec.get("Type", "Application") != "Application":
                 continue
             if sec.get("NoDisplay", "false").lower() == "true" or sec.get("Hidden", "false").lower() == "true":
+                continue
+            if did in HIDE or sec.get("Terminal", "false").lower() == "true":
                 continue
             onlyin = sec.get("OnlyShowIn", "")
             if onlyin and "Hyprland" not in onlyin:

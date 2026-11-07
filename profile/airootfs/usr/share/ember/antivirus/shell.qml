@@ -220,7 +220,7 @@ ShellRoot {
                         return { icon: "info", color: root.cAccent2, text: root.tr("Ще не перевірялось — почни зі швидкої перевірки", "Never scanned — start with a quick scan", "Ещё не проверялось — начни с быстрой проверки") }
                     }
                     Icon { name: parent.info.icon; color: parent.info.color; size: 16; anchors.verticalCenter: parent.verticalCenter }
-                    Text { text: parent.info.text; color: parent.info.color; font.family: "Inter"; font.pixelSize: 13.5; anchors.verticalCenter: parent.verticalCenter }
+                    Text { text: parent.info.text; color: parent.info.color; font.family: "Inter"; font.pixelSize: 13; anchors.verticalCenter: parent.verticalCenter }
                 }
             }
 
@@ -292,7 +292,7 @@ ShellRoot {
                         Row {
                             anchors.right: parent.right; anchors.rightMargin: 14; anchors.verticalCenter: parent.verticalCenter
                             spacing: 8
-                            Text { anchors.verticalCenter: parent.verticalCenter; text: row.modelData.sub; color: root.a(root.cFg, 0.55); font.family: "Inter"; font.pixelSize: 12.5 }
+                            Text { anchors.verticalCenter: parent.verticalCenter; text: row.modelData.sub; color: root.a(root.cFg, 0.55); font.family: "Inter"; font.pixelSize: 12 }
                             Rectangle {       // кількість у карантині
                                 visible: row.modelData.key === "quarantine" && root.st.quarantine > 0
                                 anchors.verticalCenter: parent.verticalCenter
@@ -343,7 +343,7 @@ ShellRoot {
                         Column {
                             x: 16; anchors.verticalCenter: parent.verticalCenter; width: parent.width - 130
                             Text { width: parent.width; elide: Text.ElideMiddle; text: qrow.modelData.name; color: root.cFg; font.family: "Inter"; font.pixelSize: 14; font.weight: Font.DemiBold }
-                            Text { width: parent.width; elide: Text.ElideRight; text: qrow.modelData.sig + " · " + root.when(qrow.modelData.time); color: root.a(root.cRed, 0.9); font.family: "Inter"; font.pixelSize: 11.5 }
+                            Text { width: parent.width; elide: Text.ElideRight; text: qrow.modelData.sig + " · " + root.when(qrow.modelData.time); color: root.a(root.cRed, 0.9); font.family: "Inter"; font.pixelSize: 11 }
                         }
                         Row {
                             anchors.right: parent.right; anchors.rightMargin: 12; anchors.verticalCenter: parent.verticalCenter
@@ -385,7 +385,7 @@ ShellRoot {
                     text: root.page === "main"
                         ? k + "↑↓</b></font> " + root.tr("вибір", "select", "выбор") + "   " + k + "Enter</b></font> " + root.tr("відкрити", "open", "открыть") + "   " + k + "Esc</b></font> " + root.tr("закрити", "close", "закрыть")
                         : k + "R</b></font> " + root.tr("повернути", "restore", "вернуть") + "   " + k + "Del</b></font> " + root.tr("видалити", "delete", "удалить") + "   " + k + "Esc</b></font> " + root.tr("назад", "back", "назад")
-                    color: root.a(root.cFg, 0.55); font.family: "Inter"; font.pixelSize: 12.5
+                    color: root.a(root.cFg, 0.55); font.family: "Inter"; font.pixelSize: 12
                 }
             }
         }
