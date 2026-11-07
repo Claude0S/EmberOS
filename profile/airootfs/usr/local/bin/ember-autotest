@@ -152,7 +152,7 @@ pacman -Q steam wine 2>&1 | sed 's/^/EMBER-INSTALLED: pkg /' > /dev/ttyS0
 hx launcher "quickshell -p /usr/share/ember/launcher/shell.qml >/tmp/ql.log 2>&1"
 sleep 10
 say "launcher shown"
-sleep 8
+sleep 25
 grep -iE "warn|error|fail" /tmp/ql.log 2>/dev/null | head -20 | sed 's/^/EMBER-INSTALLED: qml launcher: /' > /dev/ttyS0
 pkill -f "launcher/shell.qml"
 if command -v clamscan >/dev/null && ls /var/lib/clamav/*.c[vl]d >/dev/null 2>&1; then
@@ -168,8 +168,26 @@ fi
 hx antivirus "quickshell -p /usr/share/ember/antivirus/shell.qml >/tmp/qa.log 2>&1"
 sleep 10
 say "antivirus shown"
-sleep 8
+sleep 25
 grep -iE "warn|error|fail" /tmp/qa.log 2>/dev/null | head -20 | sed 's/^/EMBER-INSTALLED: qml antivirus: /' > /dev/ttyS0
+pkill -f "antivirus/shell.qml"
+hx calc "ember-calc >/tmp/calc.log 2>&1"
+sleep 8
+say "calc shown"
+sleep 25
+grep -iE "error|Traceback" -A3 /tmp/calc.log 2>/dev/null | head -12 | sed 's/^/EMBER-INSTALLED: calc: /' > /dev/ttyS0
+pkill -f ember-calc
+hx office "ember-office >/tmp/office.log 2>&1"
+sleep 10
+say "office shown"
+sleep 25
+grep -iE "error|Traceback" -A3 /tmp/office.log 2>/dev/null | head -12 | sed 's/^/EMBER-INSTALLED: office: /' > /dev/ttyS0
+pkill -f "bin/ember-office"
+command -v soffice >/dev/null && say "libreoffice installed"
+hx slides "ember-office --new slides dark >/tmp/slides.log 2>&1"
+sleep 40
+say "slides shown"
+sleep 25
 EOB
 chmod 755 /mnt/usr/local/bin/ember-ci-beacon
 ln -sf /etc/systemd/system/ember-ci-beacon.service /mnt/etc/systemd/system/multi-user.target.wants/ember-ci-beacon.service

@@ -1,0 +1,15 @@
+[Desktop Entry]
+Type=Application
+Name=Ember Office
+Name[uk]=Ember Office
+Name[ru]=Ember Office
+Comment=Documents, presentations, spreadsheets
+Comment[uk]=Документи, презентації, таблиці
+Comment[ru]=Документы, презентации, таблицы
+Exec=ember-office %F
+Icon=ember-office
+Terminal=false
+Categories=Office;
+Keywords=office;word;powerpoint;excel;docx;офіс;офис;
+StartupWMClass=os.ember.Office
+MimeType=application/vnd.openxmlformats-officedocument.wordprocessingml.document;application/vnd.openxmlformats-officedocument.presentationml.presentation;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;application/vnd.oasis.opendocument.text;application/vnd.oasis.opendocument.presentation;application/vnd.oasis.opendocument.spreadsheet;application/msword;application/vnd.ms-powerpoint;application/vnd.ms-excel;

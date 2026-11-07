@@ -123,6 +123,20 @@ hl.window_rule({
     center = true,
 })
 hl.window_rule({
+    name  = "ember-calculator",
+    match = { class = "^(os.ember.Calculator)$" },
+    float = true,
+    size  = "360 590",
+    center = true,
+})
+hl.window_rule({
+    name  = "ember-office",
+    match = { class = "^(os.ember.Office)$" },
+    float = true,
+    size  = "1000 680",
+    center = true,
+})
+hl.window_rule({
     name  = "ember-pip",
     match = { title = "^(Picture-in-Picture|Картинка в картинке)$" },
     float = true,

@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=Ember Write
+Name[uk]=Ember Write
+Name[ru]=Ember Write
+Comment=New document (like Word)
+Comment[uk]=Новий документ (як Word)
+Comment[ru]=Новый документ (как Word)
+Exec=ember-office --new write
+Icon=ember-write
+Terminal=false
+Categories=Office;WordProcessor;
+Keywords=word;docx;document;документ;текст;

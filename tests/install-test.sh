@@ -78,6 +78,9 @@ shot 14-installed-apps 1 || true
 waitmark() { for i in $(seq "$2"); do grep -aq "EMBER-INSTALLED: $1" "$OUT/installed-serial.log" && return 0; sleep 2; done; return 1; }
 waitmark "launcher shown" 60 && { sleep 3; shot 15-launcher 0 || true; }
 waitmark "antivirus shown" 240 && { sleep 3; shot 16-antivirus 0 || true; }
+waitmark "calc shown" 120 && { sleep 3; shot 17-calculator 0 || true; }
+waitmark "office shown" 120 && { sleep 3; shot 18-office 0 || true; }
+waitmark "slides shown" 180 && { sleep 3; shot 19-slides 0 || true; }
 sleep 10
 echo quit | socat - "UNIX-CONNECT:$MON" >/dev/null 2>&1 || true
 wait "$QPID" 2>/dev/null

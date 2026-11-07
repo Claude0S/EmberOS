@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=Ember Slides
+Name[uk]=Ember Slides
+Name[ru]=Ember Slides
+Comment=New presentation (like PowerPoint)
+Comment[uk]=Нова презентація (як PowerPoint)
+Comment[ru]=Новая презентация (как PowerPoint)
+Exec=ember-office --new slides
+Icon=ember-slides
+Terminal=false
+Categories=Office;Presentation;
+Keywords=powerpoint;pptx;slides;презентація;презентация;

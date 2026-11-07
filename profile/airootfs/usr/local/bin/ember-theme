@@ -160,6 +160,7 @@ def render(look, reload=True):
         pass
     if reload:
         reload_desktop()
+        quiet("/usr/local/bin/ember-office", "--apply-theme")   # LibreOffice у кольорах теми
 
 
 def quiet(*cmd):

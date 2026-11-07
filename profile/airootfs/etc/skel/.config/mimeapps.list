@@ -1,0 +1,10 @@
+[Default Applications]
+application/vnd.openxmlformats-officedocument.wordprocessingml.document=ember-office.desktop
+application/vnd.openxmlformats-officedocument.presentationml.presentation=ember-office.desktop
+application/vnd.openxmlformats-officedocument.spreadsheetml.sheet=ember-office.desktop
+application/vnd.oasis.opendocument.text=ember-office.desktop
+application/vnd.oasis.opendocument.presentation=ember-office.desktop
+application/vnd.oasis.opendocument.spreadsheet=ember-office.desktop
+application/msword=ember-office.desktop
+application/vnd.ms-powerpoint=ember-office.desktop
+application/vnd.ms-excel=ember-office.desktop

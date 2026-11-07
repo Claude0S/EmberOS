@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=Ember Sheets
+Name[uk]=Ember Sheets
+Name[ru]=Ember Sheets
+Comment=New spreadsheet (like Excel)
+Comment[uk]=Нова таблиця (як Excel)
+Comment[ru]=Новая таблица (как Excel)
+Exec=ember-office --new sheets
+Icon=ember-sheets
+Terminal=false
+Categories=Office;Spreadsheet;
+Keywords=excel;xlsx;table;таблиця;таблица;

@@ -65,7 +65,11 @@ HIDE = {"qv4l2.desktop", "qvidcap.desktop", "xgps.desktop", "xgpsspeed.desktop",
         "org.freedesktop.IBus.Setup.desktop", "xdg-desktop-portal-gtk.desktop", "jconsole-java-openjdk.desktop",
         "jshell-java-openjdk.desktop", "rofi.desktop", "rofi-theme-selector.desktop", "fuzzel.desktop",
         "nwg-dock-hyprland.desktop", "wine.desktop", "winetricks.desktop", "wine-mime-msi.desktop",
-        "gcr-prompter.desktop", "gcr-viewer.desktop", "kitty-open.desktop", "nvtop.desktop"}
+        "gcr-prompter.desktop", "gcr-viewer.desktop", "kitty-open.desktop", "nvtop.desktop",
+        # LibreOffice ховається за Ember Office / Write / Slides / Sheets
+        "libreoffice-startcenter.desktop", "libreoffice-writer.desktop", "libreoffice-impress.desktop",
+        "libreoffice-calc.desktop", "libreoffice-draw.desktop", "libreoffice-math.desktop", "libreoffice-base.desktop",
+        "libreoffice-xsltfilter.desktop"}
 
 
 def desktop_entries():
@@ -220,6 +224,10 @@ def cmd_cmd(line):
     name = line[1:].split()[0].lower() if line[1:].split() else ""
     if name in ("antivirus", "av"):
         return detach(["ember-antivirus"])
+    if name in ("calc", "calculator"):
+        return detach(["ember-calc"])
+    if name == "office":
+        return detach(["ember-office"])
     if name in TERMINAL_CMDS:
         return detach(["kitty", "--class", "ember-cmd", "-e", "bash", "-c",
                        f"ember-shell {shlex.quote(line)}; echo; read -rsn1 -p '  ⏎ …'"])

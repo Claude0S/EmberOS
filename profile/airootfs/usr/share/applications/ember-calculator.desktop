@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+Name=Calculator
+Name[uk]=Калькулятор
+Name[ru]=Калькулятор
+Comment=Ember calculator in your theme colours
+Comment[uk]=Калькулятор Ember у кольорах теми
+Comment[ru]=Калькулятор Ember в цветах темы
+Exec=ember-calc
+Icon=ember-calculator
+Terminal=false
+Categories=Utility;Calculator;
+Keywords=calc;calculator;math;калькулятор;
+StartupWMClass=os.ember.Calculator

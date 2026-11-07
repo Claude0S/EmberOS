@@ -34,6 +34,8 @@ ShellRoot {
 
     readonly property var commands: [
         { cmd: "/antivirus", glyph: "shield",   name: tr("Антивірус", "Antivirus", "Антивирус") },
+        { cmd: "/office",    glyph: "apps",     name: "Ember Office" },
+        { cmd: "/calc",      glyph: "apps",     name: tr("Калькулятор", "Calculator", "Калькулятор") },
         { cmd: "/update",    glyph: "download", name: tr("Оновити систему", "Update system", "Обновить систему") },
         { cmd: "/theme ember",  glyph: "palette", name: "Тема · Ember" },
         { cmd: "/theme night",  glyph: "palette", name: "Тема · Night" },

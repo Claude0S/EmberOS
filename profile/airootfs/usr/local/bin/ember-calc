@@ -1,0 +1,261 @@
+#!/usr/bin/env python3
+"""Ember Калькулятор — у кольорах поточної теми (міняється разом з /theme)."""
+import ast
+import math
+import operator
+import sys
+
+sys.path.insert(0, "/usr/share/ember/python")
+import gi  # noqa: E402
+
+gi.require_version("Gtk", "4.0")
+gi.require_version("Adw", "1")
+from gi.repository import Adw, Gdk, Gtk  # noqa: E402
+
+from ember_ui import ThemedCss, rgba, tr  # noqa: E402
+
+
+# ─── безпечний підрахунок (без eval) ───
+OPS = {ast.Add: operator.add, ast.Sub: operator.sub, ast.Mult: operator.mul, ast.Div: operator.truediv,
+       ast.Pow: operator.pow, ast.USub: operator.neg, ast.UAdd: operator.pos, ast.Mod: operator.mod}
+FUNCS = {"sqrt": math.sqrt, "sin": lambda x: math.sin(math.radians(x)), "cos": lambda x: math.cos(math.radians(x)),
+         "tan": lambda x: math.tan(math.radians(x)), "ln": math.log, "log": math.log10, "abs": abs}
+CONST = {"pi": math.pi, "e": math.e}
+
+
+def _ev(n):
+    if isinstance(n, ast.Expression):
+        return _ev(n.body)
+    if isinstance(n, ast.Constant) and isinstance(n.value, (int, float)):
+        return n.value
+    if isinstance(n, ast.BinOp) and type(n.op) in OPS:
+        a, b = _ev(n.left), _ev(n.right)
+        if isinstance(n.op, ast.Pow) and abs(b) > 1000:
+            raise ValueError("too big")
+        return OPS[type(n.op)](a, b)
+    if isinstance(n, ast.UnaryOp) and type(n.op) in OPS:
+        return OPS[type(n.op)](_ev(n.operand))
+    if isinstance(n, ast.Call) and isinstance(n.func, ast.Name) and n.func.id in FUNCS and len(n.args) == 1:
+        return FUNCS[n.func.id](_ev(n.args[0]))
+    if isinstance(n, ast.Name) and n.id in CONST:
+        return CONST[n.id]
+    raise ValueError("bad")
+
+
+def normalize(expr):
+    e = expr.replace("×", "*").replace("÷", "/").replace("−", "-").replace(",", ".").replace("π", "pi")
+    e = e.replace("√", "sqrt").replace("^", "**")
+    # 50% → (50/100); 200+10% → 200+200*10/100 (як у звичайних калькуляторах)
+    out, i = "", 0
+    while i < len(e):
+        if e[i] == "%":
+            j = len(out)
+            while j > 0 and (out[j - 1].isdigit() or out[j - 1] == "."):
+                j -= 1
+            num = out[j:]
+            head = out[:j]
+            if head.endswith(("+", "-")) and head[:-1]:
+                base = head[:-1]
+                out = f"{head}(({base})*{num}/100)"
+            else:
+                out = f"{head}({num}/100)"
+        else:
+            out += e[i]
+        i += 1
+    opens = out.count("(") - out.count(")")
+    return out + ")" * max(0, opens)
+
+
+def calc(expr):
+    e = normalize(expr)
+    if not e.strip():
+        return None
+    v = _ev(ast.parse(e, mode="eval"))
+    if isinstance(v, float):
+        if math.isinf(v) or math.isnan(v):
+            raise ValueError("inf")
+        if v.is_integer() and abs(v) < 1e15:
+            v = int(v)
+    return v
+
+
+def fmt(v):
+    if isinstance(v, int):
+        s = f"{v:,}".replace(",", " ")
+    else:
+        s = f"{v:.10g}"
+        if "e" not in s:
+            ip, _, fp = s.partition(".")
+            ip = f"{int(ip):,}".replace(",", " ") if ip.lstrip("-").isdigit() else ip
+            s = ip + ("," + fp if fp else "")
+    return s
+
+
+def css(t):
+    a, a2, fg, bg, sf = t["accent"], t["accent2"], t["fg"], t["bg"], t["surface"]
+    return f"""
+window.ember-calc, window.ember-calc > * {{ background: {bg}; color: {fg}; }}
+.calc-display {{ background: {rgba(sf, 0.35)}; border-radius: 22px; padding: 14px 18px; margin: 14px 14px 6px 14px; }}
+.calc-expr {{ color: {rgba(fg, 0.55)}; font-size: 17px; }}
+.calc-result {{ color: {a2}; font-size: 42px; font-weight: 800; }}
+.calc-error {{ color: #ff6b6b; }}
+.calc-brand {{ color: {rgba(fg, 0.6)}; font-size: 12px; font-weight: 700; }}
+button.key {{ background: {rgba(sf, 0.45)}; color: {fg}; border-radius: 18px; font-size: 21px; font-weight: 600;
+             min-height: 58px; border: none; box-shadow: none; transition: all 120ms ease; }}
+button.key:hover {{ background: {rgba(sf, 0.75)}; }}
+button.key:active {{ background: {rgba(a, 0.35)}; }}
+button.key.op {{ background: {rgba(a, 0.22)}; color: {a}; font-size: 24px; }}
+button.key.op:hover {{ background: {rgba(a, 0.35)}; }}
+button.key.fn {{ background: {rgba(sf, 0.25)}; color: {a2}; }}
+button.key.eq {{ background: {a}; color: {bg}; font-size: 26px; font-weight: 800; }}
+button.key.eq:hover {{ background: {a2}; }}
+.calc-history {{ color: {rgba(fg, 0.5)}; font-size: 13px; }}
+"""
+
+
+KEYS = [
+    [("C", "fn"), ("⌫", "fn"), ("%", "fn"), ("÷", "op")],
+    [("7", ""), ("8", ""), ("9", ""), ("×", "op")],
+    [("4", ""), ("5", ""), ("6", ""), ("−", "op")],
+    [("1", ""), ("2", ""), ("3", ""), ("+", "op")],
+    [("( )", "fn"), ("0", ""), (",", ""), ("=", "eq")],
+]
+
+
+class Calc(Adw.Application):
+    def __init__(self):
+        super().__init__(application_id="os.ember.Calculator")
+        self.expr = ""
+        self.just_eq = False
+
+    def do_activate(self):
+        if self.get_active_window():
+            self.get_active_window().present()
+            return
+        Adw.StyleManager.get_default().set_color_scheme(Adw.ColorScheme.FORCE_DARK)
+        self.css = ThemedCss(css, lambda t: self.fox.set_filename(t["fox"]))
+        win = Gtk.ApplicationWindow(application=self, title=tr("Калькулятор", "Calculator", "Калькулятор"))
+        win.set_default_size(360, 560)
+        win.set_decorated(False)          # заголовок з кнопками-«світлофором» малює Ember (hyprbars)
+        win.add_css_class("ember-calc")
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        win.set_child(box)
+
+        disp = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
+        disp.add_css_class("calc-display")
+        top = Gtk.Box(spacing=8)
+        self.fox = Gtk.Picture.new_for_filename(self.css.t["fox"])
+        self.fox.set_size_request(26, 26)
+        self.fox.set_can_shrink(True)
+        top.append(self.fox)
+        brand = Gtk.Label(label="Ember")
+        brand.add_css_class("calc-brand")
+        top.append(brand)
+        self.hist = Gtk.Label(xalign=1, hexpand=True, ellipsize=3)
+        self.hist.add_css_class("calc-history")
+        top.append(self.hist)
+        disp.append(top)
+        self.l_expr = Gtk.Label(xalign=1, ellipsize=1)
+        self.l_expr.add_css_class("calc-expr")
+        self.l_res = Gtk.Label(label="0", xalign=1, ellipsize=1, selectable=True)
+        self.l_res.add_css_class("calc-result")
+        disp.append(self.l_expr)
+        disp.append(self.l_res)
+        box.append(disp)
+
+        grid = Gtk.Grid(row_spacing=8, column_spacing=8, margin_start=14, margin_end=14, margin_bottom=14, margin_top=8,
+                        row_homogeneous=True, column_homogeneous=True, vexpand=True)
+        for r, row in enumerate(KEYS):
+            for c, (k, kind) in enumerate(row):
+                b = Gtk.Button(label=k, hexpand=True, vexpand=True)
+                b.add_css_class("key")
+                if kind:
+                    b.add_css_class(kind)
+                b.connect("clicked", lambda _b, k=k: self.press(k))
+                grid.attach(b, c, r, 1, 1)
+        box.append(grid)
+
+        keys = Gtk.EventControllerKey()
+        keys.connect("key-pressed", self.on_key)
+        win.add_controller(keys)
+        win.present()
+        self.refresh()
+
+    def on_key(self, _c, keyval, _code, state):
+        name = Gdk.keyval_name(keyval) or ""
+        ch = chr(Gdk.keyval_to_unicode(keyval)) if Gdk.keyval_to_unicode(keyval) else ""
+        if state & Gdk.ModifierType.CONTROL_MASK and name.lower() == "c":
+            Gdk.Display.get_default().get_clipboard().set(self.l_res.get_text().replace(" ", ""))
+            return True
+        if name in ("Return", "KP_Enter", "equal", "KP_Equal"):
+            self.press("=")
+        elif name == "BackSpace":
+            self.press("⌫")
+        elif name in ("Escape", "Delete"):
+            self.press("C")
+        elif ch in "0123456789":
+            self.press(ch)
+        elif ch in ".,":
+            self.press(",")
+        elif ch in "+":
+            self.press("+")
+        elif ch in "-":
+            self.press("−")
+        elif ch in "*xX":
+            self.press("×")
+        elif ch in "/:":
+            self.press("÷")
+        elif ch in "%":
+            self.press("%")
+        elif ch in "()^":
+            self.expr += ch
+            self.refresh()
+        else:
+            return False
+        return True
+
+    def press(self, k):
+        if k == "C":
+            self.expr = ""
+        elif k == "⌫":
+            self.expr = self.expr[:-1]
+        elif k == "=":
+            try:
+                v = calc(self.expr)
+                if v is not None:
+                    self.hist.set_text(f"{self.expr} = {fmt(v)}")
+                    self.expr = fmt(v).replace(" ", "")
+                    self.just_eq = True
+                    self.refresh(final=True)
+                    return
+            except Exception:
+                self.l_res.add_css_class("calc-error")
+                self.l_res.set_text(tr("Помилка", "Error", "Ошибка"))
+                return
+        elif k == "( )":
+            opens = self.expr.count("(") - self.expr.count(")")
+            last = self.expr[-1:]
+            self.expr += ")" if opens > 0 and (last.isdigit() or last == ")") else "("
+        else:
+            if self.just_eq and k[0].isdigit():
+                self.expr = ""
+            self.expr += k
+        self.just_eq = False
+        self.refresh()
+
+    def refresh(self, final=False):
+        self.l_res.remove_css_class("calc-error")
+        self.l_expr.set_text(self.expr if not final else "")
+        try:
+            v = calc(self.expr)
+            self.l_res.set_text(fmt(v) if v is not None else "0")
+        except Exception:
+            if not self.expr:
+                self.l_res.set_text("0")
+
+
+if __name__ == "__main__":
+    if len(sys.argv) > 2 and sys.argv[1] == "--eval":     # для тестів: ember-calc --eval "2+2"
+        print(fmt(calc(sys.argv[2])))
+        sys.exit(0)
+    Calc().run([])

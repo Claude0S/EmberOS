@@ -52,6 +52,7 @@
 | `/drivers` | проверить и установить драйверы |
 | `/wifi` · `/update` · `/files` | Wi-Fi · обновление системы · проводник |
 | `/antivirus` | Ember Антивирус: быстрая/полная проверка, папка, карантин, файрвол (ClamAV + ufw) |
+| `/office` · `/calc` | Ember Office (Write · Slides · Sheets — открывает/сохраняет .docx .pptx .xlsx, шаблоны в цветах темы) · калькулятор в цветах темы |
 | `Super+Space` | Ember Launcher: программы, игры с обложками, недавние, команды — под тему |
 | `/lang uk` · `/lang en` · `/lang ru` | язык интерфейса |
 

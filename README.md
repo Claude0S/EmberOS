@@ -52,6 +52,7 @@ Screenshots from these tests are attached to each release.
 | `/drivers` | check and install drivers |
 | `/wifi` · `/update` · `/files` | Wi-Fi · system update · file manager |
 | `/antivirus` | Ember Antivirus: quick/full/folder scan, quarantine, firewall (ClamAV + ufw) |
+| `/office` · `/calc` | Ember Office (Write · Slides · Sheets — opens/saves .docx .pptx .xlsx, themed templates) · calculator in your theme colours |
 | `Super+Space` | Ember Launcher: apps, games with covers, recent, Ember commands — follows the theme |
 | `/lang uk` · `/lang en` · `/lang ru` | interface language |
 

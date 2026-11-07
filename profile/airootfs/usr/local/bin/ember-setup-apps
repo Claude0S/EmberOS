@@ -58,6 +58,8 @@ step wine  pacman -S --needed --noconfirm wine wine-mono wine-gecko winetricks |
 step extras pacman -S --needed --noconfirm gamemode lib32-gamemode mangohud umu-launcher || true
 step hydra /usr/local/bin/ember-install-hydra || ok=0
 # Ember Антивірус: ClamAV + бази, файрвол увімкнений (не критично)
+# Ember Office (LibreOffice під капотом) + шрифти, сумісні з Word
+step office pacman -S --needed --noconfirm libreoffice-fresh libreoffice-fresh-uk libreoffice-fresh-ru ttf-carlito ttf-caladea || true
 step antivirus /usr/local/bin/ember-av-root install || true
 step firewall /usr/local/bin/ember-av-root firewall on || true
 
