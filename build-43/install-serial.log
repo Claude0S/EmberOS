@@ -1,0 +1,678 @@
+[    0.148019] virt/tdx: TDX not supported by the host platform
+:: running early hook [udev]
+Starting systemd-udevd version 262.1-1-arch
+:: running early hook [archiso_pxe_nbd]
+:: running hook [udev]
+:: Triggering uevents...
+:: running hook [memdisk]
+:: running hook [archiso]
+:: running hook [archiso_loop_mnt]
+:: running hook [archiso_pxe_common]
+:: running hook [archiso_pxe_nbd]
+:: running hook [archiso_pxe_http]
+:: running hook [archiso_pxe_nfs]
+:: Mounting '/dev/disk/by-label/EMBER_202611' to '/run/archiso/bootmnt'
+:: Device '/dev/disk/by-label/EMBER_202611' mounted successfully.
+:: Mounting /run/archiso/cowspace (tmpfs) filesystem, size=256M...
+:: Mounting '/dev/loop0' to '/run/archiso/airootfs'
+:: Device '/dev/loop0' mounted successfully.
+:: running late hook [archiso_pxe_common]
+:: running cleanup hook [udev]
+P+q6E616D65\[18t7[32766;32766H[6n8[!p]104\[0m[?7h[1G[0J
+[0;1;39mWelcome to [0m[38;2;232;135;90mEmber OS[0m[0;1;39m![0m
+
+]3008;start=c875e76a8a69469585d99a9d78416e5d;user=root;hostname=ember-os;machineid=e5400535a63749f688577beecc139cb1;bootid=47c07d5c01b742aaa3308d62c14a3284;pid=1;pidfdid=1;comm=systemd;type=boot\[    6.283339] systemd[1]: Failed to preset all unit: Unit dbus-org.freedesktop.ModemManager1.service is an unresolvable alias
+[[0;32m  OK  [0m] Created slice [0;1;39mSlice /system/dirmngr[0m.
+[[0;32m  OK  [0m] Created slice [0;1;39mSlice /system/getty[0m.
+[[0;32m  OK  [0m] Created slice [0;1;39mSlice /system/gpg-agent[0m.
+[[0;32m  OK  [0m] Created slice [0;1;39mSlice /system/gpg-agent-browser[0m.
+[[0;32m  OK  [0m] Created slice [0;1;39mSlice /system/gpg-agent-extra[0m.
+[[0;32m  OK  [0m] Created slice [0;1;39mSlice /system/gpg-agent-ssh[0m.
+[[0;32m  OK  [0m] Created slice [0;1;39mSlice /system/keyboxd[0m.
+[[0;32m  OK  [0m] Created slice [0;1;39mSlice /system/modprobe[0m.
+[[0;32m  OK  [0m] Created slice [0;1;39mSlice /system/serial-getty[0m.
+[[0;32m  OK  [0m] Created slice [0;1;39mUser and Session Slice[0m.
+[[0;32m  OK  [0m] Started [0;1;39mForward Password Requests to Wall Directory Watch[0m.
+[[0;32m  OK  [0m] Set up automount [0;1;39mArbitrary Executa…ormats File System Automount Point[0m.
+         Expecting device [0;1;39m/dev/ttyS0[0m...
+[[0;32m  OK  [0m] Reached target [0;1;39mLocal dm-clone Devices[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mImage Downloads[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mLocal Integrity Protected Volumes[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mRemote Encrypted Volumes[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mRemote File Systems[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mRemote Integrity Protected Volumes[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mRemote Verity Protected Volumes[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mSlice Units[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mSwaps[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mLocal Verity Protected Volumes[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mDevice-mapper event daemon FIFOs[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mLVM2 poll daemon socket[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mQuery the User Interactively for a Password[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mProcess Core Dump Socket[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mCredential Encryption/Decryption[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mDisk Encryption Enrollment Service Socket[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mFactory Reset Management[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mHostname Service Socket[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mJournal Audit Socket[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mJournal Socket (/dev/log)[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mJournal Sockets[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mDDI File System Mounter Socket[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mConsole Output Muting Service Socket[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mNetwork Management Metrics Varlink Socket[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mNetwork Management Varlink Socket[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mNetwork Management Netlink Socket[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mNamespace Resource Manager Socket[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mDisk Repartitioning Service Socket[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mReport System Basic Metrics Socket[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mCGroup Report Varlink Socket[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mReport Files Metrics Socket[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mReport Signing Socket (Local Software Key)[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mSystem Report Socket[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mResolve Monitor Varlink Socket[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mResolve Service Varlink Socket[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mSimple Block Device Backed Storage Provider[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mSimple File System Backed Storage Provider[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mSystem Install Tool[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mSystem Updates[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mudev Kernel Socket[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mudev Varlink Socket[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mUser Database Manager Socket[0m.
+         Mounting [0;1;39mHuge Pages File System[0m...
+         Mounting [0;1;39mPOSIX Message Queue File System[0m...
+         Mounting [0;1;39mKernel Debug File System[0m...
+         Mounting [0;1;39mKernel Trace File System[0m...
+         Mounting [0;1;39mTemporary Directory /tmp[0m...
+         Starting [0;1;39mCreate List of Static Device Nodes[0m...
+         Starting [0;1;39mMonitoring of LVM2 mirror…ing dmeventd or progress polling[0m...
+         Mounting [0;1;39mKernel Configuration File System[0m...
+         Mounting [0;1;39mFUSE Control File System[0m...
+         Starting [0;1;39mJournal Service[0m...
+         Starting [0;1;39mLoad Kernel Modules[0m...
+         Starting [0;1;39mGenerate Network Units from Kernel Command Line[0m...
+         Starting [0;1;39mRemount Root and Kernel File Systems[0m...
+         Starting [0;1;39mWait Until Kernel Time Synchronized[0m...
+         Starting [0;1;39mLoad udev Rules from Credentials[0m...
+         Starting [0;1;39mColdplug All udev Devices[0m...
+         Starting [0;1;39mVirtual Console Setup[0m...
+[[0;32m  OK  [0m] Finished [0;1;39mCreate List of Static Device Nodes[0m.
+         Starting [0;1;39mCreate Static Device Nodes in /dev gracefully[0m...
+[[0;32m  OK  [0m] Finished [0;1;39mGenerate Network Units from Kernel Command Line[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mPreparation for Network[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mNetwork Management Resolve Hook Socket[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mRemount Root and Kernel File Systems[0m.
+         Starting [0;1;39mLoad/Save OS Random Seed[0m...
+[[0;32m  OK  [0m] Mounted [0;1;39mHuge Pages File System[0m.
+[[0;32m  OK  [0m] Mounted [0;1;39mKernel Debug File System[0m.
+[[0;32m  OK  [0m] Mounted [0;1;39mPOSIX Message Queue File System[0m.
+[[0;32m  OK  [0m] Mounted [0;1;39mKernel Trace File System[0m.
+[[0;32m  OK  [0m] Mounted [0;1;39mTemporary Directory /tmp[0m.
+[[0;32m  OK  [0m] Mounted [0;1;39mKernel Configuration File System[0m.
+[[0;32m  OK  [0m] Mounted [0;1;39mFUSE Control File System[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mLoad udev Rules from Credentials[0m.
+[[0;32m  OK  [0m] Started [0;1;39mJournal Service[0m.
+         Starting [0;1;39mFlush Journal to Persistent Storage[0m...
+[[0;32m  OK  [0m] Finished [0;1;39mLoad/Save OS Random Seed[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mLoad Kernel Modules[0m.
+         Starting [0;1;39mApply Kernel Variables[0m...
+[[0;32m  OK  [0m] Finished [0;1;39mFlush Journal to Persistent Storage[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mColdplug All udev Devices[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mApply Kernel Variables[0m.
+         Starting [0;1;39mUser Database Manager[0m...
+[[0;32m  OK  [0m] Finished [0;1;39mMonitoring of LVM2 mirror…using dmeventd or progress polling[0m.
+[[0;32m  OK  [0m] Started [0;1;39mUser Database Manager[0m.
+         Starting [0;1;39mLoad Kernel Module tun[0m...
+[[0;32m  OK  [0m] Finished [0;1;39mLoad Kernel Module tun[0m.
+         Starting [0;1;39mNamespace Resource Manager[0m...
+[[0;32m  OK  [0m] Finished [0;1;39mVirtual Console Setup[0m.
+[[0m[0;31m*     [0m] (1 of 4) A start job is running for…in /dev gracefully (3s / no limit)
+M[K[[0;32m  OK  [0m] Started [0;1;39mNamespace Resource Manager[0m.
+[K[[0;32m  OK  [0m] Finished [0;1;39mCreate Static Device Nodes in /dev gracefully[0m.
+         Starting [0;1;39mCreate System Users[0m...
+[[0;32m  OK  [0m] Finished [0;1;39mCreate System Users[0m.
+         Starting [0;1;39mJournal Metrics Report Socket[0m...
+         Starting [0;1;39mJournal Log Access Socket[0m...
+         Starting [0;1;39mNetwork Name Resolution[0m...
+         Starting [0;1;39mCreate Static Device Nodes in /dev[0m...
+[[0;32m  OK  [0m] Listening on [0;1;39mJournal Metrics Report Socket[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mJournal Log Access Socket[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mCreate Static Device Nodes in /dev[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mPreparation for Local File Systems[0m.
+         Mounting [0;1;39mTemporary /etc/pacman.d/gnupg directory[0m...
+[[0;32m  OK  [0m] Reached target [0;1;39mVirtual Machines and Containers[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mDisk Image Download Service Socket[0m.
+         Starting [0;1;39mRule-based Manager for Device Events and Files[0m...
+[[0;32m  OK  [0m] Mounted [0;1;39mTemporary /etc/pacman.d/gnupg directory[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mLocal File Systems[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mBoot Loader Control Service Socket[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mSystem Extension Image Management[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mSystem Extension and …Refresh on Completed System Update[0m.
+         Starting [0;1;39mTell Plymouth To Write Out Runtime Data[0m...
+         Starting [0;1;39mCreate System Files and Directories[0m...
+         Starting [0;1;39mLoad JSON user/group Records from Credentials[0m...
+         Starting [0;1;39mListen Kernel Core Dump Socket[0m...
+[[0;32m  OK  [0m] Started [0;1;39mNetwork Name Resolution[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mTell Plymouth To Write Out Runtime Data[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mHost and Network Name Lookups[0m.
+         Starting [0;1;39mNetwork Time Synchronization[0m...
+[[0;32m  OK  [0m] Finished [0;1;39mLoad JSON user/group Records from Credentials[0m.
+[[0;32m  OK  [0m] Started [0;1;39mNetwork Time Synchronization[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mSystem Time Set[0m.
+[[0;32m  OK  [0m] Started [0;1;39mRule-based Manager for Device Events and Files[0m.
+         Starting [0;1;39mShow Plymouth Boot Screen[0m...
+         Starting [0;1;39mNetwork Management[0m...
+[[0;32m  OK  [0m] Started [0;1;39mListen Kernel Core Dump Socket[0m.
+         Starting [0;1;39mKernel Core Pattern Register[0m...
+[[0;32m  OK  [0m] Finished [0;1;39mKernel Core Pattern Register[0m.
+[[0;32m  OK  [0m] Found device [0;1;39m/dev/ttyS0[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mCreate System Files and Directories[0m.
+         Starting [0;1;39mRebuild Dynamic Linker Cache[0m...
+         Starting [0;1;39mInitial Setup[0m...
+[!p]104\[0m[?7h[1G[0J7[32766;32766H[6n8         Starting [0;1;39mRebuild Journal Catalog[0m...
+         Starting [0;1;39mRecord System Boot/Shutdown in UTMP[0m...
+[[0;32m  OK  [0m] Started [0;1;39mShow Plymouth Boot Screen[0m.
+[[0;32m  OK  [0m] Started [0;1;39mForward Password Requests to Plymouth Directory Watch[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mLocal Encrypted Volumes[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mPath Units[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mLoad/Save RF Kill Switch Status /dev/rfkill Watch[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mRecord System Boot/Shutdown in UTMP[0m.
+[!p]104\[0m[?7h[1G[0J7[32766;32766H[6n8[[0;32m  OK  [0m] Stopped [0;1;39mVirtual Console Setup[0m.
+         Stopping [0;1;39mVirtual Console Setup[0m...
+         Starting [0;1;39mVirtual Console Setup[0m...
+[[0;32m  OK  [0m] Finished [0;1;39mRebuild Journal Catalog[0m.
+[0;33mkauditd_printk_skb: 92 callbacks suppressed[0m
+]3008;start=0014b521a7c04ceba29ec7ab010ca2d0;user=root;hostname=ember-os;machineid=e5400535a63749f688577beecc139cb1;bootid=47c07d5c01b742aaa3308d62c14a3284;pid=560;pidfdid=326;comm=(temd-firstboot);servicename=systemd-firstboot.service;invocationid=75ca89d6b5304969b5d75967699370f9;type=service\[[0;32m  OK  [0m] Started [0;1;39mNetwork Management[0m.
+         Starting [0;1;39mEnable Persistent Storage in systemd-networkd[0m...
+         Starting [0;1;39mWait for Network to be Online[0m...
+[[0;32m  OK  [0m] Finished [0;1;39mVirtual Console Setup[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mInitial Setup[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mFirst Boot Complete[0m.
+         Starting [0;1;39mSave Transient machine-id to Disk[0m...
+[[0;32m  OK  [0m] Finished [0;1;39mEnable Persistent Storage in systemd-networkd[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mWait Until Kernel Time Synchronized[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mSystem Time Synchronized[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mSave Transient machine-id to Disk[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mWait for Network to be Online[0m.
+[[0;1;31m*[0m[0;31m*    [0m] A start job is running for Rebuild …namic Linker Cache (9s / no limit)
+M[K[[0;31m*[0;1;31m*[0m[0;31m*   [0m] A start job is running for Rebuild …namic Linker Cache (9s / no limit)
+M[K[ [0;31m*[0;1;31m*[0m[0;31m*  [0m] A start job is running for Rebuild …amic Linker Cache (10s / no limit)
+M[K[  [0;31m*[0;1;31m*[0m[0;31m* [0m] A start job is running for Rebuild …amic Linker Cache (10s / no limit)
+M[K[   [0;31m*[0;1;31m*[0m[0;31m*[0m] A start job is running for Rebuild …amic Linker Cache (11s / no limit)
+M[K[    [0;31m*[0;1;31m*[0m] A start job is running for Rebuild …amic Linker Cache (11s / no limit)
+M[K[     [0;31m*[0m] A start job is running for Rebuild …amic Linker Cache (12s / no limit)
+M[K[    [0;31m*[0;1;31m*[0m] A start job is running for Rebuild …amic Linker Cache (12s / no limit)
+M[K[   [0;31m*[0;1;31m*[0m[0;31m*[0m] A start job is running for Rebuild …amic Linker Cache (13s / no limit)
+M[K[  [0;31m*[0;1;31m*[0m[0;31m* [0m] A start job is running for Rebuild …amic Linker Cache (13s / no limit)
+M[K[ [0;31m*[0;1;31m*[0m[0;31m*  [0m] A start job is running for Rebuild …amic Linker Cache (14s / no limit)
+M[K[[0;31m*[0;1;31m*[0m[0;31m*   [0m] A start job is running for Rebuild …amic Linker Cache (14s / no limit)
+M[K[[0;1;31m*[0m[0;31m*    [0m] A start job is running for Rebuild …amic Linker Cache (15s / no limit)
+M[K[[0m[0;31m*     [0m] A start job is running for Rebuild …amic Linker Cache (15s / no limit)
+M[K[[0;1;31m*[0m[0;31m*    [0m] A start job is running for Rebuild …amic Linker Cache (16s / no limit)
+M[K[[0;31m*[0;1;31m*[0m[0;31m*   [0m] A start job is running for Rebuild …amic Linker Cache (16s / no limit)
+M[K[ [0;31m*[0;1;31m*[0m[0;31m*  [0m] A start job is running for Rebuild …amic Linker Cache (17s / no limit)
+M[K[  [0;31m*[0;1;31m*[0m[0;31m* [0m] A start job is running for Rebuild …amic Linker Cache (17s / no limit)
+[0;33mkauditd_printk_skb: 37 callbacks suppressed[0m
+M[K[[0;32m  OK  [0m] Finished [0;1;39mRebuild Dynamic Linker Cache[0m.
+[K         Starting [0;1;39mUpdate is Completed[0m...
+[[0;32m  OK  [0m] Finished [0;1;39mUpdate is Completed[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mSystem Initialization[0m.
+[[0;32m  OK  [0m] Started [0;1;39mRefresh existing PGP keys of archlinux-keyring regularly[0m.
+[[0;32m  OK  [0m] Started [0;1;39mDaily man-db regeneration[0m.
+[[0;32m  OK  [0m] Started [0;1;39mDaily verification of password and group files[0m.
+[[0;32m  OK  [0m] Started [0;1;39mDaily Cleanup of Temporary Directories[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mTimer Units[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mD-Bus System Message Bus Socket[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mGnuPG network certifi…ent daemon for /etc/pacman.d/gnupg[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mGnuPG cryptographic a… browsers) for /etc/pacman.d/gnupg[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mGnuPG cryptographic a…estricted) for /etc/pacman.d/gnupg[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mGnuPG cryptographic a…emulation) for /etc/pacman.d/gnupg[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mGnuPG cryptographic a…rase cache for /etc/pacman.d/gnupg[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mGnuPG public key mana…nt service for /etc/pacman.d/gnupg[0m.
+         Starting [0;1;39mPC/SC Smart Card Daemon Activation Socket[0m...
+[[0;32m  OK  [0m] Listening on [0;1;39mAuthorization Manager Agent Helper[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mOpenSSH Server Socket…temd-ssh-generator, AF_UNIX Local)[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mUser Login Management Varlink Socket[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mVirtual Machine and C…tainer Registration Service Socket[0m.
+         Starting [0;1;39mD-Bus System Message Bus[0m...
+[[0;32m  OK  [0m] Listening on [0;1;39mPC/SC Smart Card Daemon Activation Socket[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mSocket Units[0m.
+[[0;32m  OK  [0m] Started [0;1;39mD-Bus System Message Bus[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mBasic System[0m.
+         Starting [0;1;39mNetwork Manager[0m...
+         Starting [0;1;39mEmber OS live session user[0m...
+         Starting [0;1;39mInitializes Pacman keyring[0m...
+         Starting [0;1;39mSSH Key Generation[0m...
+         Starting [0;1;39mHome Area Manager[0m...
+         Starting [0;1;39mUser Login Management[0m...
+[[0;32m  OK  [0m] Started [0;1;39mHome Area Manager[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mHome Area Activation[0m.
+[[0;32m  OK  [0m] Started [0;1;39mUser Login Management[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mSSH Key Generation[0m.
+         Starting [0;1;39mHostname Service[0m...
+[[0;32m  OK  [0m] Started [0;1;39mHostname Service[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mEmber OS live session user[0m.
+[[0;32m  OK  [0m] Started [0;1;39mGnuPG cryptographic agent …rase cache for /etc/pacman.d/gnupg[0m.
+[[0;32m  OK  [0m] Started [0;1;39mNetwork Manager[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mNetwork[0m.
+         Starting [0;1;39mNetwork Manager Wait Online[0m...
+         Starting [0;1;39mOpenSSH Daemon[0m...
+         Starting [0;1;39mPermit User Sessions[0m...
+[[0;32m  OK  [0m] Finished [0;1;39mNetwork Manager Wait Online[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mNetwork is Online[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mPermit User Sessions[0m.
+         Starting [0;1;39mHold until boot process finishes up[0m...
+         Starting [0;1;39mTerminate Plymouth Boot Screen[0m...
+[!p]104\[0m[?7h[1G[0J7[32766;32766H[6n8[!p]104\[0m[?7h[1G[0J7[32766;32766H[6n8]3008;start=8d601863b6d346d880a5d1c5e3c4f1fc;user=root;hostname=ember-os;machineid=e5400535a63749f688577beecc139cb1;bootid=47c07d5c01b742aaa3308d62c14a3284;pid=694;pidfdid=4380;comm=(agetty);servicename=serial-getty@ttyS0.service;invocationid=23863dd4ef394fb098f96885ad07a482;type=service\P+q6E616D65\EMBER-AUTOTEST: start
+[   32.613103] ember-autotest-runner[1045]: EMBER-AUTOTEST: start
+EMBER-AUTOTEST: fresh config: bootloader.conf
+[   32.639897] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: bootloader.conf
+EMBER-AUTOTEST: fresh config: displaymanager.conf
+[   32.646049] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: displaymanager.conf
+EMBER-AUTOTEST: fresh config: finished.conf
+[   32.652561] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: finished.conf
+EMBER-AUTOTEST: fresh config: fstab.conf
+[   32.656670] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: fstab.conf
+EMBER-AUTOTEST: fresh config: initcpiocfg.conf
+[   32.663258] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: initcpiocfg.conf
+EMBER-AUTOTEST: fresh config: initcpio.conf
+[   32.673995] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: initcpio.conf
+[   32.676792] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: keyboard.conf
+EMBER-AUTOTEST: fresh config: keyboard.conf
+EMBER-AUTOTEST: fresh config: localecfg.conf
+[   32.684897] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: localecfg.conf
+EMBER-AUTOTEST: fresh config: locale.conf
+[   32.688410] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: locale.conf
+EMBER-AUTOTEST: fresh config: machineid.conf
+[   32.694382] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: machineid.conf
+EMBER-AUTOTEST: fresh config: mount.conf
+[   32.699980] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: mount.conf
+EMBER-AUTOTEST: fresh config: networkcfg.conf
+[   32.705243] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: networkcfg.conf
+EMBER-AUTOTEST: fresh config: partition.conf
+[   32.710671] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: partition.conf
+EMBER-AUTOTEST: fresh config: services-systemd.conf
+[   32.716219] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: services-systemd.conf
+EMBER-AUTOTEST: fresh config: shellprocess_before.conf
+[   32.721953] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: shellprocess_before.conf
+EMBER-AUTOTEST: fresh config: shellprocess_drivers.conf
+[   32.727859] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: shellprocess_drivers.conf
+EMBER-AUTOTEST: fresh config: shellprocess_ember.conf
+[   32.733647] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: shellprocess_ember.conf
+EMBER-AUTOTEST: fresh config: umount.conf
+[   32.809702] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: umount.conf
+EMBER-AUTOTEST: fresh config: unpackfs.conf
+[   32.824081] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: unpackfs.conf
+EMBER-AUTOTEST: fresh config: users.conf
+[   32.830462] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: users.conf
+EMBER-AUTOTEST: fresh config: welcome.conf
+[   32.833059] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: welcome.conf
+EMBER-AUTOTEST: module ok: bootloader
+EMBER-AUTOTEST: module ok: displaymanager
+[   32.919330] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: bootloader
+[   32.919697] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: displaymanager
+EMBER-AUTOTEST: module ok: finished
+EMBER-AUTOTEST: module ok: fstab
+EMBER-AUTOTEST: module ok: hwclock
+EMBER-AUTOTEST: module ok: initcpio
+EMBER-AUTOTEST: module ok: initcpiocfg
+EMBER-AUTOTEST: module ok: keyboard
+[   32.924690] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: finished
+[   32.934146] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: fstab
+[   32.935934] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: hwclock
+[   32.937805] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: initcpio
+EMBER-AUTOTEST: module ok: locale
+EMBER-AUTOTEST: module ok: localecfg
+EMBER-AUTOTEST: module ok: luksbootkeyfile
+EMBER-AUTOTEST: module ok: machineid
+EMBER-AUTOTEST: module ok: mount
+EMBER-AUTOTEST: module ok: networkcfg
+EMBER-AUTOTEST: module ok: partition
+EMBER-AUTOTEST: module ok: services-systemd
+EMBER-AUTOTEST: module ok: shellprocess
+EMBER-AUTOTEST: module ok: summary
+EMBER-AUTOTEST: module ok: umount
+EMBER-AUTOTEST: module ok: unpackfs
+EMBER-AUTOTEST: module ok: users
+EMBER-AUTOTEST: module ok: welcome
+[   32.939880] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: initcpiocfg
+[   32.958166] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: keyboard
+[   32.960357] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: locale
+[   32.965237] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: localecfg
+[   32.967231] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: luksbootkeyfile
+[   32.970178] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: machineid
+[   32.972192] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: mount
+[   32.974091] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: networkcfg
+[   32.976102] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: partition
+[   32.977956] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: services-systemd
+[   32.980074] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: shellprocess
+[   32.982230] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: summary
+[   32.984981] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: umount
+[   32.987034] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: unpackfs
+[   32.988940] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: users
+[   32.990821] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: welcome
+EMBER-AUTOTEST: calamares config ok
+[   32.994549] ember-autotest-runner[1045]: EMBER-AUTOTEST: calamares config ok
+EMBER-AUTOTEST: image ok: /run/archiso/bootmnt/arch/x86_64/airootfs.sfs (unpackfs source /run/ember/airootfs.sfs)
+[   33.080156] ember-autotest-runner[1045]: EMBER-AUTOTEST: image ok: /run/archiso/bootmnt/arch/x86_64/airootfs.sfs (unpackfs source /run/ember/airootfs.sfs)
+
+
+  [38;2;232;135;90m[1mEmber OS[0m  (ttyS0)
+
+ember-os login: EMBER-AUTOTEST: disk /dev/sda rotational=0, mount options: defaults,noatime
+[   35.266453] ember-autotest-runner[1045]: EMBER-AUTOTEST: disk /dev/sda rotational=0, mount options: defaults,noatime
+EMBER-AUTOTEST: partition ok
+[   35.312123] ember-autotest-runner[1045]: EMBER-AUTOTEST: partition ok
+EMBER-AUTOTEST: image checksum ok
+[   44.713986] ember-autotest-runner[1045]: EMBER-AUTOTEST: image checksum ok
+EMBER-AUTOTEST: unpack ok (rsync)
+[  264.575048] ember-autotest-runner[1045]: EMBER-AUTOTEST: unpack ok (rsync)
+EMBER-AUTOTEST: fresh scripts injected
+[  264.706709] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh scripts injected
+EMBER-AUTOTEST: kernel+fstab ok: vmlinuz-linux
+[  264.971115] ember-autotest-runner[1045]: EMBER-AUTOTEST: kernel+fstab ok: vmlinuz-linux
+[ember-postinstall] Удаляю настройки живой сессии
+[  265.168167] ember-autotest-runner[1045]: [ember-postinstall] Удаляю настройки живой сессии
+[  265.225260] ember-autotest-runner[1045]: [ember-postinstall] Загрузчик образов ядра (mkinitcpio)
+[ember-postinstall] Загрузчик образов ядра (mkinitcpio)
+[ember-postinstall] GRUB: тема Ember, тихая загрузка, Windows в меню
+[  265.243059] ember-autotest-runner[1045]: [ember-postinstall] GRUB: тема Ember, тихая загрузка, Windows в меню
+[ember-postinstall] Ключи pacman
+[  265.274699] ember-autotest-runner[1045]: [ember-postinstall] Ключи pacman
+[ember-postinstall] Сжатая память (zram)
+[  271.525252] ember-autotest-runner[1045]: [ember-postinstall] Сжатая память (zram)
+[ember-postinstall] Убираю установщик из установленной системы
+[  271.530558] ember-autotest-runner[1045]: [ember-postinstall] Убираю установщик из установленной системы
+[ember-postinstall] Готово
+[  272.328162] ember-autotest-runner[1045]: [ember-postinstall] Готово
+EMBER-AUTOTEST: postinstall ok
+[  272.389582] ember-autotest-runner[1045]: EMBER-AUTOTEST: postinstall ok
+==> Building image from preset: /etc/mkinitcpio.d/linux.preset: 'default'
+[  272.405853] ember-autotest-runner[1045]: ==> Building image from preset: /etc/mkinitcpio.d/linux.preset: 'default'
+==> Using default configuration file: '/etc/mkinitcpio.conf'
+[  272.411424] ember-autotest-runner[1045]: ==> Using default configuration file: '/etc/mkinitcpio.conf'
+  -> -k /boot/vmlinuz-linux -g /boot/initramfs-linux.img
+[  272.415474] ember-autotest-runner[1045]:   -> -k /boot/vmlinuz-linux -g /boot/initramfs-linux.img
+==> Starting build: '7.2.14-arch1-1'
+[  272.507955] ember-autotest-runner[1045]: ==> Starting build: '7.2.14-arch1-1'
+  -> Running build hook: [base]
+[  272.559724] ember-autotest-runner[1045]:   -> Running build hook: [base]
+  -> Running build hook: [udev]
+[  272.978474] ember-autotest-runner[1045]:   -> Running build hook: [udev]
+  -> Running build hook: [autodetect]
+[  273.249141] ember-autotest-runner[1045]:   -> Running build hook: [autodetect]
+  -> Running build hook: [microcode]
+[  273.321518] ember-autotest-runner[1045]:   -> Running build hook: [microcode]
+  -> Running build hook: [modconf]
+[  273.346345] ember-autotest-runner[1045]:   -> Running build hook: [modconf]
+  -> Running build hook: [kms]
+[  273.359126] ember-autotest-runner[1045]:   -> Running build hook: [kms]
+  -> Running build hook: [plymouth]
+[  274.833528] ember-autotest-runner[1045]:   -> Running build hook: [plymouth]
+  -> Running build hook: [keyboard]
+[  277.057149] ember-autotest-runner[1045]:   -> Running build hook: [keyboard]
+  -> Running build hook: [keymap]
+[  277.175129] ember-autotest-runner[1045]:   -> Running build hook: [keymap]
+  -> Running build hook: [consolefont]
+[  277.204718] ember-autotest-runner[1045]:   -> Running build hook: [consolefont]
+  -> Running build hook: [block]
+[  277.244446] ember-autotest-runner[1045]:   -> Running build hook: [block]
+[  277.885976] ember-autotest-runner[1045]:   -> Running build hook: [filesystems]
+  -> Running build hook: [filesystems]
+[  277.931336] ember-autotest-runner[1045]:   -> Running build hook: [fsck]
+  -> Running build hook: [fsck]
+==> Generating module dependencies
+[  278.067966] ember-autotest-runner[1045]: ==> Generating module dependencies
+==> Creating zstd-compressed initcpio image: '/boot/initramfs-linux.img'
+[  278.106683] ember-autotest-runner[1045]: ==> Creating zstd-compressed initcpio image: '/boot/initramfs-linux.img'
+  -> Early uncompressed CPIO image generation successful
+[  278.250510] ember-autotest-runner[1045]:   -> Early uncompressed CPIO image generation successful
+==> Initcpio image generation successful
+[  279.017498] ember-autotest-runner[1045]: ==> Initcpio image generation successful
+==> Building image from preset: /etc/mkinitcpio.d/linux.preset: 'fallback'
+[  279.041249] ember-autotest-runner[1045]: ==> Building image from preset: /etc/mkinitcpio.d/linux.preset: 'fallback'
+==> Using default configuration file: '/etc/mkinitcpio.conf'
+[  279.042275] ember-autotest-runner[1045]: ==> Using default configuration file: '/etc/mkinitcpio.conf'
+  -> -k /boot/vmlinuz-linux -g /boot/initramfs-linux-fallback.img -S autodetect
+[  279.050289] ember-autotest-runner[1045]:   -> -k /boot/vmlinuz-linux -g /boot/initramfs-linux-fallback.img -S autodetect
+==> Starting build: '7.2.14-arch1-1'
+[  279.122845] ember-autotest-runner[1045]: ==> Starting build: '7.2.14-arch1-1'
+  -> Running build hook: [base]
+[  279.168426] ember-autotest-runner[1045]:   -> Running build hook: [base]
+  -> Running build hook: [udev]
+[  279.581355] ember-autotest-runner[1045]:   -> Running build hook: [udev]
+[  279.807297] ember-autotest-runner[1045]:   -> Running build hook: [microcode]
+  -> Running build hook: [microcode]
+  -> Running build hook: [modconf]
+[  279.893821] ember-autotest-runner[1045]:   -> Running build hook: [modconf]
+  -> Running build hook: [kms]
+[  279.903955] ember-autotest-runner[1045]:   -> Running build hook: [kms]
+==> WARNING: Possibly missing firmware for module: 'ast'
+[  290.217857] ember-autotest-runner[1045]: ==> WARNING: Possibly missing firmware for module: 'ast'
+[  291.884710] ember-autotest-runner[1045]:   -> Running build hook: [plymouth]
+  -> Running build hook: [plymouth]
+[  293.273987] ember-autotest-runner[1045]:   -> Running build hook: [keyboard]
+  -> Running build hook: [keyboard]
+[  293.339194] ember-autotest-runner[1045]: ==> WARNING: Possibly missing firmware for module: 'xhci_pci_renesas'
+==> WARNING: Possibly missing firmware for module: 'xhci_pci_renesas'
+  -> Running build hook: [keymap]
+[  294.845151] ember-autotest-runner[1045]:   -> Running build hook: [keymap]
+  -> Running build hook: [consolefont]
+[  294.875275] ember-autotest-runner[1045]:   -> Running build hook: [consolefont]
+  -> Running build hook: [block]
+[  294.912512] ember-autotest-runner[1045]:   -> Running build hook: [block]
+==> WARNING: Possibly missing firmware for module: 'wd719x'
+[  295.403771] ember-autotest-runner[1045]: ==> WARNING: Possibly missing firmware for module: 'wd719x'
+==> WARNING: Possibly missing firmware for module: 'aic94xx'
+[  295.543495] ember-autotest-runner[1045]: ==> WARNING: Possibly missing firmware for module: 'aic94xx'
+==> WARNING: Possibly missing firmware for module: 'qla2xxx'
+[  295.676777] ember-autotest-runner[1045]: ==> WARNING: Possibly missing firmware for module: 'qla2xxx'
+==> WARNING: Possibly missing firmware for module: 'qed'
+[  296.093396] ember-autotest-runner[1045]: ==> WARNING: Possibly missing firmware for module: 'qed'
+==> WARNING: Possibly missing firmware for module: 'bfa'
+[  296.191271] ember-autotest-runner[1045]: ==> WARNING: Possibly missing firmware for module: 'bfa'
+==> WARNING: Possibly missing firmware for module: 'qla1280'
+[  296.228463] ember-autotest-runner[1045]: ==> WARNING: Possibly missing firmware for module: 'qla1280'
+  -> Running build hook: [filesystems]
+[  300.386478] ember-autotest-runner[1045]:   -> Running build hook: [filesystems]
+  -> Running build hook: [fsck]
+[  301.676650] ember-autotest-runner[1045]:   -> Running build hook: [fsck]
+==> Generating module dependencies
+[  304.739595] ember-autotest-runner[1045]: ==> Generating module dependencies
+==> Creating zstd-compressed initcpio image: '/boot/initramfs-linux-fallback.img'
+[  305.314307] ember-autotest-runner[1045]: ==> Creating zstd-compressed initcpio image: '/boot/initramfs-linux-fallback.img'
+  -> Early uncompressed CPIO image generation successful
+[  307.132892] ember-autotest-runner[1045]:   -> Early uncompressed CPIO image generation successful
+==> Initcpio image generation successful
+[  308.270529] ember-autotest-runner[1045]: ==> Initcpio image generation successful
+Встановлюємо для платформи i386-pc.
+[  308.407838] ember-autotest-runner[1045]: Встановлюємо для платформи i386-pc.
+Встановлення завершено. Помилок не виявлено.
+[  309.714831] ember-autotest-runner[1045]: Встановлення завершено. Помилок не виявлено.
+Створюємо файл налаштувань grub...
+[  309.886120] ember-autotest-runner[1045]: Створюємо файл налаштувань grub...
+Виявлено тему: /usr/share/grub/themes/ember/theme.txt
+[  310.070316] ember-autotest-runner[1045]: Виявлено тему: /usr/share/grub/themes/ember/theme.txt
+Виявлено образ linux: /boot/vmlinuz-linux
+[  310.226982] ember-autotest-runner[1045]: Виявлено образ linux: /boot/vmlinuz-linux
+Виявлено образ initrd: /boot/initramfs-linux.img
+[  310.243129] ember-autotest-runner[1045]: Виявлено образ initrd: /boot/initramfs-linux.img
+Found fallback initrd image(s) in /boot:  initramfs-linux-fallback.img
+[  310.411371] ember-autotest-runner[1045]: Found fallback initrd image(s) in /boot:  initramfs-linux-fallback.img
+[  310.503695] ember-autotest-runner[1045]: Попередження: Для виявлення інших придатних до завантаження розділів буде виконано os-prober.
+[  310.503820] ember-autotest-runner[1045]: Виведені ним дані буде використано для виявлення придатних до завантаження виконуваних файлів на розділах і створення нових записів завантаження.
+Попередження: Для виявлення інших придатних до завантаження розділів буде виконано os-prober.
+Виведені ним дані буде використано для виявлення придатних до завантаження виконуваних файлів на розділах і створення нових записів завантаження.
+Додаємо пункт меню завантаження для параметрів мікрокоду UEFI ...
+[  311.409763] ember-autotest-runner[1045]: Додаємо пункт меню завантаження для параметрів мікрокоду UEFI ...
+виконано
+[  311.448931] ember-autotest-runner[1045]: виконано
+EMBER-AUTOTEST: boot files: grub
+initramfs-linux-fallback.img
+initramfs-linux.img
+[  311.466584] ember-autotest-runner[1045]: EMBER-AUTOTEST: boot files: grub
+[  311.469355] ember-autotest-runner[1045]: initramfs-linux-fallback.img
+[  311.469634] ember-autotest-runner[1045]: initramfs-linux.img
+[  311.469902] ember-autotest-runner[1045]: vmlinuz-linux
+vmlinuz-linux
+umount: /mnt/run/credentials/serial-getty@ttyS0.service: призначення зайнято.
+EMBER-AUTOTEST: OK
+[  311.552481] ember-autotest-runner[1045]: umount: /mnt/run/credentials/serial-getty@ttyS0.service: призначення зайнято.
+[  311.555629] ember-autotest-runner[1045]: EMBER-AUTOTEST: OK
+[!p]104\[0m[?7h[1G[0J7[32766;32766H[6n8]3008;end=8d601863b6d346d880a5d1c5e3c4f1fc\[[0;32m  OK  [0m] Started [0;1;39mShow Plymouth Power Off Screen[0m.
+[[0m[0;31m*     [0m] (1 of 2) A stop job is running for …anager for UID 1000 (7s / 2min 4s)
+M[K[[0;1;31m*[0m[0;31m*    [0m] (2 of 2) A start job is running for…ate shutdown-ramfs (8s / no limit)
+M[K[[0;32m  OK  [0m] Stopped [0;1;39mUser Manager for UID 1000[0m.
+[K         Stopping [0;1;39mPermit User Sessions[0m...
+         Stopping [0;1;39mUser Runtime Directory /run/user/1000[0m...
+[[0;32m  OK  [0m] Unmounted [0;1;39m/mnt/run/user/1000[0m.
+[[0;32m  OK  [0m] Unmounted [0;1;39m/run/user/1000[0m.
+[[0;32m  OK  [0m] Stopped [0;1;39mUser Runtime Directory /run/user/1000[0m.
+[[0;32m  OK  [0m] Removed slice [0;1;39mUser Slice of UID 1000[0m.
+         Stopping [0;1;39mUser Login Management[0m...
+[[0;32m  OK  [0m] Stopped [0;1;39mUser Login Management[0m.
+[[0;32m  OK  [0m] Stopped [0;1;39mPermit User Sessions[0m.
+[[0;32m  OK  [0m] Stopped target [0;1;39mNetwork[0m.
+[[0;32m  OK  [0m] Stopped target [0;1;39mRemote File Systems[0m.
+         Stopping [0;1;39mNetwork Manager[0m...
+[[0;32m  OK  [0m] Stopped [0;1;39mEmber OS live session user[0m.
+         Stopping [0;1;39mHome Area Activation[0m...
+         Stopping [0;1;39mNetwork Management[0m...
+[[0;32m  OK  [0m] Stopped [0;1;39mLoad JSON user/group Records from Credentials[0m.
+[[0;32m  OK  [0m] Stopped [0;1;39mNetwork Management[0m.
+[[0;32m  OK  [0m] Unmounted [0;1;39m/mnt/run/credentials/systemd-networkd.service[0m.
+[[0;32m  OK  [0m] Closed [0;1;39mNetwork Management Resolve Hook Socket[0m.
+[[0;32m  OK  [0m] Stopped [0;1;39mNetwork Manager[0m.
+[[0;32m  OK  [0m] Stopped target [0;1;39mPreparation for Network[0m.
+[[0;32m  OK  [0m] Stopped [0;1;39mGenerate Network Units from Kernel Command Line[0m.
+[[0;32m  OK  [0m] Stopped [0;1;39mHome Area Activation[0m.
+         Stopping [0;1;39mHome Area Manager[0m...
+[[0;32m  OK  [0m] Stopped [0;1;39mHome Area Manager[0m.
+[[0;32m  OK  [0m] Stopped target [0;1;39mBasic System[0m.
+[[0;32m  OK  [0m] Stopped [0;1;39mForward Password Requests to Plymouth Directory Watch[0m.
+[[0;32m  OK  [0m] Stopped target [0;1;39mPath Units[0m.
+[[0;32m  OK  [0m] Stopped target [0;1;39mSlice Units[0m.
+[[0;32m  OK  [0m] Removed slice [0;1;39mUser and Session Slice[0m.
+[[0;32m  OK  [0m] Stopped target [0;1;39mSocket Units[0m.
+[[0;32m  OK  [0m] Closed [0;1;39mGnuPG network certificate m…ent daemon for /etc/pacman.d/gnupg[0m.
+[[0;32m  OK  [0m] Removed slice [0;1;39mSlice /system/dirmngr[0m.
+[[0;32m  OK  [0m] Closed [0;1;39mGnuPG cryptographic agent a… browsers) for /etc/pacman.d/gnupg[0m.
+[[0;32m  OK  [0m] Removed slice [0;1;39mSlice /system/gpg-agent-browser[0m.
+[[0;32m  OK  [0m] Closed [0;1;39mGnuPG cryptographic agent a…estricted) for /etc/pacman.d/gnupg[0m.
+[[0;32m  OK  [0m] Removed slice [0;1;39mSlice /system/gpg-agent-extra[0m.
+[[0;32m  OK  [0m] Closed [0;1;39mGnuPG cryptographic agent (…emulation) for /etc/pacman.d/gnupg[0m.
+[[0;32m  OK  [0m] Removed slice [0;1;39mSlice /system/gpg-agent-ssh[0m.
+[[0;32m  OK  [0m] Closed [0;1;39mGnuPG cryptographic agent a…rase cache for /etc/pacman.d/gnupg[0m.
+[[0;32m  OK  [0m] Removed slice [0;1;39mSlice /system/gpg-agent[0m.
+[[0;32m  OK  [0m] Closed [0;1;39mGnuPG public key management service for /etc/pacman.d/gnupg[0m.
+[[0;32m  OK  [0m] Removed slice [0;1;39mSlice /system/keyboxd[0m.
+[[0;32m  OK  [0m] Closed [0;1;39mPC/SC Smart Card Daemon Activation Socket[0m.
+[[0;32m  OK  [0m] Closed [0;1;39mAuthorization Manager Agent Helper[0m.
+[[0;32m  OK  [0m] Closed [0;1;39mOpenSSH Server Socket (systemd-ssh-generator, AF_UNIX Local)[0m.
+[[0;32m  OK  [0m] Closed [0;1;39mDisk Image Download Service Socket[0m.
+[[0;32m  OK  [0m] Closed [0;1;39mUser Login Management Varlink Socket[0m.
+[[0;32m  OK  [0m] Closed [0;1;39mVirtual Machine and Container Registration Service Socket[0m.
+[[0;32m  OK  [0m] Closed [0;1;39mDDI File System Mounter Socket[0m.
+[[0;32m  OK  [0m] Closed [0;1;39mNetwork Management Metrics Varlink Socket[0m.
+[[0;32m  OK  [0m] Closed [0;1;39mNetwork Management Varlink Socket[0m.
+[[0;32m  OK  [0m] Closed [0;1;39mNetwork Management Netlink Socket[0m.
+[[0;32m  OK  [0m] Closed [0;1;39mDisk Repartitioning Service Socket[0m.
+[[0;32m  OK  [0m] Closed [0;1;39mCGroup Report Varlink Socket[0m.
+[[0;32m  OK  [0m] Closed [0;1;39mReport Files Metrics Socket[0m.
+[[0;32m  OK  [0m] Closed [0;1;39mReport Signing Socket (Local Software Key)[0m.
+[[0;32m  OK  [0m] Closed [0;1;39mSystem Install Tool[0m.
+         Stopping [0;1;39mD-Bus System Message Bus[0m...
+[[0;32m  OK  [0m] Stopped [0;1;39mD-Bus System Message Bus[0m.
+[[0;32m  OK  [0m] Closed [0;1;39mD-Bus System Message Bus Socket[0m.
+[[0;32m  OK  [0m] Stopped target [0;1;39mSystem Initialization[0m.
+[[0;32m  OK  [0m] Unset automount [0;1;39mArbitrary Executab…ormats File System Automount Point[0m.
+[[0;32m  OK  [0m] Stopped target [0;1;39mLocal dm-clone Devices[0m.
+[[0;32m  OK  [0m] Stopped target [0;1;39mLocal Encrypted Volumes[0m.
+[[0;32m  OK  [0m] Stopped [0;1;39mForward Password Requests to Wall Directory Watch[0m.
+[[0;32m  OK  [0m] Stopped target [0;1;39mImage Downloads[0m.
+[[0;32m  OK  [0m] Stopped target [0;1;39mLocal Integrity Protected Volumes[!p]104\[0m[?7h[1G[0J7[32766;32766H[6n8]3008;end=0014b521a7c04ceba29ec7ab010ca2d0\[[0;32m  OK  [0m] Closed [0;1;39mHostname Service Socket[0m.
+[[0;32m  OK  [0m] Closed [0;1;39mConsole Output Muting Service Socket[0m.
+         Stopping [0;1;39mNamespace Resource Manager[0m...
+         Stopping [0;1;39mNetwork Time Synchronization[0m...
+[[0;32m  OK  [0m] Stopped [0;1;39mUpdate is Completed[0m.
+[[0;32m  OK  [0m] Stopped [0;1;39mRebuild Dynamic Linker Cache[0m.
+[[0;32m  OK  [0m] Stopped [0;1;39mRebuild Journal Catalog[0m.
+         Stopping [0;1;39mRecord System Boot/Shutdown in UTMP[0m...
+[[0;32m  OK  [0m] Stopped [0;1;39mNamespace Resource Manager[0m.
+[[0;32m  OK  [0m] Stopped [0;1;39mNetwork Time Synchronization[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mGenerate shutdown-ramfs[0m.
+[[0;32m  OK  [0m] Stopped [0;1;39mKernel Core Pattern Register[0m.
+[[0;32m  OK  [0m] Closed [0;1;39mNamespace Resource Manager Socket[0m.
+         Starting [0;1;39mTell Plymouth To Jump To initramfs[0m...
+         Stopping [0;1;39mNetwork Name Resolution[0m...
+         Stopping [0;1;39mListen Kernel Core Dump Socket[0m...
+[[0;32m  OK  [0m] Stopped [0;1;39mListen Kernel Core Dump Socket[0m.
+[[0;32m  OK  [0m] Stopped [0;1;39mNetwork Name Resolution[0m.
+[[0;32m  OK  [0m] Unmounted [0;1;39m/mnt/run/credentials/systemd-resolved.service[0m.
+[[0;32m  OK  [0m] Closed [0;1;39mResolve Monitor Varlink Socket[0m.
+[[0;32m  OK  [0m] Closed [0;1;39mResolve Service Varlink Socket[0m.
+[[0;32m  OK  [0m] Stopped [0;1;39mApply Kernel Variables[0m.
+[[0;32m  OK  [0m] Closed [0;1;39mProcess Core Dump Socket[0m.
+[[0;32m  OK  [0m] Stopped [0;1;39mLoad Kernel Modules[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mTell Plymouth To Jump To initramfs[0m.
+[[0;32m  OK  [0m] Stopped [0;1;39mRecord System Boot/Shutdown in UTMP[0m.
+[[0;32m  OK  [0m] Stopped [0;1;39mCreate System Files and Directories[0m.
+[[0;32m  OK  [0m] Stopped target [0;1;39mLocal File Systems[0m.
+         Unmounting [0;1;39mTemporary /etc/pacman.d/gnupg directory[0m...
+         Unmounting [0;1;39m/mnt/dev/hugepages[0m...
+         Unmounting [0;1;39m/mnt/dev/mqueue[0m...
+         Unmounting [0;1;39m/mnt/dev/pts[0m...
+         Unmounting [0;1;39m/mnt/dev/shm[0m...
+         Unmounting [0;1;39m/mnt/proc[0m...
+         Unmounting [0;1;39m/mnt/run/archiso/airootfs[0m...
+         Unmounting [0;1;39m/mnt/run/archiso/bootmnt[0m...
+         Unmounting [0;1;39m/mnt/run/archiso/cowspace[0m...
+         Unmounting [0;1;39m/mnt/run/credentials/systemd-journald.service[0m...
+         Unmounting [0;1;39m/mnt/sys/fs/bpf[0m...
+         Unmounting [0;1;39m/mnt/sys/fs/cgroup[0m...
+         Unmounting [0;1;39m/mnt/sys/fs/fuse/connections[0m...
+         Unmounting [0;1;39m/mnt/sys/fs/pstore[0m...
+         Unmounting [0;1;39m/mnt/sys/kernel/config[0m...
+         Unmounting [0;1;39m/mnt/sys/kernel/debug[0m...
+         Unmounting [0;1;39m/mnt/sys/kernel/security[0m...
+         Unmounting [0;1;39m/mnt/sys/kernel/tracing[0m...
+         Unmounting [0;1;39mTemporary Directory /tmp[0m...
+[[0;32m  OK  [0m] Unmounted [0;1;39mTemporary /etc/pacman.d/gnupg directory[0m.
+[[0;32m  OK  [0m] Unmounted [0;1;39m/mnt/dev/hugepages[0m.
+[[0;32m  OK  [0m] Unmounted [0;1;39m/mnt/dev/mqueue[0m.
+[[0;1;31mFAILED[0m] Failed unmounting [0;1;39m/mnt/dev/pts[0m.
+[[0;32m  OK  [0m] Unmounted [0;1;39m/mnt/dev/shm[0m.
+[[0;32m  OK  [0m] Unmounted [0;1;39m/mnt/proc[0m.
+[[0;32m  OK  [0m] Unmounted [0;1;39m/mnt/run/archiso/airootfs[0m.
+[[0;1;31mFAILED[0m] Failed unmounting [0;1;39m/mnt/run/archiso/bootmnt[0m.
+[[0;32m  OK  [0m] Unmounted [0;1;39m/mnt/run/archiso/cowspace[0m.
+[[0;32m  OK  [0m] Unmounted [0;1;39m/mnt/run/credentials/systemd-journald.service[0m.
+[[0;32m  OK  [0m] Unmounted [0;1;39m/mnt/sys/fs/bpf[0m.
+[[0;1;31mFAILED[0m] Failed unmounting [0;1;39m/mnt/sys/fs/cgroup[0m.
+[[0;32m  OK  [0m] Unmounted [0;1;39m/mnt/sys/fs/fuse/connections[0m.
+[[0;32m  OK  [0m] Unmounted [0;1;39m/mnt/sys/fs/pstore[0m.
+[[0;32m  OK  [0m] Unmounted [0;1;39m/mnt/sys/kernel/config[0m.
+[[0;32m  OK  [0m] Unmounted [0;1;39m/mnt/sys/kernel/debug[0m.
+[[0;32m  OK  [0m] Unmounted [0;1;39m/mnt/sys/kernel/security[0m.
+[[0;32m  OK  [0m] Unmounted [0;1;39m/mnt/sys/kernel/tracing[0m.
+[[0;32m  OK  [0m] Unmounted [0;1;39mTemporary Directory /tmp[0m.
+         Unmounting [0;1;39m/mnt/dev[0m...
+         Unmounting [0;1;39m/mnt/run[0m...
+         Unmounting [0;1;39m/mnt/sys[0m...
+[[0;1;31mFAILED[0m] Failed unmounting [0;1;39m/mnt/dev[0m.
+[[0;1;31mFAILED[0m] Failed unmounting [0;1;39m/mnt/run[0m.
+[[0;1;31mFAILED[0m] Failed unmounting [0;1;39m/mnt/sys[0m.
+[[0;32m  OK  [0m] Stopped target [0;1;39mSwaps[0m.
+         Unmounting [0;1;39m/mnt[0m...
+[[0;1;31mFAILED[0m] Failed unmounting [0;1;39m/mnt[0m.
+[[0;32m  OK  [0m] Stopped target [0;1;39mPreparation for Local File Systems[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mUnmount All Filesystems[0m.
+         Stopping [0;1;39mMonitoring of LVM2 mirror…ing dmeventd or progress polling[0m...
+[[0;32m  OK  [0m] Stopped [0;1;39mCreate Static Device Nodes in /dev[0m.
+[[0;32m  OK  [0m] Stopped [0;1;39mCreate System Users[0m.
+[[0;32m  OK  [0m] Stopped [0;1;39mRemount Root and Kernel File Systems[0m.
+[[0;32m  OK  [0m] Stopped [0;1;39mCreate Static Device Nodes in /dev gracefully[0m.
+[[0;32m  OK  [0m] Stopped [0;1;39mMonitoring of LVM2 mirrors…using dmeventd or progress polling[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mSystem Shutdown[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mLate Shutdown Services[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mSystem Power Off[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mSystem Power Off[0m.
+]3008;end=c875e76a8a69469585d99a9d78416e5d\[18t7[32766;32766H[6n8[!p]104\[0m[?7h[1G[0J[  325.135837] reboot: Power down

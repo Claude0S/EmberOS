@@ -1,0 +1,83 @@
+%Ga root: clean, 239100/1966080 files, 1409658/7864064 blocks
+[!p]104\[0m[?7h[1G[0J]3008;start=9ec2250ce84849ba8fef557ddf3a6902;user=root;hostname=ember-test;machineid=5d092071369b4e5fa2a4e5f11d407bc9;bootid=9655b7d57c554d8c88494d0eb02dfdf0;pid=1;pidfdid=1;comm=systemd;type=boot\[0;31msystemd[1]: Failed to preset all unit: Unit dbus-org.freedesktop.ModemManager1.service is an unresolvable alias[0m
+[[0;32m  OK  [0m] Finished [0;1;39mTell Plymouth To Write Out Runtime Data[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mCreate System Files and Directories[0m.
+         Starting [0;1;39mRebuild Dynamic Linker Cache[0m...
+         Starting [0;1;39mInitial Setup[0m...
+         Starting [0;1;39mRebuild Journal Catalog[0m...
+         Starting [0;1;39mRecord System Boot/Shutdown in UTMP[0m...
+[!p]104\[0m[?7h[1G[0J7[32766;32766H[6n8[[0;32m  OK  [0m] Started [0;1;39mListen Kernel Core Dump Socket[0m.
+         Starting [0;1;39mKernel Core Pattern Register[0m...
+[[0;32m  OK  [0m] Finished [0;1;39mRecord System Boot/Shutdown in UTMP[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mRebuild Journal Catalog[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mKernel Core Pattern Register[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mRebuild Dynamic Linker Cache[0m.
+         Starting [0;1;39mUpdate is Completed[0m...
+[[0;32m  OK  [0m] Finished [0;1;39mUpdate is Completed[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mInitial Setup[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mFirst Boot Complete[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mSystem Initialization[0m.
+[[0;32m  OK  [0m] Started [0;1;39mDaily Cleanup of Temporary Directories[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mD-Bus System Message Bus Socket[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mGnuPG network certificate management daemon for /etc/pacman.d/gnupg[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mGnuPG cryptographic agent and passphrase cache (access for web browsers) for /etc/pacman.d/gnupg[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mGnuPG cryptographic agent and passphrase cache (restricted) for /etc/pacman.d/gnupg[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mGnuPG cryptographic agent (ssh-agent emulation) for /etc/pacman.d/gnupg[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mGnuPG cryptographic agent and passphrase cache for /etc/pacman.d/gnupg[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mGnuPG public key management service for /etc/pacman.d/gnupg[0m.
+         Starting [0;1;39mPC/SC Smart Card Daemon Activation Socket[0m...
+[[0;32m  OK  [0m] Listening on [0;1;39mAuthorization Manager Agent Helper[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mOpenSSH Server Socket (systemd-ssh-generator, AF_UNIX Local)[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mUser Login Management Varlink Socket[0m.
+[[0;32m  OK  [0m] Listening on [0;1;39mVirtual Machine and Container Registration Service Socket[0m.
+         Starting [0;1;39mD-Bus System Message Bus[0m...
+         Starting [0;1;39mSave Transient machine-id to Disk[0m...
+[[0;32m  OK  [0m] Listening on [0;1;39mPC/SC Smart Card Daemon Activation Socket[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mSocket Units[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mSave Transient machine-id to Disk[0m.
+[[0;32m  OK  [0m] Started [0;1;39mD-Bus System Message Bus[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mBasic System[0m.
+         Starting [0;1;39mNetwork Manager[0m...
+         Starting [0;1;39mHome Area Manager[0m...
+         Starting [0;1;39mUser Login Management[0m...
+[[0;32m  OK  [0m] Started [0;1;39mHome Area Manager[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mHome Area Activation[0m.
+[[0;32m  OK  [0m] Started [0;1;39mUser Login Management[0m.
+         Starting [0;1;39mHostname Service[0m...
+[[0;32m  OK  [0m] Started [0;1;39mHostname Service[0m.
+         Starting [0;1;39mNetwork Manager Script Dispatcher Service[0m...
+[[0;32m  OK  [0m] Started [0;1;39mNetwork Manager[0m.
+[[0;32m  OK  [0m] Reached target [0;1;39mNetwork[0m.
+         Starting [0;1;39mNetwork Manager Wait Online[0m...
+         Starting [0;1;39mPermit User Sessions[0m...
+[[0;32m  OK  [0m] Started [0;1;39mNetwork Manager Script Dispatcher Service[0m.
+[[0;32m  OK  [0m] Finished [0;1;39mPermit User Sessions[0m.
+         Starting [0;1;39mHold until boot process finishes up[0m...
+         Starting [0;1;39mTerminate Plymouth Boot Screen[0m...
+EMBER-INSTALLED: multi-user OK
+EMBER-INSTALLED: Hyprland running
+[!p]104\[0m[?7h[1G[0J7[32766;32766H[6n8[!p]104\[0m[?7h[1G[0J7[32766;32766H[6n8]3008;start=d8d1875a9a994054b4e7cc5646069170;user=root;hostname=ember-test;machineid=5d092071369b4e5fa2a4e5f11d407bc9;bootid=9655b7d57c554d8c88494d0eb02dfdf0;pid=490;pidfdid=4334;comm=(agetty);servicename=serial-getty@ttyS0.service;invocationid=2f2caf869ba3402bb450702e08cb5214;type=service\P+q6E616D65\
+
+  [38;2;232;135;90m[1mEmber OS[0m  (ttyS0)
+
+ember-test login: EMBER-INSTALLED: plugins  Plugin hyprbars by Vaxry: 	Handle: 5599061910e0 
+EMBER-INSTALLED: apps done
+apps-done apps-status done-antivirus done-extras done-firewall done-hydra done-office done-steam done-wine hardware.hash 
+EMBER-INSTALLED: pkg steam 1.0.0.87-3
+EMBER-INSTALLED: pkg wine 11.21-1
+EMBER-INSTALLED: hydra installed
+EMBER-INSTALLED: launcher shown
+EMBER-INSTALLED: qml launcher: MESA-EGL: warning: egl: failed to create dri2 screen
+EMBER-INSTALLED: qml launcher: MESA-EGL: warning: egl: failed to create dri2 screen
+EMBER-INSTALLED: qml launcher: [33m  WARN[97m scene[0m: QML FileView at @shell.qml[124:5]: Read of /home/tester/.config/ember/mode failed: File does not exist.
+EMBER-INSTALLED: qml launcher: [33m  WARN[97m scene[0m: QML FileView at @shell.qml[120:5]: Read of /home/tester/.config/ember/lang failed: File does not exist.
+EMBER-INSTALLED: av done found 1
+EMBER-INSTALLED: antivirus shown
+EMBER-INSTALLED: qml antivirus: MESA-EGL: warning: egl: failed to create dri2 screen
+EMBER-INSTALLED: qml antivirus: MESA-EGL: warning: egl: failed to create dri2 screen
+EMBER-INSTALLED: qml antivirus: [33m  WARN[97m scene[0m: QML FileView at @shell.qml[82:5]: Read of /home/tester/.config/ember/lang failed: File does not exist.
+EMBER-INSTALLED: qml antivirus: [33m  WARN[97m qt.qpa.wayland.textinput[0m: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Trying to disable 0x7fcc5932f860 but 0x0 is focused
+EMBER-INSTALLED: calc shown
+EMBER-INSTALLED: office shown
+EMBER-INSTALLED: libreoffice installed
+EMBER-INSTALLED: slides shown

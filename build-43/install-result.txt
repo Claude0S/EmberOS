@@ -1,0 +1,132 @@
+[!p]104\[0m[?7h[1G[0J7[32766;32766H[6n8[!p]104\[0m[?7h[1G[0J7[32766;32766H[6n8]3008;start=8d601863b6d346d880a5d1c5e3c4f1fc;user=root;hostname=ember-os;machineid=e5400535a63749f688577beecc139cb1;bootid=47c07d5c01b742aaa3308d62c14a3284;pid=694;pidfdid=4380;comm=(agetty);servicename=serial-getty@ttyS0.service;invocationid=23863dd4ef394fb098f96885ad07a482;type=service\P+q6E616D65\EMBER-AUTOTEST: start
+[   32.613103] ember-autotest-runner[1045]: EMBER-AUTOTEST: start
+EMBER-AUTOTEST: fresh config: bootloader.conf
+[   32.639897] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: bootloader.conf
+EMBER-AUTOTEST: fresh config: displaymanager.conf
+[   32.646049] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: displaymanager.conf
+EMBER-AUTOTEST: fresh config: finished.conf
+[   32.652561] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: finished.conf
+EMBER-AUTOTEST: fresh config: fstab.conf
+[   32.656670] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: fstab.conf
+EMBER-AUTOTEST: fresh config: initcpiocfg.conf
+[   32.663258] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: initcpiocfg.conf
+EMBER-AUTOTEST: fresh config: initcpio.conf
+[   32.673995] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: initcpio.conf
+[   32.676792] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: keyboard.conf
+EMBER-AUTOTEST: fresh config: keyboard.conf
+EMBER-AUTOTEST: fresh config: localecfg.conf
+[   32.684897] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: localecfg.conf
+EMBER-AUTOTEST: fresh config: locale.conf
+[   32.688410] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: locale.conf
+EMBER-AUTOTEST: fresh config: machineid.conf
+[   32.694382] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: machineid.conf
+EMBER-AUTOTEST: fresh config: mount.conf
+[   32.699980] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: mount.conf
+EMBER-AUTOTEST: fresh config: networkcfg.conf
+[   32.705243] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: networkcfg.conf
+EMBER-AUTOTEST: fresh config: partition.conf
+[   32.710671] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: partition.conf
+EMBER-AUTOTEST: fresh config: services-systemd.conf
+[   32.716219] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: services-systemd.conf
+EMBER-AUTOTEST: fresh config: shellprocess_before.conf
+[   32.721953] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: shellprocess_before.conf
+EMBER-AUTOTEST: fresh config: shellprocess_drivers.conf
+[   32.727859] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: shellprocess_drivers.conf
+EMBER-AUTOTEST: fresh config: shellprocess_ember.conf
+[   32.733647] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: shellprocess_ember.conf
+EMBER-AUTOTEST: fresh config: umount.conf
+[   32.809702] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: umount.conf
+EMBER-AUTOTEST: fresh config: unpackfs.conf
+[   32.824081] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: unpackfs.conf
+EMBER-AUTOTEST: fresh config: users.conf
+[   32.830462] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: users.conf
+EMBER-AUTOTEST: fresh config: welcome.conf
+[   32.833059] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh config: welcome.conf
+EMBER-AUTOTEST: module ok: bootloader
+EMBER-AUTOTEST: module ok: displaymanager
+[   32.919330] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: bootloader
+[   32.919697] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: displaymanager
+EMBER-AUTOTEST: module ok: finished
+EMBER-AUTOTEST: module ok: fstab
+EMBER-AUTOTEST: module ok: hwclock
+EMBER-AUTOTEST: module ok: initcpio
+EMBER-AUTOTEST: module ok: initcpiocfg
+EMBER-AUTOTEST: module ok: keyboard
+[   32.924690] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: finished
+[   32.934146] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: fstab
+[   32.935934] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: hwclock
+[   32.937805] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: initcpio
+EMBER-AUTOTEST: module ok: locale
+EMBER-AUTOTEST: module ok: localecfg
+EMBER-AUTOTEST: module ok: luksbootkeyfile
+EMBER-AUTOTEST: module ok: machineid
+EMBER-AUTOTEST: module ok: mount
+EMBER-AUTOTEST: module ok: networkcfg
+EMBER-AUTOTEST: module ok: partition
+EMBER-AUTOTEST: module ok: services-systemd
+EMBER-AUTOTEST: module ok: shellprocess
+EMBER-AUTOTEST: module ok: summary
+EMBER-AUTOTEST: module ok: umount
+EMBER-AUTOTEST: module ok: unpackfs
+EMBER-AUTOTEST: module ok: users
+EMBER-AUTOTEST: module ok: welcome
+[   32.939880] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: initcpiocfg
+[   32.958166] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: keyboard
+[   32.960357] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: locale
+[   32.965237] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: localecfg
+[   32.967231] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: luksbootkeyfile
+[   32.970178] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: machineid
+[   32.972192] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: mount
+[   32.974091] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: networkcfg
+[   32.976102] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: partition
+[   32.977956] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: services-systemd
+[   32.980074] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: shellprocess
+[   32.982230] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: summary
+[   32.984981] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: umount
+[   32.987034] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: unpackfs
+[   32.988940] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: users
+[   32.990821] ember-autotest-runner[1045]: EMBER-AUTOTEST: module ok: welcome
+EMBER-AUTOTEST: calamares config ok
+[   32.994549] ember-autotest-runner[1045]: EMBER-AUTOTEST: calamares config ok
+EMBER-AUTOTEST: image ok: /run/archiso/bootmnt/arch/x86_64/airootfs.sfs (unpackfs source /run/ember/airootfs.sfs)
+[   33.080156] ember-autotest-runner[1045]: EMBER-AUTOTEST: image ok: /run/archiso/bootmnt/arch/x86_64/airootfs.sfs (unpackfs source /run/ember/airootfs.sfs)
+ember-os login: EMBER-AUTOTEST: disk /dev/sda rotational=0, mount options: defaults,noatime
+[   35.266453] ember-autotest-runner[1045]: EMBER-AUTOTEST: disk /dev/sda rotational=0, mount options: defaults,noatime
+EMBER-AUTOTEST: partition ok
+[   35.312123] ember-autotest-runner[1045]: EMBER-AUTOTEST: partition ok
+EMBER-AUTOTEST: image checksum ok
+[   44.713986] ember-autotest-runner[1045]: EMBER-AUTOTEST: image checksum ok
+EMBER-AUTOTEST: unpack ok (rsync)
+[  264.575048] ember-autotest-runner[1045]: EMBER-AUTOTEST: unpack ok (rsync)
+EMBER-AUTOTEST: fresh scripts injected
+[  264.706709] ember-autotest-runner[1045]: EMBER-AUTOTEST: fresh scripts injected
+EMBER-AUTOTEST: kernel+fstab ok: vmlinuz-linux
+[  264.971115] ember-autotest-runner[1045]: EMBER-AUTOTEST: kernel+fstab ok: vmlinuz-linux
+EMBER-AUTOTEST: postinstall ok
+[  272.389582] ember-autotest-runner[1045]: EMBER-AUTOTEST: postinstall ok
+EMBER-AUTOTEST: boot files: grub
+[  311.466584] ember-autotest-runner[1045]: EMBER-AUTOTEST: boot files: grub
+EMBER-AUTOTEST: OK
+[  311.555629] ember-autotest-runner[1045]: EMBER-AUTOTEST: OK
+EMBER-INSTALLED: multi-user OK
+EMBER-INSTALLED: Hyprland running
+ember-test login: EMBER-INSTALLED: plugins  Plugin hyprbars by Vaxry: 	Handle: 5599061910e0 
+EMBER-INSTALLED: apps done
+EMBER-INSTALLED: pkg steam 1.0.0.87-3
+EMBER-INSTALLED: pkg wine 11.21-1
+EMBER-INSTALLED: hydra installed
+EMBER-INSTALLED: launcher shown
+EMBER-INSTALLED: qml launcher: MESA-EGL: warning: egl: failed to create dri2 screen
+EMBER-INSTALLED: qml launcher: MESA-EGL: warning: egl: failed to create dri2 screen
+EMBER-INSTALLED: qml launcher: [33m  WARN[97m scene[0m: QML FileView at @shell.qml[124:5]: Read of /home/tester/.config/ember/mode failed: File does not exist.
+EMBER-INSTALLED: qml launcher: [33m  WARN[97m scene[0m: QML FileView at @shell.qml[120:5]: Read of /home/tester/.config/ember/lang failed: File does not exist.
+EMBER-INSTALLED: av done found 1
+EMBER-INSTALLED: antivirus shown
+EMBER-INSTALLED: qml antivirus: MESA-EGL: warning: egl: failed to create dri2 screen
+EMBER-INSTALLED: qml antivirus: MESA-EGL: warning: egl: failed to create dri2 screen
+EMBER-INSTALLED: qml antivirus: [33m  WARN[97m scene[0m: QML FileView at @shell.qml[82:5]: Read of /home/tester/.config/ember/lang failed: File does not exist.
+EMBER-INSTALLED: qml antivirus: [33m  WARN[97m qt.qpa.wayland.textinput[0m: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Trying to disable 0x7fcc5932f860 but 0x0 is focused
+EMBER-INSTALLED: calc shown
+EMBER-INSTALLED: office shown
+EMBER-INSTALLED: libreoffice installed
+EMBER-INSTALLED: slides shown
