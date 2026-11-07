@@ -133,7 +133,7 @@ hl.window_rule({
     name  = "ember-office",
     match = { class = "^(os.ember.Office)$" },
     float = true,
-    size  = "1000 680",
+    size  = "960 600",
     center = true,
 })
 hl.window_rule({

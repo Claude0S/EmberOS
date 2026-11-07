@@ -230,7 +230,7 @@ class Office(Adw.Application):
         Adw.StyleManager.get_default().set_color_scheme(Adw.ColorScheme.FORCE_DARK)
         self.css = ThemedCss(css, self.on_theme)
         self.win = Gtk.ApplicationWindow(application=self, title="Ember Office")
-        self.win.set_default_size(1000, 660)
+        self.win.set_default_size(960, 600)
         self.win.set_decorated(False)
         self.win.add_css_class("ember-office")
         outer = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=18, margin_top=22, margin_bottom=22,
