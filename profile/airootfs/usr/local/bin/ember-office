@@ -69,6 +69,15 @@ def lo_settings(t):
     ]
 
 
+def lo_version():
+    try:
+        out = subprocess.run(["pacman", "-Q", "libreoffice-fresh"], capture_output=True, text=True).stdout.split()
+        m = re.match(r"(\d+\.\d+)", out[1]) if len(out) > 1 else None
+        return m.group(1) if m else ""
+    except OSError:
+        return ""
+
+
 def apply_lo_theme(t):
     """Пише налаштування в профіль LibreOffice (поки офіс закритий — інакше він їх перезапише)."""
     if subprocess.run(["pgrep", "-f", "soffice.bin"], stdout=subprocess.DEVNULL).returncode == 0:
@@ -79,7 +88,12 @@ def apply_lo_theme(t):
     else:
         s = ('<?xml version="1.0" encoding="UTF-8"?>\n<oor:items xmlns:oor="http://openoffice.org/2001/registry" '
              'xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">\n</oor:items>\n')
-    for path, name, value in lo_settings(t):
+    items = lo_settings(t)
+    v = lo_version()
+    if v:   # без вікна «Ласкаво просимо / що нового» при першому запуску
+        items += [("/org.openoffice.Setup/Product", "ooSetupLastVersion", v),
+                  ("/org.openoffice.Setup/Office", "ooSetupInstCompleted", "true")]
+    for path, name, value in items:
         item = (f'<item oor:path="{path}"><prop oor:name="{name}" oor:op="fuse"><value>{value}</value></prop></item>')
         pat = re.compile(r'<item oor:path="' + re.escape(path) + r'"><prop oor:name="' + re.escape(name) + r'"[^>]*>.*?</prop></item>', re.S)
         if pat.search(s):
@@ -225,9 +239,8 @@ class Office(Adw.Application):
 
         # шапка
         head = Gtk.Box(spacing=14)
-        self.fox = Gtk.Picture.new_for_filename(self.css.t["fox"])
-        self.fox.set_size_request(54, 54)
-        self.fox.set_can_shrink(True)
+        self.fox = Gtk.Image.new_from_file(self.css.t["fox"])
+        self.fox.set_pixel_size(58)
         head.append(self.fox)
         tbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, valign=Gtk.Align.CENTER)
         tl = Gtk.Box(spacing=8)
@@ -319,7 +332,7 @@ class Office(Adw.Application):
         GLib.timeout_add_seconds(4, self.tick)
 
     def on_theme(self, t):
-        self.fox.set_filename(t["fox"])
+        self.fox.set_from_file(t["fox"])
 
     def tick(self):
         self.refresh()

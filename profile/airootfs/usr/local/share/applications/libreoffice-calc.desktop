@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Ember Sheets
+Icon=ember-sheets
+Exec=libreoffice --calc %U
+NoDisplay=true
+StartupWMClass=libreoffice-calc
+StartupNotify=true

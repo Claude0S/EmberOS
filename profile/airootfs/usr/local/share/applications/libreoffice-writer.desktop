@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Ember Write
+Icon=ember-write
+Exec=libreoffice --writer %U
+NoDisplay=true
+StartupWMClass=libreoffice-writer
+StartupNotify=true

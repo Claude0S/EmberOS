@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Ember Slides
+Icon=ember-slides
+Exec=libreoffice --impress %U
+NoDisplay=true
+StartupWMClass=libreoffice-impress
+StartupNotify=true

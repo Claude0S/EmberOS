@@ -36,6 +36,8 @@ for d in usr/share/ember usr/share/sddm/themes/ember usr/share/plymouth/themes/e
     [ -d "$S/$d" ] && mkdir -p "/$d" && cp -r "$S/$d/." "/$d/"
 done
 for f in "$S"/usr/share/applications/ember-*.desktop; do install -m 644 "$f" /usr/share/applications/; done
+# Вікна LibreOffice з іконками Ember Write / Slides / Sheets
+[ -d "$S/usr/local/share/applications" ] && mkdir -p /usr/local/share/applications && cp "$S"/usr/local/share/applications/*.desktop /usr/local/share/applications/
 # Фонові служби Ember (драйвери, докачка програм)
 for f in "$S"/etc/systemd/system/ember-drivers.service "$S"/etc/systemd/system/ember-setup-apps.service; do
     [ -f "$f" ] && install -m 644 "$f" /etc/systemd/system/
